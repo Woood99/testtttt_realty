@@ -1,0 +1,18 @@
+@import '../../styles/$vars.scss';
+
+.header {
+   display: grid;
+   justify-content: space-between;
+   background-color: var(--primary100);
+   border-radius: 12px;
+   padding: 16px 24px;
+   color: var(--gray);
+   grid-column-gap: 20px;
+
+   > span {
+      color: var(--primary400);
+   }
+   @media (max-width:$desktop){
+       display: none; 
+   }
+}

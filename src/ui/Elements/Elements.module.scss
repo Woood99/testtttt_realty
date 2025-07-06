@@ -1,0 +1,66 @@
+@import '../../styles/$vars.scss';
+
+.ElementOldPrice {
+   color: var(--primary400);
+   position: relative;
+   &::before {
+      content: '';
+      border-bottom: 1px solid currentColor;
+      position: absolute;
+      width: 100%;
+      height: 50%;
+      transform: rotate(-5deg);
+   }
+}
+
+.ElementTitleSubtitle {
+   > span {
+      color: var(--primary400);
+      font-weight: 500;
+      font-size: var(--default-fz);
+   }
+}
+
+.ElementTitleSubtitleSecond {
+   display: flex;
+   align-items: end;
+   gap: 8px;
+   > span {
+      color: var(--primary400);
+      font-weight: 500;
+      margin-bottom: 4px;
+   }
+}
+
+.ElementNavBtn {
+   display: flex;
+   align-items: center;
+   gap: 12px;
+
+   border-radius: 12px;
+   width: 100%;
+   height: 45px;
+   padding: 0 24px;
+   line-height: 1;
+   transition: all $transitionSpeed $transitionFunction;
+   font-weight: 500;
+   svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--blue);
+   }
+   >span{
+      color: var(--dark);
+   }
+   @media (min-width: $desktop-min) {
+      &:hover {
+         background-color: var(--primary700);
+      }
+   }
+   @media (max-width: $desktop) {
+      padding: 0;
+   }
+}
+.ElementNavBtnActive {
+   background-color: var(--primary700);
+}

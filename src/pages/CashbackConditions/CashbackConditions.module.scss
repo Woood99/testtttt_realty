@@ -1,0 +1,81 @@
+.PrivacyPolicyRoot {
+   > p {
+      word-wrap: break-word;
+      &:not(:last-child) {
+         margin-bottom: 16px;
+      }
+      &:not(:first-child) {
+         margin-top: 16px;
+      }
+   }
+   > ul {
+      &:not(:last-child) {
+         margin-bottom: 16px;
+      }
+      &:not(:first-child) {
+         margin-top: 16px;
+      }
+      > li {
+         position: relative;
+         padding-left: 10px;
+         &:not(:last-child) {
+            margin-bottom: 16px;
+         }
+         &::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            position: absolute;
+            top: 8px;
+            left: 0;
+            border-radius: 50%;
+            background: #404040;
+         }
+      }
+   }
+   > h3 {
+      &:not(:last-child) {
+         margin-bottom: 16px;
+      }
+      &:not(:first-child) {
+         margin-top: 32px;
+      }
+   }
+}
+
+.PrivacyPolicyTable {
+   overflow-x: auto;
+   table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      width: 100%;
+      table-layout: fixed;
+      thead {
+         border-bottom: 1px solid var(--primary800);
+      }
+
+      th,
+      td {
+         text-align: left;
+         padding-top: 0.5rem;
+         padding-bottom: 0.5rem;
+         &:not(:last-child) {
+            padding-right: 0.5rem;
+         }
+         &:not(:first-child) {
+            padding-left: 0.5rem;
+         }
+      }
+      tr {
+         &:not(:last-child) {
+            border-bottom: 1px solid #eee;
+         }
+      }
+   }
+   &:not(:last-child) {
+      margin-bottom: 16px;
+   }
+   &:first-child {
+      margin-top: 16px;
+   }
+}

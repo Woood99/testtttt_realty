@@ -1,0 +1,58 @@
+@import '../../styles/$vars.scss';
+
+.CardSchemeRoot {
+   box-sizing: border-box;
+   height: 100%;
+   border: 1px solid var(--primary100);
+   box-shadow: none;
+   padding-bottom: 16px;
+   text-align: left;
+   border-radius: 12px;
+
+   cursor: pointer;
+   display: flex;
+   flex-direction: column;  
+   transition: all $transitionSpeed $transitionFunction;
+   @media (min-width: $desktop-min) {
+      &:hover {
+         box-shadow: var(--shadow-primary);
+         transform: translateY(-3px);
+      }
+   }
+}
+
+.CardSchemeActiveRoot {
+   box-shadow: var(--shadow-primary);
+}
+
+.CardSchemeContent {
+   padding: 0 24px;
+   flex-grow: 1;
+   display: flex;
+   flex-direction: column;
+}
+
+.CardSchemeImage {
+   width: 100%;
+   padding: 24px 32px;
+   min-height: 308px;
+   border-radius: 12px;
+   @media (max-width:$desktop){
+       min-height: auto; 
+   }
+}
+.CardSchemeImageIbg {
+   padding-bottom: 72%;
+   @media (max-width:$desktop){
+       padding-bottom: 85%; 
+   }
+}
+
+.CardSchemeAttr {
+   margin-top: 4px;
+   color: var(--primary400);
+
+   display: flex;
+   align-items: center;
+   gap: 12px;
+}

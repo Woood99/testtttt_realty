@@ -1,0 +1,170 @@
+@import '../../styles/$vars.scss';
+
+.MultiSelectRoot {
+   position: relative;
+}
+.MultiSelectRootActive {
+   .MultiSelectCheck {
+      transform: rotate(-180deg);
+   }
+}
+
+.MultiSelectButton {
+   height: 40px;
+   width: 100%;
+   color: var(--gray);
+   background-color: var(--primary700);
+   border: 1px solid transparent;
+   border-radius: 8px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 0 16px;
+   -webkit-tap-highlight-color: transparent;
+   transition: all $transitionSpeed $transitionFunction;
+   @media (min-width: $desktop-min) {
+      &:hover {
+         background-color: var(--primary800);
+      }
+   }
+}
+
+.MultiSelectButtonError {
+   border-color: var(--red);
+   background-color: #fdf1eb;
+}
+
+.MultiSelectButtonDisabled {
+   border: 1px solid transparent;
+   background-color: rgba(220, 221, 221, 0.65);
+   pointer-events: none;
+   box-shadow: inset 0 0 0 50px #f5f5f5;
+   color: rgba(0, 0, 0, 0.4);
+}
+
+.MultiSelectButtonWrapper {
+   flex-grow: 1;
+   text-align: left;
+   display: flex;
+   align-items: center;
+   overflow: hidden;
+   margin-right: 8px;
+}
+
+.MultiSelectNameLabel {
+   transition: color $transitionSpeed $transitionFunction;
+   white-space: nowrap;
+   font-weight: 500;
+}
+
+.MultiSelectCheck {
+   margin-left: auto;
+   fill: var(--dark);
+   width: 20px;
+   height: 20px;
+   flex: 0 0 20px;
+   transition: transform $transitionSpeedFast $transitionFunction;
+   margin-left: 8px;
+}
+
+.MultiSelectDropdown {
+   position: absolute;
+   z-index: 9999;
+
+   top: calc(100% + 4px);
+   right: 0;
+
+   transform: translateY(4px);
+
+   min-width: 380px;
+   width: 100%;
+
+   border-radius: 12px;
+   padding: 56px 8px 16px 32px;
+
+   background-color: var(--white);
+   border: 1px solid rgba(122, 127, 170, 0.1);
+   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+}
+
+.MultiSelectList {
+   max-height: 245px;
+
+   display: flex;
+   flex-direction: column;
+
+   overflow-y: auto;
+   @media (max-width: $desktop) {
+      max-height: 325px;
+   }
+}
+
+.MultiSelectItem {
+   padding-top: 8px;
+   padding-bottom: 8px;
+}
+
+.MultiSelectClose {
+   position: absolute;
+   top: 16px;
+   right: 16px;
+
+   width: 20px;
+   height: 20px;
+
+   svg {
+      width: 100%;
+      height: 100%;
+      fill: var(--blue);
+      transition: fill $transitionSpeed $transitionFunction;
+   }
+}
+
+.MultiSelectPlaceholder {
+   line-height: 1;
+   color: var(--dark);
+   font-weight: 500;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   text-align: right;
+   flex-grow: 1;
+   white-space: nowrap;
+}
+
+.MultiSelectNameLabelActive {
+   color: #738295;
+}
+.MultiSelectPlaceholderNone {
+   opacity: 0.6;
+}
+
+.MultiSelectPlaceholderItem {
+   &:not(:last-child) {
+      margin-right: 6px;
+      &::after {
+         content: ',';
+      }
+   }
+}
+
+.MultiSelectSearchEmpty {
+   text-align: center;
+   font-weight: 500;
+   margin: 10px 0 5px;
+}
+
+.MultiSelectActions {
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+   grid-column-gap: 16px;
+   margin-right: 24px;
+}
+
+.MultiSelectSearch {
+   margin-bottom: 16px;
+   width: calc(100% - 24px);
+}
+
+.MultiSelectModal {
+   padding: 65px 24px 32px;
+}

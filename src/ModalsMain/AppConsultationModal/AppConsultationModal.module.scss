@@ -1,0 +1,28 @@
+@import '../../styles/$vars.scss';
+
+.root {
+   @media (min-width:$desktop-min){
+      width: 850px; 
+   }
+}
+
+.AppConsultationModal {
+   padding: 0;
+}
+
+.AppConsultationModalFields {
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+   grid-column-gap: 16px;
+   grid-row-gap: 16px;
+@media (max-width:$mobile-max){
+    grid-template-columns: repeat(1,1fr); 
+}
+}
+.AppConsultationModalWrapper {
+   padding: 48px 48px 0;
+   @media (max-width:$desktop){
+       padding-left: 24px;
+       padding-right: 24px; 
+   }
+}

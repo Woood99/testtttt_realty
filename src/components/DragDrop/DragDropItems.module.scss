@@ -1,0 +1,133 @@
+@import '../../styles/$vars.scss';
+
+.DragDropImage {
+   border-radius: 12px;
+   height: 175px;
+   overflow: hidden;
+   position: relative;
+   cursor: pointer;
+
+   transition: all $transitionSpeed $transitionFunction;
+
+   &::before {
+      content: '';
+      position: absolute;
+      background-color: rgba(36, 38, 41, 0.5);
+      z-index: 1;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.16s ease-in-out;
+   }
+   img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      object-fit: cover;
+   }
+   @media (min-width: $desktop-min) {
+      &:hover {
+         &::before {
+            opacity: 1;
+         }
+         .DragDropImageIcon {
+            opacity: 1;
+            visibility: visible;
+         }
+      }
+   }
+   @media (max-width: $desktop) {
+      &::before {
+         opacity: 1;
+      }
+   }
+}
+
+.DragDropOverlay {
+   width: 100%;
+   height: 175px;
+   border: 1px solid var(--blue);
+   border-radius: 12px;
+   background-color: #f6f5f5;
+   z-index: 998;
+}
+
+.DragDropImageIcon {
+   position: absolute;
+   width: 32px;
+   height: 32px;
+   z-index: 2;
+   background-color: var(--white);
+   border-radius: 8px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   opacity: 0;
+   visibility: hidden;
+   transition: all $transitionSpeedFast $transitionFunction;
+   box-shadow: var(--shadow-primary);
+}
+
+.DragDropImageSolo {
+   position: relative;
+   overflow: hidden;
+   cursor: pointer;
+   width: 110px;
+   height: 110px;
+   border-radius: 12px;
+   @media (min-width: $desktop-min) {
+      &:hover {
+         border-radius: 12px !important;
+         .DragDropImageIcon {
+            opacity: 1;
+            visibility: visible;
+         }
+         .DragDropImageSoloInput {
+            transform: translateY(0);
+         }
+      }
+   }
+   @media (max-width: $desktop) {
+      .DragDropImageSoloInput {
+         transform: translateY(0);
+      }
+   }
+}
+
+.DragDropImageSoloImage {
+   width: 100%;
+   height: 100%;
+}
+
+.DragDropImageSoloInput {
+   cursor: pointer;
+   position: absolute;
+   z-index: 10;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   input {
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      position: absolute;
+      inset: 0;
+      z-index: 11;
+      cursor: pointer;
+   }
+}
+
+.DragDropImageSoloInputEffect {
+   background-color: rgba(0, 0, 0, 0.5);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   transform: translateY(100%);
+   transition: transform 0.16s ease-in-out;
+   color: var(--white);
+   @media (max-width: $desktop) {
+      opacity: 0;
+   }
+}

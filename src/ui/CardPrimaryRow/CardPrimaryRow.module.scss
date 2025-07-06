@@ -1,0 +1,83 @@
+@import '../../styles/$vars.scss';
+
+.CardPrimaryRowRoot {
+   position: relative;
+   --height: 355px;
+   width: 100%;
+
+   height: var(--height);
+   min-height: var(--height);
+   max-height: var(--height);
+
+   overflow: hidden;
+}
+
+.CardPrimaryRowRootShadow {
+   background-color: var(--white);
+   box-shadow: var(--shadow-primary);
+   border-radius: 20px;
+   padding: 16px;
+}
+
+.CardPrimaryRowContainer {
+   height: 100%;
+
+   display: grid;
+   grid-template-columns: 350px 1fr;
+}
+
+.CardPrimaryRowLink {
+   position: absolute;
+   inset: 0;
+   z-index: var(--z-index-start);
+}
+
+.CardPrimaryRowGallery {
+   height: 100%;
+   max-height: none;
+}
+.CardPrimaryRowWrapper {
+   display: flex;
+   flex-direction: column;
+   margin-left: 16px;
+}
+.CardPrimaryRowContent {
+   display: flex;
+   flex-grow: 1;
+   gap: 20px;
+}
+.CardPrimaryRowQuantity {
+   font-weight: 500;
+   color: var(--blue);
+   margin-top: 12px;
+   margin-bottom: 12px;
+   display: block;
+}
+
+.CardPrimaryRowTerm {
+   color: var(--primary400);
+   margin-bottom: 4px;
+}
+
+.CardPrimaryRowAddress {
+   margin-bottom: 4px;
+}
+
+.CardPrimaryRowAdd {
+ max-width: 220px;
+   min-width: 220px;
+}
+
+.CardPrimaryRowPrices {
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+   grid-column-gap: 24px;
+   grid-row-gap: 10px;
+   grid-auto-flow: column;
+   grid-template-rows: repeat(3, 1fr);
+}
+
+.CardPrimaryRowBottom {
+   border-top: 1px solid var(--primary100);
+   padding-top: 16px;
+}

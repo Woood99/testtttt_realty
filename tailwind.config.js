@@ -1,0 +1,58 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+   theme: {
+      colors: {
+         black: 'var(--black)',
+         dark: 'var(--dark)',
+         white: 'var(--white)',
+         blue: 'var(--blue)',
+         lightBlue: 'var(--light-blue)',
+         red: 'var(--red)',
+         yellow: 'var(--yellow)',
+         green: 'var(--green)',
+         orange: 'var(--orange)',
+         pageColor: 'var(--stand-bg)',
+         primary800: 'var(--primary800)',
+         primary700: 'var(--primary700)',
+         primary600: 'var(--primary600)',
+         primary500: '#32425f',
+         primary400: '#737476',
+         primary300: '#78b4fb',
+         primary200: '#cbe3ff',
+         primary100: '#ebf1fb',
+         gray: 'var(--gray)',
+         lightGray: 'var(--light-gray)',
+         graySecond: 'var(--gray-second)',
+         hoverPrimary: 'var(--hover-primary)',
+      },
+      fontSize: {
+         verySmall: ['var(--very-small-fz)', 'var(--line-height)'],
+         small: ['var(--small-fz)', 'var(--line-height)'],
+         smallBig: ['12px', 'var(--line-height)'],
+         default: ['var(--default-fz)', 'var(--line-height)'],
+         defaultMax: ['var(--default-max)', 'var(--line-height)'],
+         littleBig: ['var(--little-big-fz)', 'var(--line-height)'],
+         bigSmall: ['var(--big-small-fz)', 'var(--line-height)'],
+         big: ['var(--big-fz)', 'var(--line-height)'],
+         VeryBig: ['var(--very-big-fz)', 'var(--line-height)'],
+      },
+      extend: {
+         screens: {
+            md1: { max: '1222px' },
+            md2: { max: '799px' },
+            md3: { max: '599px' },
+            md4: { max: '430px' },
+
+            mmd1: { min: '1222px' },
+            mmd2: { min: '799px' },
+            mmd3: { min: '599px' },
+            mmd4: { max: '430px' },
+         },
+         boxShadow: {
+            primary: 'var(--shadow-primary)',
+         },
+      },
+   },
+   plugins: [],
+};

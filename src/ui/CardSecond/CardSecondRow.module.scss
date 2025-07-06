@@ -1,0 +1,74 @@
+@import '../../styles/$vars.scss';
+
+.CardSecondRowRoot {
+   position: relative;
+   --height: 355px;
+   width: 100%;
+   height: var(--height);
+   min-height: var(--height);
+   max-height: var(--height);
+   overflow: hidden;
+}
+
+.CardSecondRowRootShadow {
+   background-color: var(--white);
+   box-shadow: var(--shadow-primary);
+   border-radius: 12px;
+   padding: 16px;
+}
+
+.CardSecondRowContainer {
+   height: 100%;
+   display: grid;
+   grid-template-columns: 350px 1fr;
+}
+
+.CardSecondRowLink {
+   position: absolute;
+   inset: 0;
+   z-index: var(--z-index-start);
+}
+
+.CardSecondRowName {
+   font-weight: 500;
+   color: var(--blue);
+   margin-bottom: 8px;
+   display: block;
+}
+
+.CardSecondRowTerm {
+   color: var(--primary400);
+   margin-bottom: 4px;
+}
+.CardSecondRowMeter {
+   color: var(--primary500);
+   line-height: 1;
+   margin-top: 8px;
+}
+
+.CardSecondRowWrapper {
+   display: flex;
+   flex-direction: column;
+   margin-left: 16px;
+}
+
+.CardSecondRowContent {
+   display: flex;
+   flex-grow: 1;
+   gap: 24px;
+}
+
+.CardSecondRowBottom {
+   border-top: 1px solid var(--primary100);
+   padding-top: 16px;
+}
+
+.CardSecondRowAdd {
+   max-width: 215px;
+   min-width: 215px;
+}
+
+.CardSecondRowGallery {
+   height: 100%;
+   max-height: none;
+}

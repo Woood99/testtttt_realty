@@ -1,0 +1,130 @@
+@import '../../styles/$vars.scss';
+
+.SpecialistRoot {
+   background-color: var(--white);
+   position: relative;
+
+   transition: all $transitionSpeed $transitionFunction;
+
+   display: flex;
+   flex-direction: column;
+
+   box-sizing: border-box;
+   height: 100%;
+   cursor: pointer;
+}
+
+.SpecialistWrapper {
+   position: relative;
+   overflow: hidden;
+   border-radius: 50%;
+   flex-shrink: 0;
+}
+
+.SpecialistImage {
+   height: 100%;
+   width: 100%;
+   overflow: hidden;
+   border-radius: inherit;
+   &::after {
+      background: linear-gradient(
+         180deg,
+         #282d3c00,
+         rgba(40, 45, 60, 0.009) 6.67%,
+         rgba(40, 45, 60, 0.036) 13.33%,
+         rgba(40, 45, 60, 0.082) 20%,
+         rgba(40, 45, 60, 0.147) 26.67%,
+         rgba(40, 45, 60, 0.232) 33.33%,
+         rgba(40, 45, 60, 0.332) 40%,
+         rgba(40, 45, 60, 0.443) 46.67%,
+         rgba(40, 45, 60, 0.557) 53.33%,
+         rgba(40, 45, 60, 0.668) 60%,
+         rgba(40, 45, 60, 0.768) 66.67%,
+         rgba(40, 45, 60, 0.853) 73.33%,
+         rgba(40, 45, 60, 0.918) 80%,
+         rgba(40, 45, 60, 0.964) 86.67%,
+         rgba(40, 45, 60, 0.991) 93.33%,
+         #282d3c
+      );
+      bottom: 0;
+      content: '';
+      height: 100%;
+      width: 100%;
+      left: 0;
+      opacity: 0.6;
+      position: absolute;
+      transition: all $transitionSpeed $transitionFunction;
+      border-radius: inherit;
+   }
+}
+
+.SpecialistRootError {
+   .SpecialistName{
+      color: var(--red);
+   }
+}
+
+.SpecialistName{
+   font-size: var(--default-max);
+   font-weight: 500;
+}
+
+.SpecialistRootActive {
+   .SpecialistCheck {
+      opacity: 1;
+      visibility: visible;
+   }
+   .SpecialistName{
+      color: var(--blue);
+   }
+}
+
+.SpecialistCheck {
+   position: absolute;
+   top: 0px;
+   right: 0px;
+   z-index: 99;
+
+   width: 20px;
+   height: 20px;
+   background-color: var(--blue);
+
+   border-radius: 50%;
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   opacity: 0;
+   visibility: hidden;
+   transition: all $transitionSpeed $transitionFunction;
+   svg {
+      width: 10px;
+      height: 10px;
+      fill: none;
+      stroke: var(--white);
+      stroke-width: 1.5px;
+   }
+}
+
+.SpecialistDescr {
+   font-size: var(--very-small-fz);
+   line-height: 1;
+   margin: 5px 0 0;
+
+   text-align: center;
+}
+
+.SpecialistLink {
+   margin-top: 12px;
+   color: var(--blue);
+
+   display: flex;
+   align-items: center;
+   gap: 4px;
+
+   font-size: var(--small-fz);
+   svg {
+      fill: currentColor;
+   }
+}

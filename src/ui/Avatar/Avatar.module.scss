@@ -1,0 +1,43 @@
+.Avatar {
+   position: relative;
+   border-radius: 50%;
+   background-color: var(--white);
+   img {
+      border-radius: inherit;
+      width: 100%;
+      height: 100%;
+   }
+}
+
+.AvatarOnlineStatus {
+   position: absolute;
+   bottom: 0;
+   right: 0;
+   background-color: var(--green);
+   border: 2px solid var(--white);
+   display: block;
+   width: 12px;
+   height: 12px;
+   border-radius: inherit;
+}
+
+.AvatarBg {
+   width: 100%;
+   height: 100%;
+   background-color: var(--primary100);
+   color: var(--dark);
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   font-weight: 500;
+   border-radius: inherit;
+   aspect-ratio: 1 / 1;
+
+   line-height: 1;
+}
+
+.AvatarBgBig {
+   font-size: 20px;
+}

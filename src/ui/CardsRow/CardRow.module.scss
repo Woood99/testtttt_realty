@@ -1,0 +1,56 @@
+@import '../../styles/$vars.scss';
+
+.CardRowRoot {
+   width: 100%;
+   color: var(--dark);
+
+   display: grid;
+   align-items: center;
+   grid-column-gap: 20px;
+   justify-content: space-between;
+
+   min-height: 96px;
+   position: relative;
+}
+
+.CardRowRootBg {
+   background-color: var(--white);
+   padding: 24px;
+   box-shadow: var(--shadow-primary);
+   border-radius: 20px;
+}
+
+.linkShift {
+   width: calc(100% + 64px) !important;
+   left: -32px !important;
+   @media (max-width:$desktop){
+      width: calc(100% + 32px) !important;
+      left: -16px !important;
+   }
+}
+
+.afterShift {
+   position: relative;
+   &:not(:last-child) {
+      border-bottom: 1px solid var(--primary100);
+   }
+   &::after {
+      content: '';
+      background-color: var(--primary100);
+      opacity: 0;
+      width: calc(100% + 64px);
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: -32px;
+      right: 0;
+      z-index: 0;
+   }
+   @media (min-width: $desktop-min) {
+      &:hover {
+         &::after {
+            opacity: 1;
+         }
+      }
+   }
+}

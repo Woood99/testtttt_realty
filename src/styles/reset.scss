@@ -1,0 +1,191 @@
+@import './$vars.scss';
+
+// =============== Reset ===============
+
+html {
+   box-sizing: border-box;
+   height: 100%;
+}
+
+body {
+   font-family: $fontFamily, sans-serif;
+   font-size: var(--default-fz);
+   line-height: var(--line-height);
+
+   color: var(--dark);
+
+   margin: 0;
+   min-width: 320px;
+   min-height: 100%;
+
+   &::after {
+      content: '';
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(7.5px);
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.32s ease-in-out, visibility 0.32s ease-in-out;
+   }
+   &._active-mask {
+      &::after {
+         opacity: 1;
+         visibility: visible;
+      }
+   }
+}
+
+*,
+*::before,
+*::after {
+   box-sizing: border-box;
+   border-width: 0;
+   border-style: solid;
+   border-color: currentColor;
+   @media (max-width: $desktop) {
+      -webkit-tap-highlight-color: transparent;
+   }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+   margin: 0;
+   font-weight: 400;
+   font-size: inherit;
+}
+
+img {
+   display: block;
+   height: auto;
+   max-width: 100%;
+   object-fit: cover;
+}
+
+a {
+   text-decoration: none;
+   color: inherit;
+   display: inline-block;
+}
+
+ul {
+   list-style: none;
+   margin: 0;
+   padding: 0;
+}
+
+button {
+   border: none;
+   padding: 0;
+   background: 0 0;
+   cursor: pointer;
+   user-select: none;
+}
+
+input {
+   -webkit-appearance: none;
+   appearance: none;
+   border-radius: 0;
+   padding: 0;
+   border: none;
+   outline: none;
+}
+
+// =============== Other ===============
+
+.visually-hidden {
+   position: absolute;
+   overflow: hidden;
+   margin: -1px;
+   border: 0;
+   padding: 0;
+   width: 1px;
+   height: 1px;
+   clip: rect(0 0 0 0);
+}
+.visually-hidden {
+   position: absolute;
+   overflow: hidden;
+   margin: -1px;
+   border: 0;
+   padding: 0;
+   width: 1px;
+   height: 1px;
+   clip: rect(0 0 0 0);
+}
+
+.dis-scroll {
+   overflow: hidden;
+   height: var(--vh, 100vh);
+}
+
+.js-focus-visible :focus:not(.focus-visible) {
+   outline: none;
+}
+
+.page--ios .dis-scroll {
+   position: relative;
+}
+
+.container {
+   margin-right: auto;
+   margin-left: auto;
+   padding-right: ($containerOffset + px);
+   padding-left: ($containerOffset + px);
+   max-width: $containerWidth + px;
+}
+
+.container--big {
+   margin: 0 auto;
+   padding: 0 ($containerOffset + px);
+   max-width: 1300 + px;
+}
+
+.container-desktop {
+   @media (min-width: $desktop-min) {
+      margin-right: auto;
+      margin-left: auto;
+      padding-right: ($containerOffset + px);
+      padding-left: ($containerOffset + px);
+      max-width: $containerWidth + px;
+   }
+}
+.container-mobile {
+   @media (max-width: $desktop) {
+      margin-right: auto;
+      margin-left: auto;
+      padding-right: ($containerOffset + px);
+      padding-left: ($containerOffset + px);
+      max-width: $containerWidth + px;
+   }
+}
+
+.container--no-padding {
+   margin: 0 auto;
+   max-width: $contentWidth + px;
+}
+
+.container-right {
+   padding-left: calc((100% - #{$containerWidth+px}) / 2 + #{$containerOffset+px});
+   padding-right: ($containerOffset + px);
+   @media (max-width: $desktop) {
+      padding: 0 ($containerOffset + px);
+   }
+}
+
+.container-right--no-padding-mobile {
+   padding-left: calc((100% - #{$containerWidth+px}) / 2 + #{$containerOffset+px});
+   padding-right: ($containerOffset + px);
+   @media (max-width: $desktop) {
+      padding: 0;
+   }
+}

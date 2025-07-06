@@ -1,0 +1,66 @@
+@import '../../styles/$vars.scss';
+
+.SliderPaginationRoot {
+   position: absolute;
+   bottom: 24px;
+   left: 50%;
+   transform: translateX(-50%);
+
+   background: #636f7f;
+   z-index: 20;
+
+   color: var(--white);
+
+   padding: 6px 20px;
+
+   display: flex;
+   align-items: center;
+   gap: 12px;
+
+   border-radius: 6px;
+
+   font-size: var(--small-fz);
+   font-weight: 500;
+   @media (max-width: $desktop) {
+      left: 16px;
+      transform: translateX(0);
+   }
+}
+
+.SliderPaginationRootStatic {
+   position: static;
+   transform: translateX(0);
+}
+
+.SliderPaginationCounter {
+   display: flex;
+   align-items: center;
+   gap: 6px;
+   line-height: 1;
+}
+
+.SliderPaginationItems {
+   display: flex;
+   align-items: center;
+   gap: 5px;
+}
+
+.SliderPaginationItem {
+   background: var(--white);
+   border-radius: 10px;
+   --width: 6px;
+
+   height: 6px;
+
+   width: var(--width);
+   flex: 0 0 var(--width);
+
+   opacity: 0.6;
+
+   transition: all $transitionSpeed $transitionFunction;
+}
+
+.SliderPaginationItemActive {
+   --width: 18px;
+   opacity: 1;
+}

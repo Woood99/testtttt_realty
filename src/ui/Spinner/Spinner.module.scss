@@ -1,0 +1,33 @@
+.SpinnerOverlay {
+   background-color: rgba(0, 0, 0, 0.6);
+   color: var(--white);
+   .SpinnerRoot {
+      border: 3px solid var(--white);
+      border-bottom-color: transparent;
+   }
+}
+
+.SpinnerRoot {
+   --size: 48px;
+   width: var(--size);
+   height: var(--size);
+   border: 3px solid var(--blue);
+   border-bottom-color: transparent;
+   border-radius: 50%;
+   display: inline-block;
+   box-sizing: border-box;
+   animation: rotation 1s linear infinite;
+}
+
+.SpinnerRootSmall {
+   border-width: 2px;
+}
+
+@keyframes rotation {
+   0% {
+      transform: rotate(0deg);
+   }
+   100% {
+      transform: rotate(360deg);
+   }
+}

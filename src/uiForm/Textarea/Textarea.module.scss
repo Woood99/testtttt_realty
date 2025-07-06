@@ -1,0 +1,43 @@
+@import '../../styles/$vars.scss';
+
+.TextareaRoot {
+   position: relative;
+   width: 100%;
+}
+
+.TextareaWrapper {
+   resize: none;
+   width: 100%;
+   min-height: 140px;
+   overflow: hidden;
+   display: block;
+
+   background-color: var(--white);
+   border-radius: 8px;
+   padding: 16px;
+
+   outline: none;
+   background-color: var(--primary600);
+   line-height: 1.35;
+   font-weight: 500;
+   color: var(--primary500);
+   font-size: var(--default-max);
+   border: 1px solid transparent;
+   @media (min-width: $desktop-min) {
+      &:hover {
+         background-color: var(--primary800);
+      }
+   }
+   &::placeholder{
+      opacity: 0.75;
+   }
+   &:focus{
+      background-color: var(--white);
+      border: 1px solid var(--dark);
+   }
+}
+
+.TextareaError {
+   border-color: red;
+   background-color: #fdf1eb;
+}

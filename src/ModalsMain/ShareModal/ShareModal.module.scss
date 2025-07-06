@@ -1,0 +1,42 @@
+@import '../../styles/$vars.scss';
+
+.root {
+   width: 490px;
+}
+
+.children {
+   padding-bottom: 24px;
+   margin-bottom: 16px;
+   border-bottom: 1px solid var(--primary100);
+}
+
+.shareAppItem {
+   padding: 15px 24px;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+
+   transition: all $transitionSpeed $transitionFunction;
+   border-radius: 12px;
+
+   background-color: var(--primary700);
+   color: var(--dark);
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   svg {
+      flex: 0 0 26px;
+   }
+
+   
+   span{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+   }
+   @media (min-width: $desktop-min) {
+      &:hover {
+         background-color: var(--primary800);
+      }
+   }
+}

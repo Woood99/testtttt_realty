@@ -1,0 +1,8 @@
+@import '../../styles/$vars.scss';
+
+.SidebarRoot {
+   position: sticky;
+   top: 16px;
+   width: 100%;
+   transition: all $transitionSpeed $transitionFunction;
+}

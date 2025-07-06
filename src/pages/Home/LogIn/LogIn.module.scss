@@ -1,0 +1,78 @@
+@import '../../../styles/$vars.scss';
+
+.logIn {
+   border-radius: 24px;
+   background-color: var(--white);
+   box-shadow: var(--shadow-primary);
+   padding: 32px;
+   display: flex;
+   flex-direction: column;
+   transition: all $transitionSpeed $transitionFunction;
+   position: relative;
+
+   @media (min-width: $desktop-min) {
+      &:hover {
+         transform: translateY(-5px);
+         box-shadow: var(--shadow-primary);
+         .rowTop {
+            img {
+               animation: updown 0.6s ease-out;
+               animation-iteration-count: 1;
+            }
+         }
+      }
+   }
+   @media (max-width:$desktop){
+       padding: 24px; 
+   }
+}
+.rowTop {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   @media (max-width:$desktop){
+       align-items: start; 
+   }
+}
+
+.avatar {
+   border-radius: 50%;
+   --size: 70px;
+   width: var(--size);
+   height: var(--size);
+   @media (max-width:$desktop){
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      --size: 60px;
+   }
+}
+
+.descr {
+   margin-top: 32px;
+   color: var(--dark);
+   flex-grow: 1;
+   @media (max-width:$desktop){
+       margin-top: 16px;
+       max-width: calc(100% - 60px - 16px); 
+   }
+}
+
+.btn {
+   margin-top: 24px;
+}
+
+@keyframes updown {
+   25% {
+      transform: translateY(-6px);
+   }
+   50% {
+      transform: translateY(-12px);
+   }
+   75% {
+      transform: translateY(-6px);
+   }
+   100% {
+      transform: translateY(0);
+   }
+}

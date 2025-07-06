@@ -1,0 +1,53 @@
+@import '../../styles/$vars.scss';
+
+.ShortCard {
+   position: relative;
+   @media (min-width: $desktop-min) {
+      &:hover {
+         .VideoCardControl {
+            opacity: 1;
+            visibility: visible;
+         }
+      }
+   }
+}
+
+.ShortCardImage {
+   padding-bottom: percent(322, 187);
+   border-radius: 12px;
+   overflow: hidden;
+   width: 100%;
+
+  > img {
+      border-radius: 12px;
+   }
+
+   &::after {
+      bottom: 0;
+      content: '';
+      height: 50%;
+      width: 100%;
+      left: 0;
+      opacity: 0.3;
+      position: absolute;
+      border-radius: inherit;
+      background: linear-gradient(181.78deg, #0000 3.05%, #0000007a 50.7%, #000000b8 98.49%);
+   }
+}
+
+.ShortCardContent {
+   padding-top: 12px;
+}
+
+.ShortCardUser {
+   padding-top: 16px;
+}
+
+.ShortCardControl {
+   position: absolute;
+   opacity: 0;
+   visibility: hidden;
+
+   transition: all $transitionSpeed $transitionFunction;
+   z-index: 9;
+}

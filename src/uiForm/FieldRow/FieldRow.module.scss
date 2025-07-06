@@ -1,0 +1,46 @@
+@import '../../styles/$vars.scss';
+
+.FieldRowRoot {
+   display: flex;
+   align-items: center;
+   gap: 24px;
+   @media (max-width:$smallTablet-max){
+      flex-direction: column;
+      gap: 12px;
+   }
+   &.FieldRowRootCol {
+      flex-direction: column;
+      align-items: start;
+      gap: 12px;
+      .FieldRowName {
+         width: 100%;
+         flex: 0 0 100%;
+      }
+      .FieldRowChildren {
+         max-width: 100%;
+      }
+   }
+}
+
+.FieldRowName {
+   width: var(--width-name);
+   flex: 0 0 var(--width-name);
+
+   line-height: 1;
+
+   display: flex;
+   align-items: center;
+   gap: 6px;
+   @media (max-width:$smallTablet-max){
+      width: 100%;
+      flex: 0 0 100%;
+   }
+}
+
+.FieldRowChildren {
+   max-width: var(--width-children);
+   width: 100%;
+   @media (max-width:$smallTablet-max){
+      max-width: 100%;
+   }
+}

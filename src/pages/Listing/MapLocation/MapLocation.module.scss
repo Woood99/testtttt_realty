@@ -1,0 +1,13 @@
+.MapLocationRoot {
+   margin-top: 0.5rem;
+   --height-map: calc(var(--vh) - 3rem);
+   min-height: var(--height-map);
+   max-height: var(--height-map);
+   height: 100%;
+}
+
+.MapLocationGo{
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+}

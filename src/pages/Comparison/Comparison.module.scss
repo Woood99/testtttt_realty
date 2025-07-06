@@ -1,0 +1,109 @@
+@import '../../styles/$vars.scss';
+
+.ComparisonBody {
+   overflow-x: auto;
+   scrollbar-width: none;
+}
+.ComparisonWrapper {
+   --width-actions: 335px;
+   --width-col: calc((1190px - var(--width-actions) - 64px) / 3);
+
+   min-width: fit-content;
+   width: 100%;
+}
+
+.ComparisonTop {
+   position: relative;
+   width: 100%;
+   background-color: var(--white);
+}
+
+.ComparisonActions {
+   position: sticky;
+   z-index: 90;
+   left: 0;
+   background-color: var(--white);
+}
+
+.ComparisonName {
+   min-width: var(--width-actions);
+   width: var(--width-actions);
+}
+
+.ComparisonCol {
+   min-width: var(--width-col);
+   width: var(--width-col);
+   flex: 0 0 var(--width-col);
+   padding: 0 12px;
+   @media (max-width:$desktop){
+       &:first-child{
+         padding-left: 0;
+       } 
+   }
+}
+
+.ComparisonMore {
+   display: flex;
+   align-items: center;
+   gap: 16px;
+   text-align: left;
+   position: sticky;
+   left: 0;
+   z-index: 2;
+   padding: 16px 0;
+}
+
+.ComparisonOption {
+   display: flex;
+   position: relative;
+   padding: 24px 0;
+   &:not(:last-child) {
+      &::before {
+         content: '';
+         width: var(--width-option-line);
+         height: 1px;
+         background-color: var(--primary100);
+         position: absolute;
+         bottom: 0;
+         right: 0;
+         left: 0;
+      }
+   }
+   @media (max-width:$desktop){
+      flex-direction: column;
+      gap: 8px;
+      padding: 16px 0; 
+   }
+}
+
+.ComparisonOptionName {
+   position: sticky;
+   z-index: 2;
+   left: 0;
+   padding: 0 16px 0 0;
+   background-color: var(--white);
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   transition: min-width 0.32s ease-in-out, width 0.32s ease-in-out;
+   @media (max-width:$desktop){
+      width: max-content;
+      min-width: max-content;
+      font-weight: 500; 
+   }
+}
+
+.ComparisonPrev {
+   position: absolute;
+   z-index: 10;
+
+   top: calc(32px + 24px + 60px);
+   left: calc(var(--width-actions) + 32px + 18px + 12px);
+}
+.ComparisonNext {
+   position: absolute;
+   z-index: 10;
+
+   top: calc(32px + 24px + 60px);
+   right: calc(32px + 18px + 12px);
+}

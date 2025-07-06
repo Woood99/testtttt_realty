@@ -1,0 +1,72 @@
+@import '../../styles/$vars.scss';
+
+.ProgressCardRoot {
+   background-color: #f4f6fb;
+   border-radius: 24px;
+   cursor: pointer;
+   overflow: hidden;
+   padding: 20px;
+   position: relative;
+   user-select: none;
+
+   width: 100%;
+   &::after {
+      background: linear-gradient(
+         180deg,
+         #282d3c00,
+         rgba(40, 45, 60, 0.009) 6.67%,
+         rgba(40, 45, 60, 0.036) 13.33%,
+         rgba(40, 45, 60, 0.082) 20%,
+         rgba(40, 45, 60, 0.147) 26.67%,
+         rgba(40, 45, 60, 0.232) 33.33%,
+         rgba(40, 45, 60, 0.332) 40%,
+         rgba(40, 45, 60, 0.443) 46.67%,
+         rgba(40, 45, 60, 0.557) 53.33%,
+         rgba(40, 45, 60, 0.668) 60%,
+         rgba(40, 45, 60, 0.768) 66.67%,
+         rgba(40, 45, 60, 0.853) 73.33%,
+         rgba(40, 45, 60, 0.918) 80%,
+         rgba(40, 45, 60, 0.964) 86.67%,
+         rgba(40, 45, 60, 0.991) 93.33%,
+         #282d3c
+      );
+      bottom: 0;
+      content: '';
+      height: 120px;
+      min-height: 30%;
+      left: 0;
+      opacity: 0.6;
+      position: absolute;
+      transition: all $transitionSpeed $transitionFunction;
+      width: 100%;
+   }
+   @media (min-width:$desktop-min){
+       &:hover{
+         .ProgressCardControls{
+            opacity: 1;
+            visibility: visible;
+         }
+       } 
+   }
+}
+
+.ProgressCardImage {
+   height: 100%;
+   width: 100%;
+
+   position: absolute;
+
+   top: 0;
+   left: 0;
+}
+
+.ProgressCardBadges {
+   position: absolute;
+   top: 20px;
+   left: 20px;
+   z-index: 10;
+
+   display: flex;
+   align-items: center;
+   gap: 12px;
+}

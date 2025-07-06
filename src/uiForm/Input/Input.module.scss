@@ -1,0 +1,151 @@
+@import '../../styles/$vars.scss';
+
+.InputRoot {
+   width: 100%;
+   height: 40px;
+   padding: 0 16px;
+   line-height: 1;
+
+   color: var(--gray);
+   background-color: var(--primary700);
+   border: 1px solid transparent;
+   border-radius: 8px;
+
+   transition: all $transitionSpeed $transitionFunction;
+
+   display: flex;
+   align-items: center;
+   gap: 15px;
+
+   @media (min-width: $desktop-min) {
+      &:hover {
+         background-color: var(--primary800);
+      }
+   }
+}
+
+.InputWrapper {
+   height: 100%;
+   width: 100%;
+   background-color: transparent;
+   color: var(--dark);
+   &::placeholder{
+      font-weight: 500;
+   }
+}
+
+.InputSize48 {
+   height: 48px;
+}
+.InputSize60 {
+   height: 60px;
+}
+
+.InputLeft {
+   border-radius: 8px 0 0 8px;
+}
+
+.InputRight {
+   border-radius: 0 8px 8px 0;
+}
+.InputCode {
+   .InputWrapper {
+      text-align: center;
+      font-size: 26px;
+      font-weight: 500;
+   }
+}
+
+.InputBefore {
+   white-space: nowrap;
+   font-weight: 500;
+   pointer-events: none;
+   user-select: none;
+}
+
+.InputAfter {
+   white-space: nowrap;
+   font-weight: 500;
+   margin-left: auto;
+}
+
+.InputRootActive {
+   .InputBefore {
+      color: #738295;
+   }
+   .InputWrapper {
+      &:-webkit-autofill {
+         -webkit-box-shadow: 0 0 0 30px var(--primary800) inset !important; /* Цвет фона */
+         -webkit-text-fill-color: black !important; /* Цвет текста */
+      }
+   }
+}
+
+.InputError {
+   border-color: red !important;
+   background-color: #fdf1eb !important;
+}
+
+.InputDisabled {
+   border: 1px solid transparent;
+   background-color: rgba(220, 221, 221, 0.65);
+   pointer-events: none;
+
+   box-shadow: inset 0 0 0 50px #f5f5f5;
+   color: rgba(0, 0, 0, 0.4);
+}
+
+.InputRangeSlider {
+   :global {
+      .noUi-target {
+         width: calc(100% - 32px);
+         bottom: 4px;
+         left: 16px;
+         border: none;
+         box-shadow: none;
+         background-color: var(--primary200);
+      }
+
+      .noUi-horizontal {
+         height: 6px;
+
+         .noUi-handle {
+            width: 16px;
+            height: 16px;
+            top: -5px;
+            background: transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            &.noUi-handle-lower {
+               right: -10px;
+            }
+
+            &:focus-visible {
+               outline: none;
+            }
+         }
+      }
+
+      .noUi-handle {
+         border: none;
+         box-shadow: none;
+
+         &::after {
+            display: none;
+         }
+
+         &::before {
+            display: none;
+         }
+      }
+
+      .noUi-touch-area {
+         background-color: var(--blue);
+         border-radius: 50%;
+      }
+
+      .noUi-connect {
+         background-color: var(--blue);
+      }
+   }
+}

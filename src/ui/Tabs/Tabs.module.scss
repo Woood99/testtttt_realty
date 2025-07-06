@@ -1,0 +1,81 @@
+@import '../../styles/$vars.scss';
+
+.tabsNav {
+   display: flex;
+   align-items: center;
+   border-bottom: 1px solid var(--primary200);
+   position: relative;
+   @media (max-width: $desktop) {
+      overflow-x: auto;
+      scrollbar-width: none;
+   }
+}
+
+.tabsNavSecond {
+   width: max-content;
+   padding: 4px;
+   display: flex;
+   align-items: center;
+   height: 40px;
+   background-color: var(--primary100);
+   border-radius: 12px;
+
+   @media (max-width: $desktop) {
+      overflow-x: auto;
+      scrollbar-width: none;
+      width: auto;
+      max-width: max-content;
+   }
+}
+
+.tabsNavControls {
+   display: flex;
+   align-items: center;
+   border-bottom: 1px solid var(--primary200);
+   position: relative;
+
+   overflow-x: auto;
+   scrollbar-width: none;
+}
+
+.tabsBtn {
+   padding: 9px 20px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: var(--dark);
+   position: relative;
+   min-width: max-content;
+}
+
+.tabsBtnSecond {
+   padding: 0 32px;
+   border-radius: 8px;
+   height: 100%;
+
+   @media (max-width: $desktop) {
+      width: max-content;
+   }
+}
+
+.tabsBtnActive {
+   color: var(--blue);
+   font-weight: 500;
+}
+.tabsBtnSecondActive {
+   background-color: var(--white);
+}
+
+.tabsBtnActiveBorder {
+   color: var(--blue);
+   font-weight: 500;
+   border-bottom: 2px solid var(--blue);
+}
+
+.magicLine {
+   position: absolute;
+   bottom: 0;
+   height: 2px;
+   background-color: var(--blue);
+   transition: left 0.2s $transitionFunction, width 0.2s $transitionFunction;
+}

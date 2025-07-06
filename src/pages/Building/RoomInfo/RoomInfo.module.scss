@@ -1,0 +1,82 @@
+@import '../../../styles/$vars.scss';
+
+.RoomInfoRootMain {
+   border-bottom: 1px solid var(--stand-bg);
+}
+
+.RoomInfoRoot {
+   display: grid;
+   align-items: center;
+   grid-template-columns: 385px 1fr minmax(max-content,auto) max-content;
+   grid-column-gap: 24px;
+   height: 80px;
+
+   width: 100%;
+   padding: 0 24px;
+   position: relative;
+
+   transition: all $transitionSpeed $transitionFunction;
+
+   text-align: left;
+
+   cursor: pointer;
+
+   svg {
+      transition: all $transitionSpeedFast $transitionFunction;
+   }
+
+   @media (min-width: $desktop-min) {
+      &:hover {
+         background-color: var(--stand-bg);
+      }
+   }
+
+   @media (max-width: $desktop) {
+      grid-template-columns: 1fr max-content max-content;
+      height: auto;
+      padding: 24px;
+      grid-column-gap: 12px;
+   }
+
+   @media (max-width: $smallTablet-max) {
+      padding: 24px 20px;
+   }
+}
+
+.RoomInfoAttr {
+   display: flex;
+   align-items: center;
+   gap: 6px;
+   margin-left: auto;
+   span {
+      position: relative;
+      @media (min-width: $desktop-min) {
+         &:not(:first-child) {
+            padding-left: 12px;
+            &::before {
+               content: '';
+               position: absolute;
+               left: 0;
+               top: 4px;
+               background-color: #1175da;
+               border-radius: 50%;
+               width: 5px;
+               height: 5px;
+            }
+         }
+      }
+   }
+   @media (max-width: $desktop) {
+      flex-direction: column;
+      align-items: start;
+      margin-left: 0;
+   }
+}
+
+.RoomInfoActiveRoot {
+   background-color: var(--stand-bg);
+   border-radius: 12px;
+   svg {
+      transform: rotate(-180deg);
+   }
+}

@@ -1,0 +1,19 @@
+@import '../../styles/$vars.scss';
+
+.FixedBlockRoot {
+   position: fixed;
+   bottom: 0;
+   left: 0;
+   right: 0;
+   width: 100%;
+   z-index: 100;
+   background-color: var(--white);
+   box-shadow: 0 -2px 1px rgba(0, 0, 0, 0.1);
+   transform: translateY(110%);
+   transition: transform $transitionSpeed $transitionFunction;
+   z-index: 99;
+}
+
+.FixedBlockRootActive {
+   transform: translateY(0);
+}

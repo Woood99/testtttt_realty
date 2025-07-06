@@ -1,0 +1,27 @@
+@import '../../styles/$vars.scss';
+
+.MetroItems {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 16px;
+   @media (max-width:$desktop){
+       gap: 8px; 
+   }
+}
+
+.MetroItem {
+   display: flex;
+   align-items: center;
+}
+
+.MetroItemName {
+   margin-left: 8px;
+   margin-right: 6px;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.MetroItemTime {
+   color: var(--primary400);
+}

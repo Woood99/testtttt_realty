@@ -1,0 +1,9 @@
+export { default as ChatMessageVideo } from './ChatMessageVideo';
+export { default as ChatMessageAudio } from './ChatMessageAudio';
+export { default as ChatMessagePhotos } from './ChatMessagePhotos';
+export { default as ChatMessageTooltip } from './ChatMessageTooltip';
+export { default as ChatMessageCommentsButton } from './ChatMessageCommentsButton';
+export { default as ChatMessageCommentsPanel } from './ChatMessageCommentsPanel';
+export { default as ChatMessagePersonalDiscount } from './ChatMessagePersonalDiscount';
+export { default as ChatMessageTimeAndReads } from './ChatMessageTimeAndReads';
+export { default as ChatMessageText } from './ChatMessageText';

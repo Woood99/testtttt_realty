@@ -1,0 +1,104 @@
+@import '../../styles/$vars.scss';
+
+.CardStock {
+   position: relative;
+   display: flex;
+   flex-direction: column;
+   @media (min-width: $desktop-min) {
+      &:hover {
+         .CardStockControl {
+            opacity: 1;
+            visibility: visible;
+         }
+      }
+   }
+}
+
+.CardStockShadow {
+   background-color: var(--white);
+   box-shadow: var(--shadow-primary);
+   border-radius: 12px;
+   padding: 16px;
+}
+
+.CardStockLink {
+   position: absolute;
+   inset: 0;
+   z-index: var(--z-index-start);
+}
+
+.CardStockImage {
+   padding-bottom: percent(207, 323);
+   border-radius: 12px;
+   overflow: hidden;
+   width: 100%;
+
+   img {
+      border-radius: inherit;
+   }
+   &::after {
+      bottom: 0;
+      content: '';
+      height: 50%;
+      width: 100%;
+      left: 0;
+      opacity: 0.3;
+      position: absolute;
+      border-radius: inherit;
+      background: linear-gradient(181.78deg, #0000 3.05%, #0000007a 50.7%, #000000b8 98.49%);
+   }
+}
+
+.CardStockTitle {
+   margin-bottom: 4px;
+}
+.CardStockName {
+   margin-bottom: 8px;
+   color: var(--dark);
+}
+
+.CardStockDescr {
+   color: var(--dark);
+   flex-grow: 1;
+
+   display: -webkit-box;
+   overflow: hidden;
+   -webkit-box-orient: vertical;
+   -webkit-line-clamp: 2;
+}
+
+.CardStockContent {
+   padding-top: 8px;
+   display: flex;
+   flex-direction: column;
+   flex-grow: 1;
+}
+
+.CardStockUser {
+   margin-top: 16px;
+}
+
+.CardStockTimes {
+   position: absolute;
+   z-index: 3;
+   top: 16px;
+   left: 16px;
+
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+   > div {
+      font-size: var(--small-fz);
+      padding: 0 8px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: start;
+
+      height: 30px;
+      border-radius: 8px;
+      background-color: var(--white);
+      backdrop-filter: blur(2px);
+   }
+}

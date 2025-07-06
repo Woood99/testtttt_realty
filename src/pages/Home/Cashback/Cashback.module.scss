@@ -1,0 +1,30 @@
+.CashbackModalItem {
+   position: relative;
+   counter-increment: inst;
+   margin: 0 0 0 15px;
+   &:not(:last-child) {
+      margin-bottom: 24px;
+   }
+   &::before {
+      content: counter(inst) '. ';
+      position: absolute;
+      top: 0;
+      left: -15px;
+      font-weight: 500;
+   }
+}
+
+.CashbackModalElement {
+   margin: 0 0 12px 15px;
+   position: relative;
+   &::before {
+      content: '';
+      position: absolute;
+      top: 7px;
+      left: -15px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--blue);
+   }
+}

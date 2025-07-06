@@ -1,0 +1,236 @@
+@import '../../styles/$vars.scss';
+
+.modal-overlay {
+   position: fixed;
+   inset: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(0, 0, 0, 0.4);
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   z-index: 9999;
+
+   --modal-height: var(--vh, 100vh);
+   --modal-space: 0px;
+   --modal-width: 70%;
+
+   padding: var(--modal-space) 0;
+
+   &._left {
+      justify-content: start;
+
+      .modal {
+         border-top-left-radius: 0;
+         border-bottom-left-radius: 0;
+         > .modal-content {
+            padding-left: 32px;
+            padding-right: 32px;
+         }
+      }
+      @media (max-width: $desktop) {
+         --modal-width: 100% !important;
+      }
+   }
+   &._right {
+      justify-content: end;
+
+      .modal {
+         border-top-right-radius: 0;
+         border-bottom-right-radius: 0;
+      }
+      @media (max-width: $desktop) {
+         justify-content: start;
+         --modal-width: 100% !important;
+      }
+   }
+   &._full {
+      --modal-width: 100%;
+
+      .modal {
+         border-radius: 0;
+      }
+   }
+   &._bottom {
+      --modal-height: auto;
+      align-items: end;
+      .modal {
+         border-radius: 12px 12px 0 0;
+      }
+   }
+   &._center-max-content-desktop {
+      @media (min-width: $desktop-min) {
+         > .modal {
+            max-height: 95%;
+            display: flex;
+            height: auto;
+            > .modal-content {
+               height: inherit;
+               width: 100%;
+            }
+         }
+      }
+      @media (max-width: $desktop) {
+         --modal-width: 100%;
+
+         > .modal {
+            border-radius: 0;
+         }
+      }
+   }
+   &._center-max-content {
+      @media (min-width: $desktop-min) {
+         > .modal {
+            max-height: 95%;
+            display: flex;
+            height: auto;
+            > .modal-content {
+               height: inherit;
+               width: 100%;
+            }
+         }
+      }
+      @media (max-width: $desktop) {
+         --modal-height: auto;
+         align-items: end;
+         --modal-width: 100%;
+         .modal {
+            border-radius: 12px 12px 0 0;
+         }
+      }
+   }
+}
+
+.modal-overlay-null {
+   position: static;
+}
+
+.modal {
+   background-color: var(--white);
+   width: var(--modal-width);
+   max-width: 100%;
+   border-radius: 12px;
+   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+   position: relative;
+   height: var(--modal-height);
+   overflow: hidden;
+   &.HeaderSticky {
+      padding-bottom: 12px;
+
+      display: flex;
+      flex-direction: column;
+   }
+   @media (max-width: $desktop) {
+      border-radius: 0;
+   }
+}
+
+.ModalHeader {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+
+   background-color: var(--white);
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   h2 {
+      line-height: 1;
+   }
+}
+
+.ModalFooter {
+   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+   padding: 24px 32px 24px;
+   display: flex;
+   gap: 12px;
+   justify-content: end;
+   align-items: center;
+   @media (max-width: $desktop) {
+      padding: 12px;
+   }
+}
+
+.modal-content {
+   overflow-y: auto;
+   height: var(--modal-height);
+   padding: 65px 56px 32px;
+   text-align: left;
+   @media (max-width: $desktop) {
+      padding-left: 24px;
+      padding-right: 24px;
+   }
+}
+
+.modal-close {
+   position: absolute;
+   right: 0;
+   top: 0;
+   width: 60px;
+   height: 60px;
+   cursor: pointer;
+   z-index: 99;
+
+   @media (max-width: $desktop) {
+      width: 40px;
+      height: 40px;
+      right: 12px;
+      top: 12px;
+      svg {
+         width: 22px;
+         height: 22px;
+      }
+   }
+}
+
+.modal-close-white {
+   background-color: var(--white);
+   border-radius: 50%;
+   width: 40px;
+   height: 40px;
+   top: 16px;
+   right: 16px;
+   svg {
+      fill: var(--blue);
+   }
+}
+.modal-close-dark {
+   background-color: var(--dark);
+   border-radius: 50%;
+   width: 40px;
+   height: 40px;
+   top: 16px;
+   right: 16px;
+   svg {
+      fill: #828282;
+   }
+}
+
+.modal-close-default {
+   position: relative;
+   width: 25px;
+   height: 25px;
+   cursor: pointer;
+}
+
+._open-modal-enter {
+   opacity: 0;
+   visibility: hidden;
+}
+._open-modal-enter-active {
+   opacity: 1;
+   visibility: visible;
+}
+._open-modal-exit {
+   opacity: 1;
+}
+._open-modal-exit-active {
+   opacity: 0;
+   visibility: hidden;
+}
+
+.modal-title-gap {
+   margin-bottom: 32px;
+   @media (max-width: $desktop) {
+      margin-bottom: 16px;
+   }
+}

@@ -1,0 +1,30 @@
+@import '../../styles/$vars.scss';
+
+.CityModalRoot {
+   width: 615px;
+   @media (max-width: $desktop) {
+      width: 100%;
+   }
+}
+
+.CityModalItems {
+   display: flex;
+   flex-wrap: wrap;
+   align-items: center;
+   gap: 10px;
+}
+
+.CityModalItem {
+   flex-grow: 1;
+   @media (min-width: $desktop-min) {
+      max-width: 65%;
+   }
+}
+
+.CityModalSave {
+   margin-left: auto;
+   padding: 0 40px;
+   @media (max-width:$desktop){
+       width: 100%; 
+   }
+}

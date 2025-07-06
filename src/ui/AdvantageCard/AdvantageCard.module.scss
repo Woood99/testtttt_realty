@@ -1,0 +1,85 @@
+@import '../../styles/$vars.scss';
+
+.AdvantageCardRoot {
+   position: relative;
+   cursor: pointer;
+}
+
+.AdvantageCardRootActive {
+   .AdvantageCardCheck {
+      opacity: 1;
+      visibility: visible;
+   }
+}
+
+.AdvantageCardTitle {
+   // position: absolute;
+   // bottom: 16px;
+   // left: 16px;
+   // right: 16px;
+   // color: var(--white) !important;
+   margin-top: 8px;
+   z-index: 10;
+   max-width: 100%;
+}
+
+.AdvantageCardImage {
+   position: relative;
+   &::after {
+      background: linear-gradient(
+         180deg,
+         rgba(40, 45, 60, 0),
+         rgba(40, 45, 60, 0.009) 6.67%,
+         rgba(40, 45, 60, 0.036) 13.33%,
+         rgba(40, 45, 60, 0.082) 20%,
+         rgba(40, 45, 60, 0.147) 26.67%,
+         rgba(40, 45, 60, 0.232) 33.33%,
+         rgba(40, 45, 60, 0.332) 40%,
+         rgba(40, 45, 60, 0.443) 46.67%,
+         rgba(40, 45, 60, 0.557) 53.33%,
+         rgba(40, 45, 60, 0.668) 60%,
+         rgba(40, 45, 60, 0.768) 66.67%,
+         rgba(40, 45, 60, 0.853) 73.33%,
+         rgba(40, 45, 60, 0.918) 80%,
+         rgba(40, 45, 60, 0.964) 86.67%,
+         rgba(40, 45, 60, 0.991) 93.33%,
+         #282d3c
+      );
+      bottom: 0;
+      content: '';
+      height: 70px;
+      left: 0;
+      opacity: 0.6;
+      position: absolute;
+      width: 100%;
+   }
+}
+
+.AdvantageCardCheck {
+   position: absolute;
+   top: -4px;
+   right: -4px;
+
+   width: 26px;
+   height: 26px;
+   background-color: var(--blue);
+
+   border-radius: 50%;
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   opacity: 0;
+   visibility: hidden;
+   transition: all $transitionSpeed $transitionFunction;
+
+   z-index: 99;
+   svg {
+      width: 12px;
+      height: 12px;
+      fill: none;
+      stroke: var(--white);
+      stroke-width: 1.5px;
+   }
+}

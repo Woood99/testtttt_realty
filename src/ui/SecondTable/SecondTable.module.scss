@@ -1,0 +1,26 @@
+@import '../../styles/$vars.scss';
+.header {
+   display: grid;
+   justify-content: space-between;
+   grid-column-gap: 20px;
+   margin: 0 24px;
+   > span {
+      color: var(--primary400);
+   }
+   @media (max-width:$desktop){
+       display: none; 
+   }
+}
+
+.headerSticky {
+   position: sticky;
+   top: 0;
+   left: 0;
+   z-index: 65;
+  
+   margin-left: 0;
+   margin-right: 0;
+
+   padding-left: 24px;
+   padding-right: 24px;
+}

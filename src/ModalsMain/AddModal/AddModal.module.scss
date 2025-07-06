@@ -1,0 +1,13 @@
+@import '../../styles/$vars.scss';
+
+.root {
+   width: auto;
+   @media (max-width: $desktop) {
+      width: 100%;
+   }
+}
+
+.items {
+   display: flex;
+   gap: 16px;
+}

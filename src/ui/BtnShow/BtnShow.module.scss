@@ -1,0 +1,17 @@
+.BtnShowRoot {
+   display: flex;
+   align-items: center;
+   gap: 5px;
+   color: var(--blue);
+   font-weight: 500;
+   svg {
+      fill: currentColor;
+      transition: transform 0.16s ease-in-out;
+   }
+}
+
+.BtnShowRootActive {
+   svg {
+      transform: rotate(-180deg);
+   }
+}

@@ -1,0 +1,189 @@
+@import '../../styles/$vars.scss';
+
+.SelectRoot {
+   position: relative;
+
+   @media (min-width: $desktop-min) {
+      &:hover {
+         .SelectButton {
+            background-color: var(--primary800);
+         }
+      }
+   }
+}
+
+.SelectRootSecond {
+   position: relative;
+   align-self: start;
+   .SelectPlaceholder {
+      color: var(--dark);
+      font-weight: 400;
+   }
+   @media (min-width: $desktop-min) {
+      &:hover {
+         .SelectPlaceholderSelected {
+            color: var(--light-blue);
+         }
+      }
+   }
+}
+
+.SelectRootActive {
+   .SelectCheck {
+      transform: rotate(-180deg);
+   }
+}
+
+.SelectClose {
+   position: absolute;
+   top: 16px;
+   right: 16px;
+   width: 20px;
+   height: 20px;
+   svg {
+      width: 100%;
+      height: 100%;
+      fill: var(--blue);
+   }
+}
+
+.SelectCheck {
+   margin-left: auto;
+   fill: var(--dark);
+   width: 20px;
+   height: 20px;
+   flex: 0 0 20px;
+   transition: transform $transitionSpeedFast $transitionFunction;
+}
+
+.SelectButton {
+   height: 40px;
+   width: 100%;
+   color: var(--gray);
+   background-color: var(--primary700);
+   border: 1px solid transparent;
+   border-radius: 8px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 0 16px;
+   -webkit-tap-highlight-color: transparent;
+   transition: all $transitionSpeed $transitionFunction;
+}
+
+.SelectButtonSecond {
+   width: 100%;
+   color: var(--gray);
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 0;
+   -webkit-tap-highlight-color: transparent;
+   transition: all $transitionSpeed $transitionFunction;
+}
+
+.SelectButtonError {
+   border-color: var(--red);
+   background-color: #fdf1eb;
+}
+.SelectButtonDisabled {
+   border: 1px solid transparent;
+   background-color: rgba(220, 221, 221, 0.65);
+   pointer-events: none;
+   box-shadow: inset 0 0 0 50px #f5f5f5;
+   color: rgba(0, 0, 0, 0.4);
+}
+
+.SelectButtonWrapper {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   width: 100%;
+   margin-right: 10px;
+
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.SelectDropdown {
+   position: absolute;
+   z-index: 500;
+   top: calc(100% + 4px);
+   left: 0;
+   transform: translateY(4px);
+   min-width: 200px;
+   width: 100%;
+   border-radius: 12px;
+   padding: 56px 0 16px 0;
+   background-color: var(--white);
+   border: 1px solid rgba(122, 127, 170, 0.1);
+   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+}
+
+.SelectDropdownList {
+   max-height: 185px;
+   display: flex;
+   flex-direction: column;
+   overflow-y: auto;
+}
+
+.SelectDropdownItem {
+   text-align: left;
+   padding: 0 48px 0 24px;
+   height: 42px;
+   min-height: 42px;
+   line-height: 1;
+   cursor: pointer;
+
+   display: flex;
+   align-items: center;
+
+   @media (min-width: $desktop-min) {
+      &:hover {
+         background-color: #f2f2f2;
+      }
+   }
+}
+
+.SelectDropdownItemActive {
+   pointer-events: none;
+   background-color: rgba(0, 150, 255, 0.08);
+   color: var(--blue);
+}
+
+.SelectSearch {
+   padding: 0 24px;
+   margin-bottom: 16px;
+}
+.SelectSearchEmpty {
+   text-align: center;
+   font-weight: 500;
+   margin: 10px 0 5px;
+}
+
+.SelectPlaceholder {
+   transition: color $transitionSpeed $transitionFunction;
+   margin-right: 12px;
+   white-space: nowrap;
+   font-weight: 500;
+}
+.SelectPlaceholderActive {
+   color: #738295;
+}
+
+.SelectPlaceholderSelected {
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   font-weight: 500;
+   transition: color $transitionSpeed $transitionFunction;
+}
+
+.SelectPlaceholderNone {
+   opacity: 0.6;
+}
+
+.SelectModal {
+   padding: 65px 0 32px;
+}

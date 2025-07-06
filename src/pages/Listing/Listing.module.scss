@@ -1,0 +1,75 @@
+@import '../../styles/$vars.scss';
+
+.ListingMapContainer {
+   @media (min-width: $desktop-min) {
+      --height-map: calc(var(--vh,100vh) - 189px);
+      display: grid;
+      grid-template-columns: 390px 1fr;
+      grid-column-gap: 12px;
+      min-height: var(--height-map);
+      max-height: var(--height-map);
+      height: 100%;
+   }
+}
+
+.ListingMap {
+   height: 100%;
+   width: 100%;
+
+   background-color: rgb(226, 224, 224);
+
+   max-height: var(--height-map);
+   min-height: var(--height-map);
+   overflow: hidden;
+   border-radius: 12px;
+}
+
+.ListingMapCards {
+   display: flex;
+   flex-direction: column;
+   gap: 12px;
+
+   overflow-y: auto;
+   max-height: var(--height-map);
+   padding-right: 8px;
+   @media (max-width: $desktop) {
+      padding-right: 0;
+
+      display: grid;
+      @apply grid-cols-2;
+   }
+   @media (max-width: $smallTablet-max) {
+      display: flex;
+   }
+}
+.ListingMobile {
+   @media (max-width: $desktop) {
+      display: grid;
+      grid-template-columns: calc(50% - 8px) calc(50% - 8px);
+      grid-gap: 12px;
+   }
+   @media (max-width: $smallTablet-max) {
+      grid-template-columns: 100%;
+   }
+}
+
+.ShowTypeRoot {
+   width: max-content;
+   padding: 4px;
+   display: flex;
+   align-items: center;
+   height: 40px;
+   background-color: var(--primary700);
+   border-radius: 12px;
+}
+
+.ShowTypeItem{
+   padding: 0 10px;
+   border-radius: 8px;
+   height: 100%;
+   font-weight: 500;
+}
+
+.ShowTypeItemActive{
+   background-color: var(--white);
+}

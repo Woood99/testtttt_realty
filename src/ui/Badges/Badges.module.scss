@@ -1,0 +1,137 @@
+@import '../../styles/$vars.scss';
+
+.List {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 12px;
+}
+
+.Badge {
+   cursor: pointer;
+   border-radius: 4px;
+   padding: 0 8px;
+   height: 24px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   svg {
+      width: 17px;
+      height: 17px;
+   }
+}
+
+.BadgeMortgage {
+   background: rgba(36, 202, 142, 0.2);
+   color: #24ca8e;
+
+   svg {
+      fill: #24ca8e;
+   }
+}
+.BadgeNoMortgage {
+   background: rgba(229, 42, 42, 0.2);
+   color: #ed5959;
+
+   svg {
+      fill: #ed5959;
+   }
+}
+
+.BadgeCash {
+   background: rgba(255, 157, 0, 0.1);
+   color: #ff9d00;
+   svg {
+      fill: #ff9d00;
+   }
+}
+
+.BadgeCertificate {
+   background: rgba(252, 147, 147, 0.2);
+   color: #fc9393;
+
+   svg {
+      fill: #fc9393;
+   }
+}
+
+.BadgeUrgently {
+   background: rgba(255, 27, 27, 0.2);
+   color: #ff1b1b;
+
+   svg {
+      fill: #ff1b1b;
+   }
+}
+.BadgeInstallmentPlan {
+   background: rgba(255, 27, 27, 0.2);
+   color: #ff1b1b;
+
+   svg {
+      fill: #ff1b1b;
+   }
+}
+
+.BadgeMonthlyPayment {
+   background: rgba(148, 61, 189, 0.2);
+   color: #943dbd;
+
+   svg {
+      fill: #943dbd;
+   }
+}
+
+.BadgeNoDownPayment {
+   background: rgba(58, 197, 0, 0.1);
+   color: #3ac500;
+
+   svg {
+      fill: #3ac500;
+   }
+}
+
+.BadgeText {
+   padding: 5px 8px;
+   position: relative;
+   z-index: 1;
+   border-radius: 5px;
+   font-size: var(--small-fz);
+   line-height: 1;
+}
+
+.BadgeTextAbsolute {
+   position: absolute;
+   overflow: hidden;
+}
+
+.BadgeTextAnimated {
+   animation: BadgeTextAnimatedFrames linear infinite;
+   height: 100%;
+   width: 90px;
+   animation-duration: 5s;
+   background: linear-gradient(90deg, rgba(#fff, 0.1), var(--white));
+   opacity: 0;
+   position: absolute;
+   z-index: 1;
+   top: 0;
+}
+
+@keyframes BadgeTextAnimatedFrames {
+   0% {
+      opacity: 0.3;
+      transform: translateX(-100px);
+   }
+   100% {
+      opacity: 0.1;
+      transform: translateX(200px);
+   }
+}
+
+.BadgeTextWhite {
+   color: var(--dark);
+   background-color: var(--white);
+}
+
+.BadgeTextDark {
+   color: var(--white);
+   background-color: var(--dark);
+}

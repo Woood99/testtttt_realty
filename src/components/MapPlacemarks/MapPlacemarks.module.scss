@@ -1,0 +1,189 @@
+.MapCircle {
+   width: 13px;
+   height: 13px;
+   border-radius: 50%;
+   background: var(--blue);
+   border: 2px solid #ffffff;
+   box-shadow: 0 7px 10px #0000001a;
+   position: relative;
+}
+
+.MapCircleRed {
+   background: var(--red);
+}
+
+.MapCircleActive {
+   background: rgb(87, 87, 87);
+   opacity: 0.5;
+}
+
+.MapPlacemark {
+   background: var(--blue);
+   width: max-content;
+   border-radius: 6px;
+   cursor: pointer;
+   color: #fff;
+   font-weight: 500;
+   font-size: 12px;
+   line-height: 1;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding: 4px 8px;
+   position: relative;
+   box-shadow: 0 7px 10px #0000001a;
+   transform: translateY(-26px) translateX(-48px);
+   &::after {
+      content: url("data:image/svg+xml,%3Csvg width='15' height='10' viewBox='0 0 15 10' fill='rgba(23, 96, 246, 1)' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9.23207 9C8.46227 10.3333 6.53777 10.3333 5.76797 9L0.571815 0H14.4282L9.23207 9Z' fill='rgba(23, 96, 246, 1)'/%3E%3C/svg%3E");
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translate(-50%);
+      width: 20px;
+      height: 20px;
+   }
+}
+
+.MapPlacemarkInfrastructure {
+   width: 32px;
+   height: 32px;
+   border-radius: 50%;
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   background-color: var(--dark);
+}
+
+.MapPlacemarkScholl {
+   background-color: var(--blue);
+}
+
+.MapPlacemarkKindergarten {
+   background-color: #f790a0;
+}
+
+.MapPlacemarkMedicine {
+   background-color: var(--red);
+}
+
+.MapPlacemarkShops {
+   background-color: #ae8af7;
+}
+
+.MapPlacemarkCol {
+   flex-direction: column;
+   gap: 4px;
+   font-size: var(--default-fz);
+   padding: 6px 12px;
+   max-width: 120px;
+   min-width: 120px;
+   > p {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+      text-align: center;
+   }
+}
+
+.MapPlacemarkActive {
+   background: rgb(87, 87, 87);
+   opacity: 0.5;
+   &::after {
+      content: url("data:image/svg+xml,%3Csvg width='15' height='10' viewBox='0 0 15 10' fill='rgba(87, 87, 87, 1)' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9.23207 9C8.46227 10.3333 6.53777 10.3333 5.76797 9L0.571815 0H14.4282L9.23207 9Z' fill='rgba(87, 87, 87, 1)'/%3E%3C/svg%3E");
+   }
+}
+
+.TooltipCardRoot {
+   background-color: var(--white);
+   box-shadow: var(--shadow-primary);
+
+   display: flex;
+   flex-direction: column;
+   gap: 12px;
+
+   padding: 16px;
+   border-radius: 12px;
+   width: 300px;
+   max-width: 300px;
+
+   overflow: hidden;
+}
+
+.TooltipCardSmallRoot {
+   background-color: var(--white);
+   box-shadow: var(--shadow-primary);
+
+   display: flex;
+   gap: 12px;
+
+   padding: 16px 32px 16px 16px;
+   border-radius: 12px;
+   max-width: 450px;
+
+   overflow: hidden;
+}
+
+.TooltipCardInfoRoot {
+   --height: 105px;
+   height: var(--height);
+   min-height: var(--height);
+   max-height: var(--height);
+
+   background-color: var(--white);
+   box-shadow: var(--shadow-primary);
+
+   display: flex;
+   gap: 12px;
+
+   padding: 12px 24px 12px 12px;
+   border-radius: 12px;
+   width: 260px;
+   max-width: 260px;
+
+   overflow: hidden;
+   .TooltipCardImage {
+      min-width: auto;
+      max-width: 70px;
+      flex: 0 0 70px;
+   }
+}
+
+.TooltipCardImage {
+   height: 100%;
+   min-width: 150px;
+   border-radius: 12px;
+   width: 100%;
+   overflow: hidden;
+   img {
+      height: 100%;
+   }
+}
+
+.TooltipCardTitle {
+   max-width: 235px;
+
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.MapRouteBlock {
+   position: absolute;
+   bottom: 24px;
+   left: 50%;
+   transform: translateX(-50%);
+
+   background: rgba(0, 0, 0, 0.6);
+   padding: 16px;
+
+   font-size: var(--default-max);
+   font-weight: 500;
+   color: var(--white);
+   border-radius: 8px;
+
+   z-index: 20000;
+   pointer-events: all;
+}

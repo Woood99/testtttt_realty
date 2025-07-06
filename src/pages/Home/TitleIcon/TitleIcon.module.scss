@@ -1,0 +1,43 @@
+@import '../../../styles/$vars.scss';
+
+.titleIconRoot {
+   display: flex;
+   align-items: center;
+   gap: 16px;
+   margin-bottom: 24px;
+   @media (max-width: $desktop) {
+      margin-bottom: 20px;
+   }
+}
+
+.icon {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background: rgba(255, 227, 66, 0.2);
+   border-radius: 12px;
+   --size: 42px;
+   width: var(--size);
+   height: var(--size);
+   
+   @media (max-width: $desktop) {
+      --size: 35px;
+   }
+}
+
+.link {
+   margin-left: auto;
+   position: relative;
+   height: min-content;
+   color: var(--blue);
+   &::before {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      right: 0;
+      width: 100%;
+      height: 1px;
+      background-color: currentColor;
+      opacity: 1;
+   }
+}

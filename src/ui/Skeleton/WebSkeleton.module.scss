@@ -1,0 +1,40 @@
+.WebSkeleton {
+   --animation-duration: 1.5s;
+   background-color: #d8d7d7;
+   max-width: 100%;
+   display: inline-flex;
+   flex-shrink: 0;
+   line-height: 1;
+   position: relative;
+   overflow: hidden;
+   z-index: 1;
+   &::after {
+      content: ' ';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      background-repeat: no-repeat;
+      background-image: linear-gradient(90deg, #d8d7d7, #e4e3e3, #d8d7d7);
+      transform: translateX(-100%);
+      animation-name: WebSkeletonFramer;
+      animation-direction: normal;
+      animation-duration: 2s;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+   }
+}
+
+.WebSkeletonChildren {
+   &::before {
+      content: '​';
+   }
+}
+
+@keyframes WebSkeletonFramer {
+   100% {
+      transform: translateX(100%);
+   }
+}

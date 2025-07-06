@@ -1,0 +1,15 @@
+@import '../../styles/$vars.scss';
+
+.BodyAndSidebarRoot {
+   @media (min-width: $desktop-min) {
+      display: grid;
+      justify-content: space-between;
+      grid-template-columns: 1fr 350px;
+      grid-column-gap: 12px;
+   }
+   @media (max-width:$desktop){
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+   }
+}

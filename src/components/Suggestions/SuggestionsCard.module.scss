@@ -1,0 +1,37 @@
+.SuggestionsCardRoot {
+   background-color: var(--white);
+   box-shadow: var(--shadow-primary);
+   border-radius: 20px;
+   padding: 20px;
+   min-height: 200px;
+   position: relative;
+   overflow: hidden;
+}
+
+.SuggestionsCardDefaultRoot {
+   padding: 0;
+   border-radius: 0;
+   box-shadow: none;
+   background-color: transparent;
+}
+
+.SuggestionsCardInactiveRoot {
+   &::before {
+      content: '';
+      background-color: rgba(0, 0, 0, 0.65);
+      inset: 0;
+      position: absolute;
+      z-index: 98;
+   }
+}
+.SuggestionsCardInactive {
+   position: absolute;
+   inset: 0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-size: var(--default-max);
+   font-weight: 500;
+   color: var(--white);
+   z-index: 99;
+}

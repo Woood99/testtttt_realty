@@ -1,0 +1,8 @@
+.FieldInputRoot{
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    >div{
+      flex-grow: 1;
+    }
+}

@@ -1,0 +1,9 @@
+.ApartmentInfoChars {
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+   grid-column-gap: 68px;
+   grid-row-gap: 16px;
+   &:not(:last-child) {
+      margin-bottom: 32px;
+   }
+}

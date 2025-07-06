@@ -1,0 +1,72 @@
+@import '../../styles/$vars.scss';
+
+.FilterButtonRoot {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   height: 40px;
+   border-radius: 10px;
+
+   padding: 0 16px;
+
+   color: var(--gray);
+   background-color: var(--primary700);
+   border: 1px solid transparent;
+
+   gap: 10px;
+
+   width: 145px;
+   font-weight: 500;
+
+   transition: all $transitionSpeed $transitionFunction;
+   @media (min-width: $desktop-min) {
+      &:hover {
+         background-color: var(--primary800);
+      }
+   }
+}
+
+.FilterButtonMiniRoot {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   height: 40px;
+   border-radius: 10px;
+
+   padding: 0 8px;
+
+   color: var(--gray);
+   background-color: var(--primary700);
+   border: 1px solid transparent;
+
+   width: 100%;
+   font-weight: 500;
+}
+
+.FilterButtonIcon {
+   stroke-width: 1.5px;
+   flex: 0 0 20px;
+
+   stroke: currentColor;
+   fill: none;
+}
+
+.FilterButtonCount {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   --size: 18px;
+   width: var(--size);
+   height: var(--size);
+   flex: 0 0 var(--size);
+   border-radius: 50%;
+
+   font-size: 11px;
+   line-height: 1;
+
+   background-color: var(--red);
+   color: var(--white);
+}

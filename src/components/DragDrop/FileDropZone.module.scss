@@ -1,0 +1,40 @@
+@import '../../styles/$vars.scss';
+
+.FileDropZoneRoot {
+   width: 100%;
+   height: 96px;
+   position: relative;
+   overflow: hidden;
+   background-color: var(--stand-bg);
+   border: 1px dashed #2683f2;
+   border-radius: 12px;
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   text-align: center;
+
+   transition: all $transitionSpeed $transitionFunction;
+
+   cursor: pointer;
+}
+
+.FileDropZoneRootActive {
+   border-color: var(--white);
+}
+
+.FileDropZoneOverlay {
+   position: absolute;
+   inset: 0;
+
+   background-color: rgba(0, 0, 0, 0.9);
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   color: var(--white);
+   font-size: var(--big-fz);
+   font-weight: 500;
+   line-height: 1;
+}

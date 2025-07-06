@@ -1,0 +1,88 @@
+@import '../../styles/$vars.scss';
+
+.GalleryRowSlide {
+   height: 100%;
+   width: auto !important;
+   display: flex !important;
+   align-items: center;
+   justify-content: center;
+   flex: 1 0 auto !important;
+   max-width: 100%;
+}
+
+.GalleryRowSlideFull {
+   flex: 1 0 100%;
+}
+
+.GalleryRowVideo {
+   height: 100%;
+   max-width: 100%;
+   max-height: 100%;
+   border-radius: 20px;
+   width: 100%;
+   @media (max-width: $desktop) {
+      border-radius: 0 0 12px 12px;
+   }
+}
+
+.GalleryRowImage {
+   object-fit: cover;
+   height: 100%;
+   max-width: 100%;
+   max-height: 100%;
+   border-radius: 20px;
+   @media (max-width: $desktop) {
+      border-radius: 12px;
+   }
+}
+
+.GalleryRowTag {
+   position: absolute;
+   z-index: 2;
+   top: 16px;
+   left: 16px;
+
+   box-shadow: var(--shadow-primary);
+   color: var(--dark);
+   padding: 8px 16px;
+   background-color: var(--white);
+   border-radius: 12px;
+
+   font-weight: 500;
+}
+
+.GalleryRowVideoBadge {
+   color: var(--white);
+
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+
+   // pointer-events: none;
+
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+
+   background: rgba(36, 38, 41, 0.7);
+   border-radius: 16px;
+   gap: 5px;
+   padding: 16px;
+
+   font-size: var(--small-fz);
+   line-height: 1;
+}
+
+.GalleryRowVideoBadgeCircle{
+   background-color: var(--white);
+   border-radius: 50%;
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   width: 50px;
+   height: 50px;
+}

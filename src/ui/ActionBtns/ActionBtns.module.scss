@@ -1,0 +1,77 @@
+@import '../../styles/$vars.scss';
+
+.BtnAction {
+   --size: 32px;
+
+   width: var(--size);
+   height: var(--size);
+   flex: 0 0 var(--size);
+   border-radius: 50%;
+   background-color: var(--primary700);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.BtnActionText {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+
+   color: var(--primary400);
+   transition: color $transitionSpeed $transitionFunction;
+   padding: 5px 12px;
+   font-weight: 400;
+   svg {
+      fill: currentColor;
+      pointer-events: none;
+   }
+}
+
+.BtnActionBg {
+   color: var(--primary400);
+   transition: all $transitionSpeed $transitionFunction;
+   height: 40px;
+   width: 100%;
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   border-radius: 8px;
+   background-color: var(--primary700);
+   svg {
+      fill: currentColor;
+      pointer-events: none;
+   }
+   @media (min-width: $desktop-min) {
+      &:hover {
+         background-color: var(--primary800);
+         color: var(--dark);
+      }
+   }
+}
+
+.BtnActionCircle {
+   color: var(--dark);
+   background-color: var(--white);
+
+   transition: all $transitionSpeed $transitionFunction;
+   --size: 36px;
+   height: var(--size);
+   width: var(--size);
+   flex: 0 0 var(--size);
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   border-radius: 50%;
+   svg {
+      fill: currentColor;
+      pointer-events: none;
+   }
+   @media (max-width:$desktop){
+       --size:40px; 
+          color: var(--white);
+   background-color: #242629a3;
+   }
+}

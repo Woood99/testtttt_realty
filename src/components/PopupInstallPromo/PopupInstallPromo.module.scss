@@ -1,0 +1,30 @@
+.InstallPopup {
+   position: fixed;
+   top: 20px;
+   right: 20px;
+   z-index: 1000;
+   background: white;
+   border-radius: 12px;
+   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+   width: 320px;
+   overflow: hidden;
+   transform: translateY(0);
+   opacity: 1;
+   transition: all 0.3s ease;
+}
+
+.InstallPopupClosing {
+   transform: translateY(-20px);
+   opacity: 0;
+}
+
+.InstallPopupClose {
+   position: absolute;
+   top: 10px;
+   right: 10px;
+   background: none;
+   border: none;
+   font-size: 20px;
+   cursor: pointer;
+   color: #888;
+}

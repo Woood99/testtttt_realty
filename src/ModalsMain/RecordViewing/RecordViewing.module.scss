@@ -1,0 +1,106 @@
+@import '../../styles/$vars.scss';
+
+.RecordViewingRoot {
+   padding: 32px 0;
+}
+
+.RecordViewingDays {
+   display: flex;
+   align-items: center;
+   gap: 16px;
+
+   overflow-x: auto;
+   margin: -4px -4px 0;
+   padding: 4px 4px 0;
+   scrollbar-width: none;
+}
+
+.RecordViewingDayItem {
+   --width: 120px;
+   flex: 0 0 var(--width);
+   width: var(--width);
+
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   text-align: center;
+
+   padding: 16px;
+   border: 1px solid var(--primary200);
+   border-radius: 12px;
+   position: relative;
+
+   transition: border $transitionSpeed $transitionFunction;
+}
+.RecordViewingDayInput {
+   position: absolute;
+   inset: -1px;
+   opacity: 0;
+   z-index: 2;
+   cursor: pointer;
+}
+
+.RecordViewingDayCheck {
+   position: absolute;
+   top: -4px;
+   right: -4px;
+   width: 20px;
+   height: 20px;
+
+   background-color: var(--blue);
+
+   border-radius: 50%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   opacity: 0;
+   visibility: hidden;
+
+   transition: all $transitionSpeed $transitionFunction;
+   svg {
+      width: 10px;
+      height: 10px;
+      fill: none;
+      stroke: var(--white);
+      stroke-width: 1.5px;
+   }
+}
+
+.RecordViewingDayWeek {
+}
+
+.RecordViewingDayMonth {
+   margin-top: 12px;
+   font-size: var(--big-fz);
+   font-weight: 500;
+}
+
+.RecordViewingMonth {
+   margin-top: 8px;
+}
+
+
+
+
+.RecordViewingTime{
+    flex: 0 0 100px;
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 16px;
+    border: 1px solid var(--primary200);
+    border-radius: 12px;
+    position: relative;
+    transition: all $transitionSpeed $transitionFunction;
+    font-weight: 500;
+}
+.RecordViewingActive {
+    border-color: var(--blue);
+    .RecordViewingDayCheck {
+       opacity: 1;
+       visibility: visible;
+    }
+ }

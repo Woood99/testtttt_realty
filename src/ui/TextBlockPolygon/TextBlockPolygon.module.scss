@@ -1,0 +1,8 @@
+.TextBlockPolygonRoot {
+   font-size: 12px;
+   background-color: var(--blue);
+   color: var(--white);
+   padding: 8px 38px 8px 12px;
+   position: relative;
+   clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+}

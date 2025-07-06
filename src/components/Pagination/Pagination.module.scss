@@ -1,0 +1,49 @@
+@import '../../styles/$vars.scss';
+
+.PaginationPageRoot {
+   --width-item: 37px;
+   --height-item: 32px;
+   --gap-item: 10px;
+
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.PaginationPageButton{
+   width: 100%;
+   margin-bottom: 24px;
+}
+
+.PaginationPageList {
+   display: flex;
+   align-items: center;
+   gap: var(--gap-item);
+}
+
+.PaginationPageItem {
+   min-width: var(--width-item);
+   height: var(--height-item);
+   border-radius: 7px;
+   background-color: var(--white);
+   border: 1px solid var(--primary200);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+
+   font-size: var(--small-fz);
+   line-height: 1;
+
+   color: var(--dark);
+   transition: all $transitionSpeed $transitionFunction;
+
+   cursor: pointer;
+}
+
+.PaginationPageItemActive {
+   background-color: var(--blue);
+   border: none;
+   color: var(--white);
+   cursor: default;
+   pointer-events: none;
+}

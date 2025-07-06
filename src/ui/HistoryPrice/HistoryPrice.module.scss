@@ -1,0 +1,62 @@
+@import '../../styles/$vars.scss';
+
+.HistoryPriceContent {
+   margin-top: 24px;
+}
+
+.HistoryPriceItem {
+   display: grid;
+   grid-auto-flow: column;
+   grid-gap: 32px;
+   &:not(:last-child) {
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--primary200);
+   }
+}
+
+.HistoryPriceItemDefault{
+   grid-template-columns: 200px 1fr 200px;
+   @media (max-width:$desktop){
+      grid-template-columns: 80px 1fr 100px; 
+   }
+}
+.HistoryPriceItemMini{
+   grid-template-columns: 80px 1fr 100px;
+}
+
+.HistoryPriceDate {
+   color: var(--primary400);
+
+   display: block;
+}
+
+.HistoryPriceStatusUp {
+   color: var(--red);
+   display: flex;
+   align-items: center;
+   gap: 8px;
+
+   font-size: var(--small-fz);
+
+   background: rgba(255, 72, 72, 0.1);
+
+   padding: 4px 12px;
+   border-radius: 12px;
+   font-weight: 500;
+}
+
+.HistoryPriceStatusDown {
+   color: var(--green);
+   display: flex;
+   align-items: center;
+   gap: 8px;
+
+   font-size: var(--small-fz);
+
+   background: rgba(36, 202, 142, 0.1);
+
+   padding: 4px 12px;
+   border-radius: 12px;
+   font-weight: 500;
+}

@@ -1,0 +1,27 @@
+@import '../../styles/$vars.scss';
+
+.FullscreenBtnRoot {
+   width: 36px;
+   height: 36px;
+   background-color: var(--white);
+   box-shadow: 0 7px 10px rgba(0, 0, 0, 0.1);
+   border-radius: 12px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   position: absolute;
+   z-index: 2;
+   top: 16px;
+   right: 16px;
+   transition: all $transitionSpeed $transitionFunction;
+   border-radius: 50%;
+   svg {
+      width: 16px;
+      height: 16px;
+   }
+}
+
+.FullscreenBtnDark {
+   color: var(--white);
+   background-color: rgba(36, 38, 41, 0.6392156863);
+}

@@ -1,0 +1,27 @@
+.CountdownTimerRoot {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+
+   background-color: var(--primary100);
+   border-radius: 12px;
+   padding: 20px 24px;
+}
+
+.CountdownTimerItem {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.CountdownTimerValue {
+   font-weight: 500;
+}
+.CountdownTimerName {
+    color: var(--primary400);
+    font-size: var(--very-small-fz);
+}
+
+.CountdownTimerDot{
+   color: var(--primary400);
+}
