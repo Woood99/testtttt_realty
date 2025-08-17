@@ -14,6 +14,7 @@ export const ControllerFieldCheckbox = ({
    errors,
    className = '',
    variant = 'checkbox',
+   classNameText = '',
 }) => {
    return (
       <Controller
@@ -34,7 +35,14 @@ export const ControllerFieldCheckbox = ({
                );
             }
             if (variant === 'toggle') {
-               return <CheckboxToggle checked={field.value} set={event => field.onChange(event.target.checked)} text={option.label} />;
+               return (
+                  <CheckboxToggle
+                     classNameText={classNameText}
+                     checked={field.value}
+                     set={event => field.onChange(event.target.checked)}
+                     text={option.label}
+                  />
+               );
             }
          }}
       />

@@ -16,7 +16,7 @@ import MapAddressInput from '../../../unifComponents/ymap/AddressInput';
 import isEmptyArrObj from '../../../helpers/isEmptyArrObj';
 import { useObject } from './useObject';
 import { useSelector } from 'react-redux';
-import { getCurrentCitySelector } from '../../../redux/helpers/selectors';
+import { getCurrentCitySelector } from '@/redux';
 
 const ObjectCreate = () => {
    const {

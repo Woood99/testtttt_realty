@@ -24,6 +24,7 @@ const Tag = ({
    tagObj = {},
    hoverEnable,
    disabled = false,
+   isError = false,
 }) => {
    let isActive = Boolean(value);
    const onClickHandler = () => {
@@ -119,7 +120,8 @@ const Tag = ({
                currentColorClass(),
                isActive && styles.TagActive,
                className,
-               disabled && styles.TagDisabled
+               disabled && styles.TagDisabled,
+               isError && styles.TagError
             )}>
             <div>{children}</div>
             {childrenRoot}
@@ -138,13 +140,13 @@ export const TagCashback = ({ cashback = '', prefix = 'Кешбэк до', incre
          mobile
          ElementTarget={() => (
             <Tag size="small" color="green">
-               {is_increased && 'Повышенный'} {prefix} {numberReplace(cashback)} ₽
+               {is_increased && <IconLightning width={11} height={11} />} {prefix} {numberReplace(cashback)} ₽
             </Tag>
          )}
          classNameContent="mmd1!p-6"
          placement={placement}
          offset={[5, 5]}>
-         <h3 className="title-3-5 !text-white md1:!text-dark">Кешбэк за покупку объекта</h3>
+         <h3 className="title-3-5 !text-white md1:!text-dark">{is_increased && 'Повышенный'} Кешбэк за покупку объекта</h3>
          <p className="mt-2">Начислим наличными за покупку на банковскую карту.</p>
          <ExternalLink to={RoutesPath.cashbackConditions} className="mmd1:text-white underline font-medium mt-2.5">
             Условия акции «Кешбэк»
@@ -171,7 +173,7 @@ export const TagPresents = ({ dataMainGifts = [], dataSecondGifts = [], title = 
    if (!data.length) return;
 
    return (
-      <Tooltip placement={placement} offset={[5,5]} mobile color="dark" ElementTarget={() => <TagPresent present title={title} />}>
+      <Tooltip placement={placement} offset={[5, 5]} mobile color="dark" ElementTarget={() => <TagPresent present title={title} />}>
          <div className="mmd1:pr-8 flex flex-col items-start gap-4">
             {Boolean(dataMainGifts.length) && (
                <div>
@@ -218,7 +220,7 @@ export const TagsDiscounts = ({ discounts, is_building, by_price, by_area }) => 
    const currentDiscount = getMaxDiscount({ discounts, by_price, by_area });
    if (!currentDiscount) return;
 
-   return <TagDiscount {...currentDiscount} is_building={is_building} />;
+   return <TagDiscount {...currentDiscount} is_building={is_building} prefix={discounts.length > 1 ? 'Скидка до' : 'Скидка'} />;
 };
 
 export const TagDiscount = ({ type, unit, value, start_date, end_date, prefix = 'Скидка', is_building = false }) => {
@@ -234,7 +236,6 @@ export const TagDiscount = ({ type, unit, value, start_date, end_date, prefix = 
          ElementTarget={() => (
             <Tag size="small" color="yellow">
                <div className="flex items-center gap-1">
-                  <IconLightning width={12} height={12} />
                   {prefix}
                   <span>
                      -{numberReplace(value)} {typeSuffix}

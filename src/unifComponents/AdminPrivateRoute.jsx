@@ -5,7 +5,7 @@ import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
 import isEmptyArrObj from '../helpers/isEmptyArrObj';
 import { ROLE_ADMIN } from '../constants/roles';
-import { getUserInfo } from '../redux/helpers/selectors';
+import { getUserInfo } from '@/redux';
 
 const AdminPrivateRoute = ({ children }) => {
    const [cookies] = useCookies();

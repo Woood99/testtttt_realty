@@ -1,21 +1,23 @@
 import React, { useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import cn from 'classnames';
+
 import FormRow from '../../uiForm/FormRow';
 import FilterButton from '../../uiForm/FilterButton';
 import { PurchaseListContext } from '../../context';
-import cn from 'classnames';
 import { ControllerFieldMultiSelect } from '../../uiForm/ControllerFields/ControllerFieldMultiSelect';
 import ControllerFieldTags from '../../uiForm/ControllerFields/ControllerFieldTags';
 import { calcPropsOptions, roomsOptions } from '../../data/selectsField';
 import Button from '../../uiForm/Button';
 import { BuyerRoutesPath, PrivateRoutesPath } from '../../constants/RoutesPath';
-import { useDispatch, useSelector } from 'react-redux';
-import { checkAuthUser, getIsDesktop, getUserInfo } from '../../redux/helpers/selectors';
+import { checkAuthUser, getIsDesktop, getUserInfo } from '@/redux';
 import { setSelectAccLogModalOpen } from '../../redux/slices/helpSlice';
 import InputSearch from '../../uiForm/InputSearch';
 import { isAdmin } from '../../helpers/utils';
+import { openUrl } from '../../helpers/openUrl';
 
 const PurchaseListFormRow = () => {
-   const { filterCount, setIsOpenMoreFilter, reset, cities, currentCity, variant, control, setValue, complexes } = useContext(PurchaseListContext);
+   const { filterCount, setIsOpenMoreFilter, variant, control, setValue, complexes } = useContext(PurchaseListContext);
 
    const isDesktop = useSelector(getIsDesktop);
    const authUser = useSelector(checkAuthUser);
@@ -47,9 +49,9 @@ const PurchaseListFormRow = () => {
                   onClick={() => {
                      if (authUser) {
                         if (userIsAdmin) {
-                           window.open(PrivateRoutesPath.purchase.create, '_blank');
+                           openUrl(PrivateRoutesPath.purchase.create);
                         } else {
-                           window.open(BuyerRoutesPath.purchase.create, '_blank');
+                           openUrl(BuyerRoutesPath.purchase.create);
                         }
                      } else {
                         dispatch(setSelectAccLogModalOpen(true));
@@ -64,7 +66,7 @@ const PurchaseListFormRow = () => {
                <ControllerFieldMultiSelect nameLabel="Комплекс" control={control} search btnsActions options={complexes} name="complexes" />
                <ControllerFieldTags control={control} options={roomsOptions} name="rooms" type="multiple" />
                <ControllerFieldMultiSelect
-                  nameLabel="Способ расчёта"
+                  nameLabel="Способ покупки"
                   name="calc_props"
                   control={control}
                   calcProp

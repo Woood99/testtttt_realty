@@ -1,7 +1,8 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 import Button from '../../uiForm/Button';
 import { PrivateRoutesPath, RoutesPath } from '../../constants/RoutesPath';
@@ -12,33 +13,28 @@ import HeaderAdmin from '../../components/Header/HeaderAdmin';
 import Header from '../../components/Header';
 import SpecialistsListFilters from './SpecialistsListFilters';
 import EmptyBlock from '../../components/EmptyBlock';
-import { checkAuthUser, getCitiesValuesSelector, getIsDesktop, getUserInfo } from '../../redux/helpers/selectors';
+import { getCitiesValuesSelector, getIsDesktop, getUserInfo } from '@/redux';
 import Sidebar from '../../components/Sidebar';
 import { SidebarNavElements } from '../../components/SidebarNav';
 import BodyAndSidebar from '../../components/BodyAndSidebar';
-import { checkDialogId, getUrlNavigateToChatDialog, getUrlNavigateToChatDialogFake } from '../../api/getDialogId';
-import { setSelectAccLogModalOpen } from '../../redux/slices/helpSlice';
 import { UserCardBasic, UserCardBasicSkeleton } from '../../ui/CardsRow';
 import RepeatContent from '../../components/RepeatContent';
 import { useSpecialistsList } from './useSpecialistsList';
 import { isAdmin } from '../../helpers/utils';
-import { CHAT_TYPES } from '../../components/Chat/constants';
 import { useNavigateToChat } from '../../hooks/useNavigateToChat';
 import { getDataRequest } from '../../api/requestsApi';
-import { useCookies } from 'react-cookie';
 import { COOKIE_MAX_AGE } from '../../constants/general';
-import { useUserAuth } from '../../unifComponents/Provider/useUserAuth';
+import { useAuth } from '@/hooks';
 
 const SpecialistsList = () => {
-   const [cookies, setCookie, removeCookie] = useCookies();
+   const [cookies, setCookie] = useCookies();
 
    const isDesktop = useSelector(getIsDesktop);
    const userInfo = useSelector(getUserInfo);
    const userIsAdmin = isAdmin(userInfo);
    const citiesData = useSelector(getCitiesValuesSelector);
-   const dispatch = useDispatch();
    const { control, reset, setValue, currentCity, isLoading, dataItems, currentPage, setCurrentPage, titleText } = useSpecialistsList();
-   const { setAuthUser } = useUserAuth();
+   const { setAuthUser } = useAuth();
 
    const navigateToChat = useNavigateToChat();
 

@@ -1,15 +1,16 @@
 import React, { useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
-import BodyAndSidebar from '../../components/BodyAndSidebar';
-
+import { FormProvider } from 'react-hook-form';
 import { useSelector } from 'react-redux';
+
+import BodyAndSidebar from '../../components/BodyAndSidebar';
 import { PurchaseCreateContext } from '../../context';
 import Button from '../../uiForm/Button';
 import FixedBlock from '../../components/FixedBlock';
 import MainLayout from '../../layouts/MainLayout';
 import Header from '../../components/Header';
 import PurchaseCreateSidebar from './PurchaseCreateSidebar';
-import { getCitiesSelector, getIsDesktop } from '../../redux/helpers/selectors';
+import { getCitiesSelector, getIsDesktop } from '@/redux';
 import PurchaseCreateMain from './PurchaseCreateMain';
 import PurchaseCreateStart from './PurchaseCreateStart';
 import PurchaseCreateContacts from './PurchaseCreateContacts';
@@ -28,6 +29,9 @@ import { sendPostRequest } from '../../api/requestsApi';
 import { BuyerRoutesPath, RoutesPath } from '../../constants/RoutesPath';
 import ModalWrapper from '../../ui/Modal/ModalWrapper';
 import Modal from '../../ui/Modal';
+import { calcPropsOptions, calcPropsOptionsValues } from '../../data/selectsField';
+import PurchaseCreateTags from './PurchaseCreateTags';
+import PurchaseCreateAdvantages from './PurchaseCreateAdvantages';
 
 const PurchaseCreate = ({ isEdit = false, isAdmin = false }) => {
    const purchaseCreateSettings = usePurchaseCreate(isEdit);
@@ -40,11 +44,14 @@ const PurchaseCreate = ({ isEdit = false, isAdmin = false }) => {
    const [confirmLoading, setConfirmLoading] = useState(false);
 
    const stages = [
-      // {
-      //    body: <PurchaseCreateStart />,
-      // },
       {
          body: <PurchaseCreateLocation />,
+      },
+      {
+         body: <PurchaseCreatePrice />,
+      },
+      {
+         body: <PurchaseCreateTags />,
       },
       {
          body: <PurchaseCreateParameters />,
@@ -55,7 +62,7 @@ const PurchaseCreate = ({ isEdit = false, isAdmin = false }) => {
             body: (
                <div key={index}>
                   <h2 className="title-2 mb-8 md1:mb-6">{item.name}</h2>
-                  <div className="flex flex-col gap-6 mt-4">
+                  <div className="flex flex-col gap-8 mt-4">
                      {item.items.map((item, index) => {
                         return (
                            <FiltersFromDataController
@@ -73,7 +80,7 @@ const PurchaseCreate = ({ isEdit = false, isAdmin = false }) => {
          };
       }),
       {
-         body: <PurchaseCreatePrice />,
+         body: <PurchaseCreateAdvantages />,
       },
       {
          body: <PurchaseCreateDescr />,
@@ -156,22 +163,44 @@ const PurchaseCreate = ({ isEdit = false, isAdmin = false }) => {
 
          view_start: data.view_start,
 
-         calc_props: data.calc_props,
-         ...(data.calc_props.find(i => i.id === 1) ? { price_type: 'object_price_from', price: data.object_price } : {}),
-         ...(data.calc_props.find(i => i.id === 2 || i.id === 3 || i.id === 6) ? { price_type: 'month_payment', price: data.month_payment } : {}),
+         calc_props: calcPropsOptions.filter(item => data.calc_props.includes(item.value)),
+         ...(data.calc_props.find(i => i === calcPropsOptionsValues.cash) ? { price_type: 'object_price_from', price: data.object_price } : {}),
+         ...(data.calc_props.find(
+            i =>
+               i === calcPropsOptionsValues.mortgage_approval_bank ||
+               i === calcPropsOptionsValues.mortgage_no_approval_bank ||
+               i === calcPropsOptionsValues.installment_plan
+         )
+            ? { price_type: 'month_payment', price: data.month_payment }
+            : {}),
 
-         month_payment: data.calc_props.find(i => i.id === 2 || i.id === 3 || i.id === 6) ? stringToNumber(data.month_payment) : null,
-         approved_amount: data.calc_props.find(i => i.id === 2) ? stringToNumber(data.approved_amount) : null,
-         certificate_amount: data.calc_props.find(i => i.id === 5) ? stringToNumber(data.certificate_amount) : null,
-         initial_payment: data.calc_props.find(i => (i.id === 2 || i.id === 3 || i.id === 6) && i.id !== 4)
-            ? stringToNumber(data.initial_payment || '')
-            : null,
+         month_payment: data.calc_props.find(
+            i =>
+               i === calcPropsOptionsValues.mortgage_approval_bank ||
+               i === calcPropsOptionsValues.mortgage_no_approval_bank ||
+               i === calcPropsOptionsValues.installment_plan
+         )
+            ? stringToNumber(data.month_payment)
+            : 0,
+         approved_amount: data.calc_props.find(i => i === calcPropsOptionsValues.mortgage_approval_bank) ? stringToNumber(data.approved_amount) : 0,
+         certificate_amount: data.calc_props.find(i => i === calcPropsOptionsValues.certificate) ? stringToNumber(data.certificate_amount) : 0,
+         initial_payment: data.calc_props.find(
+            i =>
+               (i === calcPropsOptionsValues.mortgage_approval_bank ||
+                  i === calcPropsOptionsValues.mortgage_no_approval_bank ||
+                  i === calcPropsOptionsValues.installment_plan) &&
+               i !== calcPropsOptionsValues.no_down_payment
+         )
+            ? stringToNumber(data.initial_payment || '') || 0
+            : 0,
 
          user_phone: data.phone.replace('+', ''),
          user_name: data.name,
 
-         is_one_time_payment: Boolean(data.calc_props.find(i => i.id === 1)),
-         is_not_one_time_payment: Boolean(data.calc_props.find(i => i.id === 2 || i.id === 3)),
+         is_one_time_payment: Boolean(data.calc_props.find(i => i === calcPropsOptionsValues.cash)),
+         is_not_one_time_payment: Boolean(
+            data.calc_props.find(i => i === calcPropsOptionsValues.mortgage_approval_bank || i === calcPropsOptionsValues.mortgage_no_approval_bank)
+         ),
       };
 
       const url = isAdmin
@@ -235,32 +264,39 @@ const PurchaseCreate = ({ isEdit = false, isAdmin = false }) => {
                isEdit,
                cities: citiesItems,
                isAdmin,
+               isInitEdit: isEdit ? purchaseCreateSettings.isInitEdit : true,
             }}>
             <Header />
             <main className="main">
-               <form
-                  onSubmit={purchaseCreateSettings.handleSubmit(onSubmitHandler, purchaseCreateSettings.onInvalidSubmit)}
-                  className="main-wrapper--title md1:!pb-[86px]">
-                  <div className="container-desktop">
-                     <h1 className="title-1-5 mb-6 md1:mx-4">{isEdit ? 'Редактировать заявку на покупку' : 'Разместить заявку на покупку'}</h1>
-                     <BodyAndSidebar className="mmd1:!grid-cols-[1fr_280px]">
-                        <PurchaseCreateMain />
-                        {isDesktop && <PurchaseCreateSidebar />}
-                     </BodyAndSidebar>
-                     {purchaseCreateSettings.typeActiveId && isDesktop && (
-                        <div ref={buttonSubmitRef}>
-                           <Button className="mt-8 w-full">{isEdit ? 'Сохранить' : 'Разместить'}</Button>
-                        </div>
+               <FormProvider
+                  {...{
+                     control: purchaseCreateSettings.control,
+                     formState: { errors: purchaseCreateSettings.errors },
+                     setValue: purchaseCreateSettings.setValue,
+                  }}>
+                  <form
+                     onSubmit={purchaseCreateSettings.handleSubmit(onSubmitHandler, purchaseCreateSettings.onInvalidSubmit)}
+                     className="main-wrapper md1:!pb-[86px]">
+                     <div className="container-desktop">
+                        <BodyAndSidebar className="mmd1:!grid-cols-[1fr_280px]">
+                           <PurchaseCreateMain />
+                           {isDesktop && <PurchaseCreateSidebar />}
+                        </BodyAndSidebar>
+                        {purchaseCreateSettings.typeActiveId && isDesktop && (
+                           <div ref={buttonSubmitRef}>
+                              <Button className="mt-8 w-full">{isEdit ? 'Сохранить' : 'Разместить'}</Button>
+                           </div>
+                        )}
+                     </div>
+                     {purchaseCreateSettings.typeActiveId && (
+                        <FixedBlock activeDefault={!isDesktop} condition={isDesktop ? { top: 50, el: buttonSubmitRef } : null}>
+                           <div className="container py-2.5">
+                              <Button className="w-full">{isEdit ? 'Сохранить' : 'Разместить'}</Button>
+                           </div>
+                        </FixedBlock>
                      )}
-                  </div>
-                  {purchaseCreateSettings.typeActiveId && (
-                     <FixedBlock activeDefault={!isDesktop} condition={isDesktop ? { top: 50, el: buttonSubmitRef } : null}>
-                        <div className="container py-2.5">
-                           <Button className="w-full">{isEdit ? 'Сохранить' : 'Разместить'}</Button>
-                        </div>
-                     </FixedBlock>
-                  )}
-               </form>
+                  </form>
+               </FormProvider>
             </main>
             <ModalWrapper condition={modalConfirm}>
                <Modal

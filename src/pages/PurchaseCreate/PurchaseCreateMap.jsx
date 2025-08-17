@@ -1,16 +1,27 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import cn from 'classnames';
+import { useSelector } from 'react-redux';
+
 import { fullscrenEnterClasses, fullscrenExitClasses, toggleFullscreen } from '../../unifComponents/ymap/YmapFullscreen';
 import { handleZoomIn, handleZoomOut } from '../../unifComponents/ymap/YmapZoom';
 import { IconFinger, IconFullscreen, IconMinus, IconPlus, IconTrash } from '../../ui/Icons';
 import paintOnMap from '../../helpers/paintOnMap';
 import { colorLineBlue, colorLinePaint, colorLineRed } from '../../unifComponents/ymap/ymapStyles';
+import { getIsDesktop } from '@/redux';
+import { PurchaseCreateContext } from '../../context';
 
 let COORDINATES = [];
 
 let drawingsCollection = {};
 
 const PurchaseCreateMap = ({ center = [], coordinates = [], setCoordinates }) => {
+   const { setValue, isInitEdit } = useContext(PurchaseCreateContext);
+   console.log(isInitEdit);
+
    const mapRef = useRef(null);
+   const mapContainerRef = useRef(null);
+   const isDesktop = useSelector(getIsDesktop);
+   const fullscreenBtnRef = useRef(null);
 
    const actionsContainerRef = useRef(null);
 
@@ -36,7 +47,7 @@ const PurchaseCreateMap = ({ center = [], coordinates = [], setCoordinates }) =>
 
    const createMap = () => {
       paintOnMap();
-      
+
       const map = ymaps.ready(['ext.paintOnMap']).then(function () {
          const myMap = new window.ymaps.Map('customMap', {
             center: center || [],
@@ -125,21 +136,28 @@ const PurchaseCreateMap = ({ center = [], coordinates = [], setCoordinates }) =>
             }
          });
 
-         fullscrenEnterClasses(myMap, actionsContainerRef);
-         fullscrenExitClasses(myMap, actionsContainerRef);
+         fullscrenEnterClasses(myMap, actionsContainerRef, mapContainerRef);
+         fullscrenExitClasses(myMap, actionsContainerRef, mapContainerRef, value => {
+            if (value) return;
+            if (COORDINATES.length) return;
+            setValue('any_region', false);
+         });
 
          return myMap;
       });
       return map;
    };
-   
+
    useEffect(() => {
       if (!window.ymaps || center?.length === 0) return;
-      
+
       window.ymaps.ready(() => {
          if (!mapRef.current) {
             createMap().then(res => {
                mapRef.current = res;
+               if (isInitEdit) {
+                  toggleFullscreen(mapRef.current, actionsContainerRef);
+               }
             });
          } else if (center) {
             paintBtnClearHandler();
@@ -149,12 +167,27 @@ const PurchaseCreateMap = ({ center = [], coordinates = [], setCoordinates }) =>
    }, [center]);
 
    return (
-      <div id="customMap" className="mt-6 remove-copyrights-pane relative w-full h-[320px] rounded-xl overflow-hidden">
+      <div className="relative w-full h-full">
+         <div
+            id="customMap"
+            ref={mapContainerRef}
+            className="mt-6 remove-copyrights-pane map-fullscreen relative w-full h-[320px] rounded-xl overflow-hidden"
+         />
          {mapRef && (
             <div className="ymap-actions-container" ref={actionsContainerRef}>
-               <div className="ymap-actions ymap-actions-group ymap-action-right-top">
-                  <button type="button" onClick={() => toggleFullscreen(mapRef.current, actionsContainerRef)} className="ymap-action ymap-action-btn">
+               <div className="ymap-actions ymap-actions-group ymap-action-left-top">
+                  <button
+                     type="button"
+                     ref={fullscreenBtnRef}
+                     onClick={() => toggleFullscreen(mapRef.current, actionsContainerRef)}
+                     className="ymap-action ymap-action-btn">
                      <IconFullscreen />
+                  </button>
+               </div>
+               <div className="ymap-actions top-4 right-4 ymap-actions-group !w-auto items-end">
+                  <button type="button" ref={paintBtnRef} className={cn('ymap-action ymap-action-btn !w-auto px-4 gap-2')}>
+                     Нарисовать область
+                     <IconFinger />
                   </button>
                </div>
                <div className="ymap-actions ymap-top-right-center ymap-actions-group ymap-actions-group-join">
@@ -165,25 +198,24 @@ const PurchaseCreateMap = ({ center = [], coordinates = [], setCoordinates }) =>
                      <IconMinus />
                   </button>
                </div>
-               <div className="ymap-actions bottom-4 right-4 ymap-actions-group !w-auto items-end">
-                  {paintMore ? (
-                     <>
-                        <button type="button" className="ymap-action ymap-action-btn !w-auto font-medium gap-1 px-3">
-                           <IconPlus className="stroke-black" width={15} height={15} />
-                           <span>Ещё</span>
-                        </button>
-                        <button type="button" onClick={paintBtnClearHandler} className="ymap-action ymap-action-btn !w-auto font-medium gap-1 px-3">
-                           <IconTrash width={15} height={15} />
-                        </button>
-                     </>
-                  ) : (
-                     <>
-                        <button type="button" ref={paintBtnRef} className="ymap-action ymap-action-btn">
-                           <IconFinger />
-                        </button>
-                     </>
-                  )}
-               </div>
+               {isDesktop && (
+                  <div className="ymap-actions bottom-4 right-4 ymap-actions-group !w-auto items-end">
+                     {paintMore && (
+                        <>
+                           <button type="button" className="ymap-action ymap-action-btn !w-auto font-medium gap-1 px-3">
+                              <IconPlus className="stroke-black" width={15} height={15} />
+                              <span>Ещё</span>
+                           </button>
+                           <button
+                              type="button"
+                              onClick={paintBtnClearHandler}
+                              className="ymap-action ymap-action-btn !w-auto font-medium gap-1 px-3">
+                              <IconTrash width={15} height={15} />
+                           </button>
+                        </>
+                     )}
+                  </div>
+               )}
             </div>
          )}
       </div>

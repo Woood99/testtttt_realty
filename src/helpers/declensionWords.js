@@ -9,6 +9,9 @@ export const declensionWords = (value, arr, numberRepl = false) => {
 export const declensionWordsYear = value => {
    return declensionWords(value, ['год', 'года', 'лет']);
 };
+export const declensionWordsDays = value => {
+   return declensionWords(value, ['день', 'дня', 'дней']);
+};
 
 export const declensionWordsSpecialist = value => {
    return declensionWords(value, ['менеджер', 'менеджера', 'менеджеров'], true);
@@ -16,6 +19,10 @@ export const declensionWordsSpecialist = value => {
 
 export const declensionWordsOffer = value => {
    return declensionWords(value, ['предложение', 'предложения', 'предложений'], true);
+};
+
+export const declensionBuilding = value => {
+   return declensionWords(value, ['новостройку', 'новостройки', 'новостроек'], true);
 };
 
 export const declensionWordsPurchaseRequests = value => {
@@ -44,6 +51,14 @@ export const declensionComments = value => {
 
 export const declensionView = value => {
    return declensionWords(value, ['просмотр', 'просмотра', 'просмотров'], true);
+};
+
+export const declensionPlannings = value => {
+   return declensionWords(value, ['планировка', 'планировки', 'планировок'], true);
+};
+
+export const declensionApartments = value => {
+   return declensionWords(value, ['квартира', 'квартиры', 'квартир'], true);
 };
 
 export const declensionWordsName = (value = '', data = {}, type = 0) => {

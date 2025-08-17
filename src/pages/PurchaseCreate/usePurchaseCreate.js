@@ -3,7 +3,7 @@ import { getDataRequest, sendPostRequest } from '../../api/requestsApi';
 import scrollToFirstErrorElement from '../../helpers/scrollToFirstErrorElement';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { getIsDesktop } from '../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 import { useForm } from 'react-hook-form';
 
 export const usePurchaseCreate = isEdit => {
@@ -20,6 +20,7 @@ export const usePurchaseCreate = isEdit => {
    const [defaultData, setDefaultData] = useState(null);
 
    const [modalOpen, setModalOpen] = useState(!isDesktop && !isEdit);
+   const [isInitEdit, setIsInitEdit] = useState(false);
 
    const {
       handleSubmit,
@@ -95,6 +96,9 @@ export const usePurchaseCreate = isEdit => {
                      label: el.name,
                   }))
                );
+               setTimeout(() => {
+                  setIsInitEdit(true);
+               }, 200);
             }
          }
 
@@ -209,5 +213,6 @@ export const usePurchaseCreate = isEdit => {
       onInvalidSubmit,
       handleSubmit,
       params,
+      isInitEdit,
    };
 };

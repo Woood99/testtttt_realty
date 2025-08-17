@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import { PurchaseCreateContext } from '../../context';
 import { ControllerFieldInput, ControllerFieldInputPhone } from '../../uiForm/ControllerFields/ControllerFieldInput';
-import { getUserInfo } from '../../redux/helpers/selectors';
+import { getUserInfo } from '@/redux';
 
 const PurchaseCreateContacts = () => {
    const { control, errors, isEdit, defaultData, isAdmin } = useContext(PurchaseCreateContext);

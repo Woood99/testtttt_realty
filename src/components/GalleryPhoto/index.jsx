@@ -13,19 +13,18 @@ import { VideoBlock } from '../../ModalsMain/VideoModal';
 import videojs from 'video.js';
 import FullscreenBtn from '../../ui/FullscreenBtn';
 import { GetDescrHTML } from '../BlockDescr/BlockDescr';
-import { getIsDesktop } from '../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 
-export const videoToggleControls = (swiperEl, status = 'auto', set=()=>{}) => {
+export const videoToggleControls = (swiperEl, status = 'auto', set = () => {}) => {
    const slides = swiperEl.slides;
-   const currentEl = slides[swiperEl.activeIndex];
-
+   const currentEl = slides?.[swiperEl?.activeIndex];
+   
    slides.forEach((item, index) => {
       const videoElement = item.querySelector('video');
-
+      
       const player = videoElement ? videojs.getPlayer(videoElement.id) : null;
-   
+
       if (player) {
-            
          if (status === 'auto') {
             if (swiperEl.activeIndex === index) {
                player.volume(localStorage.getItem('video_volume') || 0.5);

@@ -1,3 +1,5 @@
+import { fakeAudioStream, fakeVideoStream } from '../../../helpers/mediaStreamUtils';
+
 export const getPermissions = async (ref, type = 'getUserMedia', set, options = { video: false, audio: true, facingMode: 'user' }) => {
    if (navigator.mediaDevices === undefined) {
       navigator.mediaDevices = {};
@@ -28,6 +30,7 @@ export const getPermissions = async (ref, type = 'getUserMedia', set, options = 
    }
 
    let stream;
+   let statuses = { video: false, audio: false };
 
    try {
       const constraints = {
@@ -48,99 +51,45 @@ export const getPermissions = async (ref, type = 'getUserMedia', set, options = 
       }
    }
 
-   function fakeVideoStream() {
-      const canvas = document.createElement('canvas');
-      canvas.width = 640;
-      canvas.height = 480;
-      const context = canvas.getContext('2d');
-
-      function draw() {
-         context.fillStyle = '#242629';
-         context.fillRect(0, 0, canvas.width, canvas.height);
-         requestAnimationFrame(draw);
-      }
-
-      draw();
-
-      return canvas.captureStream(25);
-   }
-
-   function fakeAudioStream() {
-      const audioContext = new AudioContext();
-      const destination = audioContext.createMediaStreamDestination();
-      return destination.stream;
-   }
-
    if (stream) {
       if (stream.getVideoTracks().length === 0) {
          stream = new MediaStream([...fakeVideoStream().getVideoTracks(), ...stream.getAudioTracks()]);
          if (set) set({ video: false, audio: true });
+         statuses = { video: false, audio: true };
       } else if (stream.getAudioTracks().length === 0) {
          stream = new MediaStream([...stream.getTracks(), ...fakeAudioStream().getTracks()]);
          if (set) set({ video: true, audio: false });
+         statuses = { video: true, audio: false };
       } else {
          if (set) set({ video: true, audio: true });
+         statuses = { video: true, audio: true };
       }
    } else {
       stream = new MediaStream([...fakeVideoStream().getTracks(), ...fakeAudioStream().getTracks()]);
       if (set) set({ video: false, audio: false });
+      statuses = { video: false, audio: false };
    }
 
    if (ref && ref.current) {
       ref.current.srcObject = stream;
    }
 
-   return stream;
+   return { stream, statuses };
 };
 
-export const sendMediaState = (peer, videoEnabled, audioEnabled) => {
+export const sendMediaState = (peer, videoEnabled, audioEnabled, screenSharingEnabled) => {
    if (peer && peer.connected) {
       peer.send(
          JSON.stringify({
             type: 'mediaState',
             video: videoEnabled,
             audio: audioEnabled,
+            screenSharing: screenSharingEnabled,
          })
       );
    }
 };
 
-export const updateUI = (videoEnabled, audioEnabled, set) => {
-   set({ video: videoEnabled, audio: audioEnabled });
+export const updateUI = (videoEnabled, audioEnabled, screenSharingEnabled, set) => {
+   set({ video: videoEnabled, audio: audioEnabled, screenSharing: screenSharingEnabled });
 };
-
-export const settingsIceServersPeer = [
-   { urls: 'stun:stun.l.google.com:19302' },
-   { urls: 'stun:global.stun.twilio.com:3478' },
-
-   {
-      urls: [
-         'turn:hk.api.inrut.ru:3478?transport=udp', // UDP для скорости
-         'turn:hk.api.inrut.ru:443?transport=tcp', // TCP для обхода блокировок
-      ],
-      username: 'inrut',
-      credential: 'y9GGXmfcR0Lsdfw1',
-   },
-   {
-      urls: ['turn:fra.api.inrut.ru:3478?transport=udp', 'turn:fra.api.inrut.ru:443?transport=tcp'],
-      username: 'inrut',
-      credential: 'y9GGXmfcR0Lsdfw1',
-   },
-   {
-      urls: ['turn:ny.api.inrut.ru:3478?transport=udp', 'turn:ny.api.inrut.ru:443?transport=tcp'],
-      username: 'inrut',
-      credential: 'y9GGXmfcR0Lsdfw1',
-   },
-
-   {
-      urls: 'turn:relay.metered.ca:443?transport=tcp',
-      username: 'inrut',
-      credential: 'y9GGXmfcR0Lsdfw1',
-   },
-
-   // {
-   //    urls: 'turn:api.inrut.ru:3478',
-   //    username: 'inrut',
-   //    credential: 'y9GGXmfcR0Lsdfw1',
-   // },
-];

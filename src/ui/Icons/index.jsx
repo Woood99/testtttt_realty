@@ -90,6 +90,7 @@ export function IconClose({ width = 20, height = 20, className = '' }) {
       </svg>
    );
 }
+
 export function IconCloseCircle({ width = 20, height = 20, className = '' }) {
    return (
       <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={width} height={height} className={className}>
@@ -308,8 +309,7 @@ export function IconShare({ width = 20, height = 20, className = '' }) {
 export function IconShareArrow({ width = 20, height = 20, className = '' }) {
    return (
       <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} className={className} viewBox="0 0 16 16">
-         <path
-            d="M8.832 14.667c-.833 0-.833-4.167-.833-4.167-5.834 0-6.25 4.167-6.667 4.167-1.576 0-1.667-9.167 6.667-9.167 0 0 0-4.167.833-4.167S15.499 6.75 15.499 8s-5.834 6.667-6.667 6.667"></path>
+         <path d="M8.832 14.667c-.833 0-.833-4.167-.833-4.167-5.834 0-6.25 4.167-6.667 4.167-1.576 0-1.667-9.167 6.667-9.167 0 0 0-4.167.833-4.167S15.499 6.75 15.499 8s-5.834 6.667-6.667 6.667"></path>
       </svg>
    );
 }
@@ -702,6 +702,13 @@ export function IconСamcorder({ width = 20, height = 20, className = '' }) {
       </svg>
    );
 }
+export function IconСamcorderOff({ width = 20, height = 20, className = '' }) {
+   return (
+      <svg focusable="false" width={width} height={height} className={className} viewBox="0 0 24 24">
+         <path d="M18 10.48V6c0-1.1-.9-2-2-2H6.83l2 2H16v7.17l2 2v-1.65l4 3.98v-11l-4 3.98zM16 16L6 6 4 4 2.81 2.81 1.39 4.22l.85.85C2.09 5.35 2 5.66 2 6v12c0 1.1.9 2 2 2h12c.34 0 .65-.09.93-.24l2.85 2.85 1.41-1.41L18 18l-2-2zM4 18V6.83L15.17 18H4z"></path>
+      </svg>
+   );
+}
 
 export function IconMonitor({ width = 20, height = 20, className = '' }) {
    return (
@@ -831,8 +838,20 @@ export function IconDoubleTick({ width = 20, height = 20, className = '' }) {
 
 export function IconPresent({ width = 20, height = 20, className = '' }) {
    return (
-      <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} className={className} version="1.1" viewBox="0 0 464.628 464.628">
-         <path d="m394.33,105.596h-76.136c22.944-22.372 37.216-53.596 37.216-88.096 0-9.665-7.835-17.5-17.5-17.5-44.786,0-84.057,24.045-105.596,59.9-21.539-35.855-60.81-59.9-105.595-59.9-9.665,0-17.5,7.835-17.5,17.5 0,34.5 14.273,65.724 37.216,88.096h-76.137c-9.665,0-17.5,7.835-17.5,17.5v324.033c0,9.665 7.835,17.5 17.5,17.5h324.032c9.665,0 17.5-7.835 17.5-17.5v-324.033c0-9.665-7.835-17.5-17.5-17.5zm-17.5,162.016h-127.016v-127.016h127.016v127.016zm-58.646-230.385c-7.525,32.765-33.378,58.618-66.144,66.143 7.526-32.766 33.379-58.619 66.144-66.143zm-105.596,66.142c-32.765-7.525-58.618-33.378-66.143-66.143 32.765,7.525 58.618,33.378 66.143,66.143zm2.226,37.227v127.016h-127.016v-127.016h127.016zm-127.016,162.016h127.016v127.017h-127.016v-127.017zm162.016,127.016v-127.016h127.016v127.017h-127.016z" />
+      <svg
+         xmlns="http://www.w3.org/2000/svg"
+         width={width}
+         height={height}
+         className={className}
+         fill="none"
+         viewBox="0 0 24 24"
+         strokeWidth={1.5}
+         stroke="currentColor">
+         <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
+         />
       </svg>
    );
 }
@@ -1015,5 +1034,23 @@ export const IconUnderlineCh = ({ width = 20, height = 20, className = '' }) => 
          fillRule="evenodd"
          d="M5 17.25a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1-.75-.75m7.104-7.271c-.629.476-1.608.826-2.715.826C6.52 10.805 5 9.005 5 6.658V4.404c0-.553.342-.904.892-.904.542 0 .892.35.892.904v2.191c0 1.645.972 2.651 2.756 2.651 1.155 0 2.11-.405 2.676-.959V4.404c0-.553.35-.904.892-.904.55 0 .892.35.892.904v9.692c0 .553-.342.904-.892.904-.542 0-.892-.35-.892-.904V9.979z"
          clipRule="evenodd"></path>
+   </svg>
+);
+
+export const IconVolumeOff = ({ width = 20, height = 20, className = '' }) => (
+   <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height}
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round">
+      <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" />
+      <line x1="22" x2="16" y1="9" y2="15" />
+      <line x1="16" x2="22" y1="9" y2="15" />
    </svg>
 );

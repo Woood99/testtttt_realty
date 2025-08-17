@@ -4,6 +4,8 @@ import { ChatContext, ChatMessageContext } from '../../../../context';
 import { useChatReaction } from '../../hooks';
 import Avatar from '../../../../ui/Avatar';
 
+import styles from '../../Chat.module.scss';
+
 const ChatMessageReactionPanel = () => {
    const { cachedDialog, setCachedDialog } = useContext(ChatContext);
    const { data, userInfo, getDialog, currentDialog } = useContext(ChatMessageContext);
@@ -44,7 +46,7 @@ const ChatMessageReactionPanel = () => {
    };
 
    return (
-      <div className="inline-flex flex-wrap gap-2" data-chat-tooltip>
+      <div className={styles.ChatMessageReactions} data-chat-tooltip>
          {groupedReactions.map((group, index) => {
             const findMe = group.items.find(find => find.user.id === userInfo.id);
 

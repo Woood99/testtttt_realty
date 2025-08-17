@@ -5,7 +5,8 @@ export const cityExclusionsBuyer = cities => {
          city.name !== 'Москва' &&
          city.name !== 'Анапа' &&
          city.name !== 'Туапсе' &&
-         city.name !== 'Новороссийск'
+         city.name !== 'Новороссийск' &&
+         city.name !== 'Ростов-на-Дону'
    );
 };
 

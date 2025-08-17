@@ -7,7 +7,7 @@ const BlockDescr = ({ descr, className = '', title = 'Описание' }) => {
    return (
       <div className={cn('mt-6', className)}>
          <h2 className="title-2">{title}</h2>
-         <BlockDescrMore descr={descr} className={`${className} mt-4 text-defaultMax leading-6`} lines={6} />
+         <BlockDescrMore descr={descr} className={`${className} mt-4 text-defaultMax leading-6`} lines={3} />
       </div>
    );
 };

@@ -54,7 +54,7 @@ export const useChatDraftEditorUtils = options => {
             if (entity.type === 'LINK') {
                return {
                   element: 'a',
-                  start: `<a href="${entity.data.url}"  target="_blank" rel="noopener noreferrer" class="text-blue block hover:underline">`,
+                  start: `<a href="${entity.data.url}"  target="_blank" rel="noopener noreferrer" class="text-blue hover:underline">`,
                   end: '</a>',
                };
             }

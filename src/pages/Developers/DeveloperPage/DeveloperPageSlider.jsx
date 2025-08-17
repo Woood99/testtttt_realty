@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from 'react';
 import getCardsBuildings from '../../../api/getCardsBuildings';
 import WebSkeleton from '../../../ui/Skeleton/WebSkeleton';
 import { useSelector } from 'react-redux';
-import { getIsDesktop } from '../../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 import { NavBtnNext, NavBtnPrev } from '../../../ui/NavBtns';
 import getSrcImage from '../../../helpers/getSrcImage';
 import findObjectWithMinValue from '../../../helpers/findObjectWithMinValue';

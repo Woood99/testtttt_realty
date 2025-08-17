@@ -4,11 +4,11 @@ import { useSelector } from 'react-redux';
 import { IconMoney, IconPresent } from '../../../ui/Icons';
 import ModalWrapper from '../../../ui/Modal/ModalWrapper';
 import Modal from '../../../ui/Modal';
-import { ChatContext } from '../../../context';
+import { ChatContext, ChatMessagesContext } from '../../../context';
 import Button from '../../../uiForm/Button';
 import Input from '../../../uiForm/Input';
 import numberReplace from '../../../helpers/numberReplace';
-import { getIsDesktop, getUserInfo } from '../../../redux/helpers/selectors';
+import { getIsDesktop, getUserInfo } from '@/redux';
 import Textarea from '../../../uiForm/Textarea';
 import { CHAT_TYPES } from '../constants';
 import { BuyerRoutesPath } from '../../../constants/RoutesPath';
@@ -16,9 +16,11 @@ import { ExternalLink } from '../../../ui/ExternalLink';
 import { ROLE_BUYER } from '../../../constants/roles';
 
 import PRESENT_IMAGE from '../../../assets/img/present2.jpg';
+import hasText from './ChatDraft/hasText';
 
 const ChatPresent = () => {
    const { currentDialog } = useContext(ChatContext);
+   const { draftOptions } = useContext(ChatMessagesContext);
 
    const [isStartModalOpen, setIsStartModalOpen] = useState(false);
    const [isSendModalOpen, setIsSendModalOpen] = useState(null);
@@ -31,13 +33,18 @@ const ChatPresent = () => {
 
    const companion = currentDialog?.companions?.find(item => item.id !== userInfo?.id);
 
+   if (!companion) return;
    if (userInfo?.role?.id !== ROLE_BUYER.id) return;
    if (currentDialog.dialog_type !== CHAT_TYPES.CHAT) return;
 
+   if (!isDesktop && hasText(draftOptions?.messageText)) return;
+
+   return false; // временно
+
    return (
-      <div className="self-center mr-2">
-         <button type="button" className="flex items-center justify-center" title="Отправить подарок" onClick={() => setIsStartModalOpen(true)}>
-            <IconPresent className="fill-primary400" width={22} height={22} />
+      <>
+         <button type="button" className="mr-3 mmd1:mb-[4px]" title="Отправить подарок" onClick={() => setIsStartModalOpen(true)}>
+            <IconPresent className="stroke-primary400" width={24} height={24} />
          </button>
 
          <ModalWrapper condition={isStartModalOpen}>
@@ -51,9 +58,9 @@ const ChatPresent = () => {
                   Баланс <br />0 ₽
                </ExternalLink>
                <div className="bg-primary700 rounded-[20px] p-5">
-                  <h3 className="title-3 mb-2">Как отправить подарок менеджеру:</h3>
+                  <h3 className="title-3 mb-2">Как отправить вознаграждение менеджеру:</h3>
                   <ul className="list-disc ml-5">
-                     <li>Выберите сумму, которую хотите пожертвовать.</li>
+                     <li>Выберите сумму, которую хотите отправить.</li>
                      <li>Нажмите на кнопку "Отправить подарок".</li>
                   </ul>
                </div>
@@ -61,7 +68,7 @@ const ChatPresent = () => {
                {isOpenOtherAmount ? (
                   <Input
                      label="Сумма"
-                     size="48"
+                     size="60"
                      className="mt-4"
                      placeholder="Введите желаемую сумму"
                      after="₽"
@@ -126,14 +133,13 @@ const ChatPresent = () => {
                <div className="flex flex-col items-center">
                   <h3 className="text-defaultMax text-center">
                      <p className="font-medium mb-1">Менеджер увидит сообщение:</p>
-                     {userInfo.name} отправил(а)&nbsp;
-                     <span className="font-medium">{companion.name}</span>
+                     <span className="font-medium">{userInfo.name}</span> отправил(а) вам &nbsp;
                      <br />
                      подарок на сумму <span className="font-medium">{numberReplace(isSendModalOpen || '')} ₽</span>
                   </h3>
                   <div className="mt-4 border border-solid border-primary800 bg-white rounded-xl relative transition-all flex-grow flex-shrink basis-0 flex flex-col justify-center items-center md1:!w-full md1:px-4 gap-1.5 h-[120px] p-4">
                      <img src={PRESENT_IMAGE} className="w-14" height="h-14" alt="Подарок" />
-                     <p>Подарок от {userInfo.name}</p>
+                     <p>Вам подарок</p>
                   </div>
                </div>
                <Textarea
@@ -168,7 +174,7 @@ const ChatPresent = () => {
                </ExternalLink>
             </Modal>
          </ModalWrapper>
-      </div>
+      </>
    );
 };
 

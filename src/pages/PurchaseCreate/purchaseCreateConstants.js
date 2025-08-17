@@ -43,7 +43,7 @@ export const PURCHASE_CREATE_NAV_ITEMS = [
    },
    {
       id: 2,
-      title: 'Способ расчёта и цена',
+      title: 'Способ покупки и цена',
       name: 'price',
       value: false,
    },

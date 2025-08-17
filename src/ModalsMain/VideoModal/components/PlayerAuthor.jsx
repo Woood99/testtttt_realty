@@ -17,7 +17,7 @@ const PlayerAuthor = ({ player, data, className = '', type = 'video' }) => {
             name={capitalizeWords(currentUser.name, currentUser.surname)}
             pos={`${data.author && data.author.role !== ROLE_ADMIN.id ? `Менеджер отдела продаж ${data.developer.name}` : 'Застройщик'}`}
             classListUser={cn(type === 'short' && '!text-white')}
-            className={cn('text-default', type === 'short' && '!text-white')}
+            className={cn('text-default', type === 'short' && '!text-white w-full')}
             classListName={cn(type === 'short' && '!text-white')}
             centered
             nameHref={`${data.author && data.author.role !== ROLE_ADMIN.id ? `${RoutesPath.specialists.inner}` : `${RoutesPath.developers.inner}`}${

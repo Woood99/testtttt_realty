@@ -1,5 +1,6 @@
 import React from 'react';
-
+import cn from 'classnames';
+import { useSelector } from 'react-redux';
 import plural from 'plural-ru';
 
 import styles from './ApartmentPresents.module.scss';
@@ -7,9 +8,8 @@ import { PresentCard } from '../../../ui/PresentCard';
 import AnimatedNumber from '../../../ui/AnimatedNumber';
 import { Tooltip } from '../../../ui/Tooltip';
 import { IconInfoTooltip } from '../../../ui/Icons';
-import cn from 'classnames';
-import { useSelector } from 'react-redux';
-import { getIsDesktop } from '../../../redux/helpers/selectors';
+
+import { getIsDesktop } from '@/redux';
 
 const ApartmentPresentsBody = ({ type = 'default', options }) => {
    const { onChangeHandler, selector, setOpenModal, mainGift, secondGift } = options;

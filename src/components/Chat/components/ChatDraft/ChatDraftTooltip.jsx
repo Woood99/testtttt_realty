@@ -32,12 +32,12 @@ const ChatDraftTooltip = ({ draftOptions }) => {
    return (
       <>
          <Tooltip
+            mobileDefault
             color="white"
-            mobile
             placement="top-start"
             value={isVisibleTooltipDraft}
             offset={[0, 5]}
-            classNameTarget="absolute h-[54px]"
+            classNameTarget="absolute h-[54px] top-0"
             classNameContent="p-1.5"
             classNameRoot="!z-[200]">
             <div className="flex gap-1" data-popper-draft>
@@ -96,7 +96,7 @@ const ChatDraftTooltip = ({ draftOptions }) => {
             placement="top-start"
             value={isVisibleTooltipLink}
             offset={[0, 5]}
-            classNameTarget="absolute h-[54px]"
+            classNameTarget="absolute h-[54px] top-0"
             classNameContent="p-1.5"
             classNameRoot="!z-[200]">
             <div className="flex items-center">

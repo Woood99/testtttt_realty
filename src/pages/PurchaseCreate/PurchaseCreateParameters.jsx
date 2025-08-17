@@ -141,58 +141,6 @@ const PurchaseCreateParameters = () => {
                />
             </FieldRow>
          </div>
-         {Boolean(tags.length) && (
-            <div className="mt-12">
-               <h2 className="title-2 mb-4">Добавить теги к заявке</h2>
-               <div className="flex flex-wrap gap-2">
-                  <ControllerFieldTags
-                     className="w-full"
-                     control={control}
-                     tagColor="default"
-                     tagSize="medium"
-                     options={[
-                        { value: 'all', label: 'Не важно' },
-                        ...tags.map(item => ({
-                           value: item.id,
-                           label: item.name,
-                        })),
-                     ]}
-                     name="tags"
-                     type="placeholder-required"
-                     defaultValue={['all']}
-                  />
-               </div>
-            </div>
-         )}
-         {Boolean(advantages.length) && (
-            <div className="mt-12">
-               <h2 className="title-2 mb-4">Уникальные преимущества объекта</h2>
-               <div className="grid grid-cols-4 gap-4 md3:grid-cols-2">
-                  <Controller
-                     name="advantages"
-                     control={control}
-                     defaultValue={[]}
-                     render={({ field }) => {
-                        return advantages.map(item => (
-                           <AdvantageCard
-                              textVisible={false}
-                              key={item.id}
-                              data={item}
-                              onChange={value => {
-                                 if (value) {
-                                    field.onChange([...field.value, item.id]);
-                                 } else {
-                                    field.onChange(field.value.filter(currentItem => currentItem !== item.id));
-                                 }
-                              }}
-                              value={field.value.includes(item.id)}
-                           />
-                        ));
-                     }}
-                  />
-               </div>
-            </div>
-         )}
       </div>
    );
 };

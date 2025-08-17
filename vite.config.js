@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
+import path from 'path';
 
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -24,6 +25,11 @@ const manifest = {
 
 // https://vitejs.dev/config/
 export default defineConfig({
+   resolve: {
+      alias: {
+         '@': path.resolve(__dirname, './src'),
+      },
+   },
    plugins: [
       react(),
       nodePolyfills({
@@ -31,9 +37,6 @@ export default defineConfig({
       }),
       VitePWA({
          registerType: 'autoUpdate',
-         // devOptions: {
-         //    enabled: true,
-         // },
          workbox: {
             globPatterns: ['**/*.{html,css,js,ico,png,svg,jpg}'],
             maximumFileSizeToCacheInBytes: 3500000,

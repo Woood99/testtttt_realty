@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import EmptyBlock from '../../components/EmptyBlock';
 import debounce from 'lodash.debounce';
 import Spinner from '../../ui/Spinner';
-import { getIsDesktop } from '../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 import { useQueryParams } from '../../hooks/useQueryParams';
 import { RoutesPath } from '../../constants/RoutesPath';
 import Button from '../../uiForm/Button';

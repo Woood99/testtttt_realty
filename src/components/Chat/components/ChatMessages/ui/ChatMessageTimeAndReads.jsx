@@ -10,7 +10,7 @@ const ChatMessageTimeAndReads = () => {
 
    const time = dayjs(data.created_at).format('HH:mm');
 
-   const is_bg = (data.photos?.length || videoData) && !dataText && !data.reactions.length;
+   const is_bg = (data.photos?.length || videoData) && !dataText && !data.reactions?.length;
 
    return (
       <div

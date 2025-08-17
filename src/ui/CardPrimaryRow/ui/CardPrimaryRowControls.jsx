@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { useSelector } from 'react-redux';
 
 import { isAdmin } from '../../../helpers/utils';
-import { getUserInfo } from '../../../redux/helpers/selectors';
+import { getUserInfo } from '@/redux';
 import CardPrimaryAdminControls from '../../CardPrimary/CardPrimaryAdminControls';
 import { CardPrimaryRowContext } from '..';
 import { BtnAction, BtnActionComparison, BtnActionFavorite } from '../../ActionBtns';
@@ -32,7 +32,7 @@ const CardPrimaryRowControls = () => {
             </CardPrimaryAdminControls>
          ) : (
             <>
-               <BtnActionComparison id={id} type="complex" variant="tooltip" placement="left" />
+               {/* <BtnActionComparison id={id} type="complex" variant="tooltip" placement="left" /> */}
                <BtnActionFavorite id={id} type="complex" variant="tooltip" placement="left" />
                <Tooltip
                   placement="left"

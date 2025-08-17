@@ -2,20 +2,7 @@ import React from 'react';
 
 import styles from './Checkbox.module.scss';
 import { IconChecked } from '../../ui/Icons';
-import getSrcImage from '../../helpers/getSrcImage';
 import Avatar from '../../ui/Avatar';
-
-export const checkboxesOneSelected = (value, currentElName, set) => {
-   set(prev => {
-      const data = {};
-
-      for (let key in prev) {
-         data[key] = false;
-      }
-
-      return { ...data, [currentElName]: value };
-   });
-};
 
 const Checkbox = ({ option = {}, checked = false, onChange, className = '', disabled, isValid, readOnly = false, children }) => {
    return (

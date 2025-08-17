@@ -10,7 +10,7 @@ import MainLayout from '../../layouts/MainLayout';
 import Header from '../../components/Header';
 import HeaderAdmin from '../../components/Header/HeaderAdmin';
 import DevelopersListFilters from './DevelopersListFilters';
-import { getCitiesValuesSelector, getIsDesktop, getUserInfo } from '../../redux/helpers/selectors';
+import { getCitiesValuesSelector, getIsDesktop, getUserInfo } from '@/redux';
 import BodyAndSidebar from '../../components/BodyAndSidebar';
 import Sidebar from '../../components/Sidebar';
 import { SidebarNavElements } from '../../components/SidebarNav';

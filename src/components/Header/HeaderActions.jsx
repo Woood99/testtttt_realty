@@ -1,33 +1,35 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+
+import { useContext, useRef } from 'react';
 import { useCookies } from 'react-cookie';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import styles from './Header.module.scss';
 
-import { IconAdd, IconDoorOpen, IconArrowY, IconArrowSmall, IconClose } from '../../ui/Icons';
+import { IconAdd, IconDoorOpen, IconArrowY, IconArrowSmall, IconClose, IconСamcorder } from '../../ui/Icons';
 
 import { PersonalModal } from '../../ModalsMain/PersonalModal';
-import { NotificationEl, Tooltip } from '../../ui/Tooltip';
+import { Tooltip } from '../../ui/Tooltip';
 
 import disableScroll from '../../helpers/disableScroll';
 import enableScroll from '../../helpers/enableScroll';
 import Logo from './Logo';
-import { BuyerRoutesPath, PrivateRoutesPath, RoutesPath, SellerRoutesPath } from '../../constants/RoutesPath';
+import { BuyerRoutesPath, PrivateRoutesPath, RoutesPath } from '../../constants/RoutesPath';
 import ModalWrapper from '../../ui/Modal/ModalWrapper';
 import Button from '../../uiForm/Button';
 import Accordion from '../../ui/Accordion';
 import Avatar from '../../ui/Avatar';
 import { capitalizeWords } from '../../helpers/changeString';
 import isEmptyArrObj from '../../helpers/isEmptyArrObj';
-import { ROLE_BUYER, ROLE_SELLER } from '../../constants/roles';
+import { ROLE_BUYER } from '../../constants/roles';
 import { HeaderContext } from '../../context';
 import CityBlock from './CityBlock';
 import HeaderActionsTooltips from './HeaderActionsTooltips';
-import { LoginPhoneModal } from '../../pages/LoginPhone';
-import { checkAuthUser } from '../../redux/helpers/selectors';
+import { checkAuthUser, getWindowSize } from '@/redux';
 import { setSelectAccLogModalOpen } from '../../redux/slices/helpSlice';
 import { useToggleNotification } from '../../hooks/useToggleNotification';
+import { openUrl } from '../../helpers/openUrl';
+import { Maybe } from '@/ui';
 
 const HeaderActions = ({ maxWidth }) => {
    const {
@@ -47,8 +49,7 @@ const HeaderActions = ({ maxWidth }) => {
    const authUser = useSelector(checkAuthUser);
 
    const dispatch = useDispatch();
-
-   const [popupLoginPhoneOpen, setPopupLoginPhoneOpen] = useState(false);
+   const { width } = useSelector(getWindowSize);
 
    const personalBtnRef = useRef(null);
 
@@ -89,29 +90,37 @@ const HeaderActions = ({ maxWidth }) => {
             <Logo />
             {isDesktop && <CityBlock />}
             <div className={styles.headerActionsList}>
+               <Maybe condition={width > 350}>
+                  <a href={RoutesPath.stream.list} className="flex items-center gap-1.5 mr-3 font-medium md1:mr-2">
+                     {isDesktop && <IconСamcorder width={16} height={16} className="stroke-[2px]" />}
+                     Live
+                     <span className="w-2 h-2 bg-red rounded-full" />
+                  </a>
+               </Maybe>
+
                {!isAdmin && (
                   <>
                      {(isEmptyArrObj(userInfo) || userInfo.role?.id === ROLE_BUYER.id) && (
                         <>
                            {isDesktop ? (
-                              <button 
+                              <button
                                  className="flex items-center gap-2 ml-4 mr-4"
                                  onClick={() => {
                                     if (authUser) {
-                                       window.open(BuyerRoutesPath.purchase.create, '_blank');
+                                       openUrl(BuyerRoutesPath.purchase.create);
                                     } else {
                                        dispatch(setSelectAccLogModalOpen(true));
                                     }
                                  }}>
                                  <IconAdd width={16} height={16} className="fill-primary400" />
-                                 <span>Добавить</span>
+                                 <span className="whitespace-nowrap">Разместить заявку</span>
                               </button>
                            ) : (
                               <button
                                  className={styles.headerAction}
                                  onClick={() => {
                                     if (authUser) {
-                                       window.open(BuyerRoutesPath.purchase.create, '_blank');
+                                       openUrl(BuyerRoutesPath.purchase.create);
                                     } else {
                                        dispatch(setSelectAccLogModalOpen(true));
                                     }
@@ -156,7 +165,7 @@ const HeaderActions = ({ maxWidth }) => {
                         </>
                      )}
                   </button>
-                  {!cookies.loggedIn &&
+                  {!authUser &&
                      isDesktop &&
                      personalBtnRef.current &&
                      window.location.pathname !== RoutesPath.loginPhone &&
@@ -180,11 +189,7 @@ const HeaderActions = ({ maxWidth }) => {
                                  size="Small"
                                  className="!px-8 mt-4 w-max"
                                  onClick={() => {
-                                    if (authUser) {
-                                       setPopupLoginPhoneOpen(true);
-                                    } else {
-                                       dispatch(setSelectAccLogModalOpen(true));
-                                    }
+                                    dispatch(setSelectAccLogModalOpen(true));
                                  }}>
                                  Войти
                               </Button>
@@ -251,13 +256,7 @@ const HeaderActions = ({ maxWidth }) => {
                   </div>
                </div>
             )}
-
-            {!cookies.loggedIn && (
-               <ModalWrapper condition={popupLoginPhoneOpen}>
-                  <LoginPhoneModal condition={popupLoginPhoneOpen} set={setPopupLoginPhoneOpen} />
-               </ModalWrapper>
-            )}
-            {cookies.loggedIn && (
+            {authUser && (
                <ModalWrapper condition={popupPersonalOpen}>
                   <PersonalModal condition={popupPersonalOpen} set={setPopupPersonalOpen} />
                </ModalWrapper>

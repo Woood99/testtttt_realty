@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
+
 import Modal from '../../ui/Modal';
-import Button from '../../uiForm/Button';
 import { SpinnerOverlay } from '../../ui/Spinner';
 import ModalHeader from '../../ui/Modal/ModalHeader';
 import { VideoDropZone } from '../DragDrop/VideoDropZone';
@@ -9,7 +10,6 @@ import { refactPhotoStageAppend, refactPhotoStageOne, refactPhotoStageTwo } from
 import { sendPostRequest } from '../../api/requestsApi';
 import ModalWrapper from '../../ui/Modal/ModalWrapper';
 import ControlsVideoEdit from './ControlsVideoEdit';
-import { createPortal } from 'react-dom';
 import { NotificationTimer } from '../../ui/Tooltip';
 
 const ControlsVideoCreate = ({ conditionModal, setModal, options, sending = () => {}, sendingError = () => {} }) => {
@@ -45,7 +45,8 @@ const ControlsVideoCreate = ({ conditionModal, setModal, options, sending = () =
 
       sendPostRequest('/api/upload/video', formData, { 'Content-Type': 'multipart/form-data' })
          .then(resVideo => {
-            options.onSubmitForm({ ...resVideo.data, is_short: options.is_short }).then(res => {
+            options.onSubmitForm({ ...resVideo.data, is_short: options.is_short }).then(async () => {
+               await new Promise(resolve => setTimeout(resolve, 750));
                setVideoIsLoading(false);
                setModal(false);
                setModalEditData(resVideo.data);

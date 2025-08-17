@@ -9,7 +9,7 @@ import isEmptyArrObj from '../../helpers/isEmptyArrObj';
 import { fetchFilters, setResultFilters } from '../../redux/slices/listingSlice';
 
 import ModalWrapper from '../../ui/Modal/ModalWrapper';
-import { getCurrentCityNameSelector } from '../../redux/helpers/selectors';
+import { getCurrentCityNameSelector } from '@/redux';
 
 const ListingForm = ({ options, isAdmin = false, shadow = false, className }) => {
    const dispatch = useDispatch();
@@ -37,6 +37,7 @@ const ListingForm = ({ options, isAdmin = false, shadow = false, className }) =>
 
    useEffect(() => {
       const { filtersMain, filtersAdditional, filtersOther } = filtersSelector;
+      
       let count = getCountOfSelectedFilter([filtersMain, filtersAdditional, filtersOther]);
       if (filtersSelector.type === 'list' && filtersSelector.mapLocationCoordinates && filtersSelector.mapLocationCoordinates.length) {
          count++;
@@ -67,6 +68,7 @@ const ListingForm = ({ options, isAdmin = false, shadow = false, className }) =>
                }
             }
          });
+         
          dispatch(setResultFilters(res));
       }, 550),
       []

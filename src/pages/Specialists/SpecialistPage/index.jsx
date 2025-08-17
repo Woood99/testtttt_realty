@@ -22,7 +22,7 @@ import BlockCardsPrimary from '../../../components/BlockCardsPrimary';
 import MainLayout from '../../../layouts/MainLayout';
 import Header from '../../../components/Header';
 import HeaderAdmin from '../../../components/Header/HeaderAdmin';
-import { getIsDesktop } from '../../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 
 import { useSpecialistPage } from './useSpecialistPage';
 import FixedBlock from '../../../components/FixedBlock';

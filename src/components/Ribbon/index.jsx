@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useSearchParams } from 'react-router-dom';
+import { Navigation } from 'swiper/modules';
+import { useSelector } from 'react-redux';
 
 import Tabs from '../../ui/Tabs';
 import { CardPost, CardStock } from '../../ui/CardStock';
@@ -20,16 +22,12 @@ import getCardsBuildings from '../../api/getCardsBuildings';
 import CardPrimary from '../../ui/CardPrimary';
 import Specialist from '../../ui/Specialist';
 import { NavBtnNext, NavBtnPrev } from '../../ui/NavBtns';
-import { Navigation } from 'swiper/modules';
-import { useDispatch, useSelector } from 'react-redux';
-import { checkAuthUser, getCitiesSelector, getIsDesktop } from '../../redux/helpers/selectors';
+
+import { getCitiesSelector, getIsDesktop } from '@/redux';
 import { objectUpdateVideo } from '../../admin/pages/Object/objectUpdateVideo';
 import ModalWrapper from '../../ui/Modal/ModalWrapper';
 import ControlsVideoEditModal from '../ControlsVideo/ControlsVideoEditModal';
 import ControlsPromoEditModal from '../../admin/pages/Object/ControlsPromoEditModal';
-import { checkDialogId, getDialogId, getUrlNavigateToChatDialog, getUrlNavigateToChatDialogFake } from '../../api/getDialogId';
-import { CHAT_TYPES } from '../Chat/constants';
-import { setSelectAccLogModalOpen } from '../../redux/slices/helpSlice';
 import { useNavigateToChat } from '../../hooks/useNavigateToChat';
 
 const feedParamsTab = [
@@ -464,7 +462,7 @@ export const FeedBlockPrimary = ({ data = [], currentComplexId, onClickShowAll, 
                         return (
                            <div key={index} className="">
                               <div className="flex justify-between items-center gap-4 mb-5">
-                                 <h2 className="title-2-5">{item.name}</h2>
+                                 <h2 className="title-2">{item.name}</h2>
                                  {item.data.length >= 0 && (
                                     <div className="self-start">
                                        {onClickShowAll ? (

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Tag from '../../ui/Tag';
+import { Tag } from '@/ui';
 
 const SelectTag = ({ options, type = 'single', onChange = () => {}, value = [] }) => {
    const [activeTags, setActiveTags] = useState(value);

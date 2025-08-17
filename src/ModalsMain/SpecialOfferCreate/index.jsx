@@ -20,7 +20,7 @@ import ChoiceApartmentsFilter from '../../components/ChoiceApartmentsFilter';
 import { choiceApartmentsFilterOptions } from '../../data/selectsField';
 import isEmptyArrObj from '../../helpers/isEmptyArrObj';
 import CardSmall from '../../ui/CardSmall';
-import { getIsDesktop } from '../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 
 const checkboxes = [
    {

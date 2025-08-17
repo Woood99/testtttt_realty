@@ -1,4 +1,9 @@
 import { useCookies } from 'react-cookie';
+import { createPortal } from 'react-dom';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
 import {
    IconComparison,
    IconComparisonActive,
@@ -12,18 +17,12 @@ import {
 } from '../Icons';
 import styles from './ActionBtns.module.scss';
 import { NotificationTimer, Tooltip } from '../Tooltip';
-import { useEffect, useState } from 'react';
 import { getDataRequest, sendPostRequest } from '../../api/requestsApi';
-import { useDispatch, useSelector } from 'react-redux';
 import SelectAccLogModal from '../../ModalsMain/SelectAccLogModal';
 import { SpinnerForBtn } from '../Spinner';
-import { Link } from 'react-router-dom';
 import { RoutesPath } from '../../constants/RoutesPath';
 
-import { createPortal } from 'react-dom';
-import ModalWrapper from '../Modal/ModalWrapper';
-import { setLikes } from '../../redux/slices/mainInfoSlice';
-import { getMainInfo } from '../../redux/helpers/selectors';
+import { getMainInfo, setLikes } from '@/redux';
 
 export const BtnAction = props => {
    const { className = '', Selector = 'button' } = props;
@@ -364,7 +363,7 @@ export const BtnActionShare = props => {
 
    return (
       <BtnActionBg variant={variant} onClick={() => set(true)} title="Поделиться">
-         <IconShareArrow width={16} height={16} />
+         <IconShareArrow width={16} height={16} className="!fill-[transparent] !stroke-[currentColor] !stroke-[1.5px]" />
       </BtnActionBg>
    );
 };

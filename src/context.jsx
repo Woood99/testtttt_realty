@@ -1,5 +1,6 @@
 import { createContext } from 'react';
 
+export const LayoutContext = createContext();
 export const HeaderContext = createContext();
 
 export const ListingFlatsContext = createContext();
@@ -31,7 +32,11 @@ export const SuggestionsContext = createContext();
 export const SuggestionsCardActionsContext = createContext();
 
 export const ChatContext = createContext();
-export const ChatMessagesContext = createContext();
+export const ChatMessagesContext = createContext({
+   draftOptions: null,
+});
 export const ChatMessageContext = createContext();
+export const ChatVoiceRecorderContext = createContext();
 
 export const VideoCallContext = createContext();
+export const StreamContext = createContext();

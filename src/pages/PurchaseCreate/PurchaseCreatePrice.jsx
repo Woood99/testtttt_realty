@@ -1,38 +1,29 @@
 import React, { useContext } from 'react';
 import { PurchaseCreateContext } from '../../context';
-import { ControllerFieldMultiSelect } from '../../uiForm/ControllerFields/ControllerFieldMultiSelect';
-import { calcPropsOptions } from '../../data/selectsField';
+import { calcPropsOptions, calcPropsOptionsValues } from '../../data/selectsField';
 import isEmptyArrObj from '../../helpers/isEmptyArrObj';
 import { ControllerFieldInput } from '../../uiForm/ControllerFields/ControllerFieldInput';
+import ControllerFieldTagsCalcProp from '../../uiForm/ControllerFields/ControllerFieldTagsCalcProp';
 
 const PurchaseCreatePrice = () => {
-   const { control, errors, isEdit, defaultData, calcPropsWatch, setValue } = useContext(PurchaseCreateContext);
+   const { control, errors, isEdit, defaultData, calcPropsWatch } = useContext(PurchaseCreateContext);
 
    return (
       <div data-block="price">
-         <h2 className="title-2 mb-6">Способ расчёта и цена</h2>
+         <h2 className="title-2 mb-6">Способ покупки и цена</h2>
          <div className="grid grid-cols-2 gap-4 md3:grid-cols-1">
-            <div className="mmd3:row-start-1">
-               <ControllerFieldMultiSelect
+            <div className="mmd3:col-span-2">
+               <ControllerFieldTagsCalcProp
                   name="calc_props"
-                  nameLabel="Способ расчёта"
-                  control={control}
-                  calcProp
-                  options={calcPropsOptions}
+                  required
                   defaultValue={
-                     isEdit && defaultData?.pricing_attributes
-                        ? calcPropsOptions.filter(item => defaultData?.pricing_attributes.includes(item.label))
-                        : []
+                     isEdit ? calcPropsOptions.filter(item => defaultData.pricing_attributes.includes(item.label)).map(item => item.value) : []
                   }
-                  setValue={setValue}
-                  errors={errors}
-                  requiredValue
-                  setValuePermit
                />
             </div>
             {calcPropsWatch && !isEmptyArrObj(calcPropsWatch) && (
                <>
-                  {calcPropsWatch.find(i => i.id === 1) && (
+                  {calcPropsWatch.find(i => i === calcPropsOptionsValues.cash) && (
                      <ControllerFieldInput
                         onlyNumber
                         convertNumber
@@ -47,7 +38,12 @@ const PurchaseCreatePrice = () => {
                         disabled={isEmptyArrObj(calcPropsWatch)}
                      />
                   )}
-                  {calcPropsWatch.find(i => i.id === 2 || i.id === 3 || i.id === 6) && (
+                  {calcPropsWatch.find(
+                     i =>
+                        i === calcPropsOptionsValues.mortgage_approval_bank ||
+                        i === calcPropsOptionsValues.mortgage_no_approval_bank ||
+                        i === calcPropsOptionsValues.installment_plan
+                  ) && (
                      <>
                         <ControllerFieldInput
                            onlyNumber
@@ -61,8 +57,8 @@ const PurchaseCreatePrice = () => {
                            errors={errors}
                            defaultValue={isEdit && defaultData?.price_type === 'month_payment' ? defaultData?.price : ''}
                         />
-                        {calcPropsWatch.find(i => i.id === 2) && (
-                           <div className={`${calcPropsWatch.find(i => i.id === 2) ? 'mmd3:row-start-1 mmd3:row-end-1' : ''}`}>
+                        {calcPropsWatch.find(i => i === calcPropsOptionsValues.mortgage_approval_bank) && (
+                           <div>
                               <ControllerFieldInput
                                  onlyNumber
                                  convertNumber
@@ -75,7 +71,7 @@ const PurchaseCreatePrice = () => {
                               />
                            </div>
                         )}
-                        {!calcPropsWatch.find(i => i.id === 4) && (
+                        {!calcPropsWatch.find(i => i === calcPropsOptionsValues.no_down_payment) && (
                            <ControllerFieldInput
                               onlyNumber
                               convertNumber
@@ -89,7 +85,7 @@ const PurchaseCreatePrice = () => {
                         )}
                      </>
                   )}
-                  {calcPropsWatch.find(i => i.id === 5) && (
+                  {calcPropsWatch.find(i => i === calcPropsOptionsValues.certificate) && (
                      <div>
                         <ControllerFieldInput
                            onlyNumber

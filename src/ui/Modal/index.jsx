@@ -4,6 +4,8 @@ import cn from 'classnames';
 
 import './Modal.scss';
 import { IconClose } from '../Icons';
+import { useSelector } from 'react-redux';
+import { getIsDesktop } from '@/redux';
 
 function ConditionalPortal({ children, usePortal }) {
    if (usePortal) {
@@ -28,6 +30,8 @@ function Modal({
    usePortal = true,
    modalContentRef = null,
 }) {
+   const isDesktop = useSelector(getIsDesktop);
+
    useEffect(() => {
       const close = e => {
          if (e.keyCode === 27) {
@@ -43,6 +47,7 @@ function Modal({
    if (!Boolean(condition)) {
       return '';
    }
+
    return (
       <ConditionalPortal usePortal={usePortal}>
          <div onClick={() => set(false)} style={style} className={`modal-overlay ${(options && options.overlayClassNames) || ''}`}>
@@ -54,12 +59,16 @@ function Modal({
                         'modal-close',
                         closeBtnWhite && 'modal-close-white',
                         closeBtnDark && 'modal-close-dark',
-                        options?.modalCloseClassNames
+                        options?.modalCloseClassNames,
+                        !(isDesktop || closeBtnWhite || closeBtnDark) && '!w-auto px-3 !right-0'
                      )}>
-                     <IconClose width={25} height={25} className={cn('fill-dark', options?.modalCloseIconClassNames)} />
-                     <div>
-                        <span></span>
-                     </div>
+                     {isDesktop || closeBtnWhite || closeBtnDark ? (
+                        <IconClose width={25} height={25} className={cn('fill-dark', options?.modalCloseIconClassNames)} />
+                     ) : (
+                        <div>
+                           <span className="text-blue">Закрыть</span>
+                        </div>
+                     )}
                   </button>
                )}
                {ModalHeader ? <ModalHeader /> : ''}

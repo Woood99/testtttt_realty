@@ -259,8 +259,8 @@ const CreateConstructProgress = ({ conditionModal, setModal, options, type = 'cr
                   nameLabel="Корпус"
                   options={options.frames}
                   name="liter"
-                  requiredValue
-                  errors={errors}
+                  // requiredValue
+                  // errors={errors}
                   defaultOption
                   defaultValue={defaultValues.liter || options.frames[0]}
                />

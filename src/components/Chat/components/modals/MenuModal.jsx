@@ -1,127 +1,113 @@
-import ModalWrapper from '../../../../ui/Modal/ModalWrapper';
-import BUILDING_ICON from '../../../../assets/svg/building.svg';
-import CardIcon from '../../../../ui/CardIcon';
-import Modal from '../../../../ui/Modal';
-import { useSelector } from 'react-redux';
-import { getUserInfo } from '../../../../redux/helpers/selectors';
-import { isAdmin, isBuyer, isSeller } from '../../../../helpers/utils';
-import { IconHand, IconHouseBuilding, IconLock2, IconMegaphone, IconMoon, IconUsers, IconUsers2 } from '../../../../ui/Icons';
-import { useContext } from 'react';
-import { ChatContext } from '../../../../context';
+import { useContext, useState } from "react";
+import { useSelector } from "react-redux";
 
-import styles from '../../Chat.module.scss';
-import Avatar from '../../../../ui/Avatar';
-import { capitalizeWords } from '../../../../helpers/changeString';
-import { ElementNavBtn } from '../../../../ui/Elements';
-import { ExternalLink } from '../../../../ui/ExternalLink';
-import { AuthRoutesPath } from '../../../../constants/RoutesPath';
-import CheckboxToggle from '../../../../uiForm/CheckboxToggle';
-import { useLocation } from 'react-router-dom';
+import { useAuth, useHistoryState } from "@/hooks";
 
-const MenuModal = ({ options }) => {
-   const { setGroupFormModal, setChannelFormModal, setBlockedUserList, themeOptions } = useContext(ChatContext);
-   const location = useLocation();
-   const { theme, toggleTheme } = themeOptions;
-   const { condition, set, setCreateDialogWithDevelopModal, setCreateDialogWithSpecialistModal } = options;
+import { capitalizeWords, changePhoneFormat, isAdmin, isBuyer, isSeller } from "@/helpers";
 
-   const userInfo = useSelector(getUserInfo);
-   const userIsBuyer = isBuyer(userInfo);
-   const userIsAdmin = isAdmin(userInfo);
-   const userIsSeller = isSeller(userInfo);
+import { ChatContext } from "@/context";
 
-   return (
-      <ModalWrapper condition={condition}>
-         <Modal
-            options={{ overlayClassNames: '_left', modalClassNames: 'mmd1:!w-[400px]', modalContentClassNames: 'md1:flex md1:flex-col !px-3' }}
-            condition={condition}
-            set={set}>
-            {Boolean(userInfo) && (
-               <div className="flex flex-col items-center mb-5">
-                  <Avatar src={userInfo.image} title={capitalizeWords(userInfo.name, userInfo.surname)} size={72} />
+import { getUserInfo } from "@/redux";
 
-                  {/* для менеджера */}
-                  <ExternalLink to={AuthRoutesPath.profile.edit} className="title-3-5 mt-3">{`${userInfo.surname || ''} ${
-                     userInfo.name || ''
-                  }`}</ExternalLink>
-               </div>
-            )}
+import { Avatar, ElementNavBtn, Maybe, Modal, ModalWrapper } from "@/ui";
+import { IconArrow, IconExit, IconLock2, IconMegaphone, IconUsers } from "@/ui/Icons";
 
-            <div className="flex flex-col border-top-lightgray">
-               <div className="mt-2">
-                  {(userIsAdmin || userIsSeller) && (
-                     <>
-                        <button
-                           onClick={() => {
-                              set(false);
-                              setGroupFormModal(true);
-                           }}
-                           className={styles.ChatMenuButton}>
-                           <ElementNavBtn className="flex items-center">
-                              <IconUsers className="!fill-blue" />
-                              <span>Создать групповой чат</span>
-                           </ElementNavBtn>
-                        </button>
-                        <button
-                           onClick={() => {
-                              set(false);
-                              setChannelFormModal(true);
-                           }}
-                           className={styles.ChatMenuButton}>
-                           <ElementNavBtn className="flex items-center">
-                              <IconMegaphone className="fill-blue" />
-                              <span>Создать канал</span>
-                           </ElementNavBtn>
-                        </button>
-                     </>
-                  )}
+import styles from "../../Chat.module.scss";
+import ChatNotAuth from "../ChatNotAuth";
 
-                  <button
-                     onClick={() => {
-                        set(false);
-                        setCreateDialogWithDevelopModal(true);
-                     }}
-                     className={styles.ChatMenuButton}>
-                     <ElementNavBtn className="flex items-center">
-                        <IconHouseBuilding className="fill-blue" />
-                        <span>Застройщики</span>
-                     </ElementNavBtn>
-                  </button>
-                  <button
-                     onClick={() => {
-                        set(false);
-                        setCreateDialogWithSpecialistModal(true);
-                     }}
-                     className={styles.ChatMenuButton}>
-                     <ElementNavBtn className="flex items-center">
-                        <IconUsers2 className="fill-blue" />
-                        <span>Менеджеры</span>
-                     </ElementNavBtn>
-                  </button>
-                  {Boolean(userIsBuyer) && (
-                     <button onClick={() => setBlockedUserList(true)} className={styles.ChatMenuButton}>
-                        <ElementNavBtn className="flex items-center">
-                           <IconLock2 className="fill-blue" />
-                           <span>Заблокированные пользователи</span>
-                        </ElementNavBtn>
-                     </button>
-                  )}
-                  {/* {location.pathname === AuthRoutesPath.chat && (
-                     <button onClick={() => {}} className={styles.ChatMenuButton}>
-                        <ElementNavBtn className="flex items-center">
-                           <CheckboxToggle className="items-center w-full" checked={theme === 'dark'} set={()=>{
-                              toggleTheme()
-                           }} text="">
-                              <IconMoon className="fill-blue -order-2" />
-                              <span className="-order-1 ml-3 mr-auto text-dark">Ночной режим</span>
-                           </CheckboxToggle>
-                        </ElementNavBtn>
-                     </button>
-                  )} */}
-               </div>
-            </div>
-         </Modal>
-      </ModalWrapper>
-   );
+import ProfileEditModal from "@/pagesUser/Profile/ProfileEditModal";
+
+const MenuModal = () => {
+	const { setGroupFormModal, setChannelFormModal, setBlockedUserList, notAuth, sidebarModalOpen, setSidebarModalOpen } = useContext(ChatContext);
+
+	const userInfo = useSelector(getUserInfo);
+	const userIsBuyer = isBuyer(userInfo);
+	const userIsAdmin = isAdmin(userInfo);
+	const userIsSeller = isSeller(userInfo);
+	const userSellerOrAdmin = userIsAdmin || userIsSeller;
+	const { logout } = useAuth();
+	const [isOpenEditProfile, setIsOpenEditProfile] = useHistoryState(false);
+
+	return (
+		<>
+			<ModalWrapper condition={sidebarModalOpen}>
+				<Modal
+					options={{ overlayClassNames: "_left", modalClassNames: "mmd1:!w-[400px]", modalContentClassNames: "flex flex-col !px-3" }}
+					condition={sidebarModalOpen}
+					set={setSidebarModalOpen}>
+					<Maybe condition={!notAuth} fallback={<ChatNotAuth />}>
+						<Maybe condition={userInfo}>
+							<button
+								type='button'
+								onClick={() => {
+									setIsOpenEditProfile(true);
+								}}
+								className='flex items-center gap-3 mb-5 md1:mb-4 relative transition-all duration-200 rounded-xl py-2 px-3 mmd1:hover:bg-primary700'>
+								<Avatar src={userInfo.image} title={capitalizeWords(userInfo.name, userInfo.surname)} size={60} />
+								<div className='flex flex-col gap-1.5'>
+									<p className='text-defaultMax font-medium'>
+										{userInfo.surname || ""} {userInfo.name || ""}
+									</p>
+									<Maybe condition={userInfo.phone}>
+										<p className='text-primary400'>{changePhoneFormat(userInfo.phone)}</p>
+									</Maybe>
+								</div>
+								<IconArrow width={28} height={28} className='ml-auto' />
+							</button>
+						</Maybe>
+						<div className='flex flex-col border-top-lightgray'>
+							<div className='mt-2'>
+								<Maybe condition={userSellerOrAdmin}>
+									<button
+										onClick={() => {
+											setSidebarModalOpen(false);
+											setGroupFormModal(true);
+										}}
+										className={styles.ChatMenuButton}>
+										<ElementNavBtn>
+											<IconUsers />
+											<span>Создать групповой чат</span>
+										</ElementNavBtn>
+									</button>
+									<button
+										onClick={() => {
+											setSidebarModalOpen(false);
+											setChannelFormModal(true);
+										}}
+										className={styles.ChatMenuButton}>
+										<ElementNavBtn>
+											<IconMegaphone className='fill-blue' />
+											<span>Создать канал</span>
+										</ElementNavBtn>
+									</button>
+								</Maybe>
+								<Maybe condition={userIsBuyer}>
+									<button onClick={() => setBlockedUserList(true)} className={styles.ChatMenuButton}>
+										<ElementNavBtn>
+											<IconLock2 className='fill-blue' />
+											<span>Заблокированные пользователи</span>
+										</ElementNavBtn>
+									</button>
+								</Maybe>
+								<button
+									onClick={async () => {
+										await logout();
+										window.location.reload();
+									}}
+									className={styles.ChatMenuButton}>
+									<ElementNavBtn>
+										<IconExit />
+										<span>Выйти</span>
+									</ElementNavBtn>
+								</button>
+							</div>
+						</div>
+					</Maybe>
+				</Modal>
+			</ModalWrapper>
+			<ProfileEditModal condition={isOpenEditProfile} set={setIsOpenEditProfile} />
+		</>
+	);
 };
 
 export default MenuModal;

@@ -9,7 +9,7 @@ import paintOnMap from '../../helpers/paintOnMap';
 import { colorLinePaint } from '../../unifComponents/ymap/ymapStyles';
 import { Chars } from '../../ui/Chars';
 import { useSelector } from 'react-redux';
-import { getIsDesktop } from '../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 
 const PurchaseRequestMap = () => {
    const { data } = useContext(PurchasePageContext);

@@ -12,7 +12,7 @@ import WebSkeleton from '../../../../ui/Skeleton/WebSkeleton';
 import { ChatContext } from '../../../../context';
 import { CHAT_TYPES } from '../../constants';
 import { useSelector } from 'react-redux';
-import { getUserInfo } from '../../../../redux/helpers/selectors';
+import { getUserInfo } from '@/redux';
 import Avatar from '../../../../ui/Avatar';
 
 const ChannelGroupInfoModal = ({ condition, set, dialog }) => {

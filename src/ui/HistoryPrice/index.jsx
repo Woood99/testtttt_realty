@@ -8,7 +8,7 @@ import { BtnAction } from '../ActionBtns';
 import { ElementOldPrice } from '../Elements';
 import { Tooltip } from '../Tooltip';
 import { useSelector } from 'react-redux';
-import { getIsDesktop, getWindowSize } from '../../redux/helpers/selectors';
+import { getIsDesktop, getWindowSize } from '@/redux';
 
 const HistoryPrice = ({ data, className = '' }) => {
    const CurrentIcon = ({ status }) => {

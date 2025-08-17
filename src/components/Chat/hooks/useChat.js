@@ -1,378 +1,478 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
-import debounce from 'lodash.debounce';
+import debounce from "lodash.debounce";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 
-import { sendPostRequest } from '../../../api/requestsApi';
-import { refactPhotoStageAppend, refactPhotoStageOne, refactPhotoStageTwo } from '../../../helpers/photosRefact';
-import convertFieldsJSON from '../../../helpers/convertFieldsJSON';
-import { getUserInfo } from '../../../redux/helpers/selectors';
-import { CHAT_TAGS } from '../../../constants/chat-tags';
-import { usePinMessage } from './usePinMessage';
-import isEmptyArrObj from '../../../helpers/isEmptyArrObj';
-import { useChatMessageComments } from './useChatMessageComments';
-import { useChatDialogs } from './useChatDialogs';
-import { useChatHelpers } from './useChatHelpers';
-import { useChatMessagesPagination } from './useChatMessagesPagination';
-import { useBlockUser } from './useBlockUser';
-import { useTheme } from './useTheme';
-import { getDialogId } from '../../../api/getDialogId';
-import { useChatParamsActions } from './useChatParamsActions';
-import { CHAT_TYPES } from '../constants';
+import { CHAT_TAGS } from "@/constants";
+
+import { getDialogId } from "@/api/getDialogId";
+import { sendPostRequest } from "@/api/requestsApi";
+
+import { useHistoryState } from "@/hooks";
+
+import { convertFieldsJSON, isEmptyArrObj, refactPhotoStageAppend, refactPhotoStageOne, refactPhotoStageTwo } from "@/helpers";
+
+import { authLoadingSelector, checkAuthUser, getHelpSliceSelector, getUserInfo } from "@/redux";
+
+import hasText from "../components/ChatDraft/hasText";
+import { CHAT_TYPES } from "../constants";
+
+import { useBlockUser } from "./useBlockUser";
+import { useChatDialogs } from "./useChatDialogs";
+import { useChatHelpers } from "./useChatHelpers";
+import { useChatMessageComments } from "./useChatMessageComments";
+import { useChatMessagesPagination } from "./useChatMessagesPagination";
+import { useChatParamsActions } from "./useChatParamsActions";
+import { usePinMessage } from "./usePinMessage";
+import { useTheme } from "./useTheme";
 
 export const useChat = options => {
-   const { defaultDialogId, tag, fake_dialog } = options;
+	const { defaultDialogId, tag, fake_dialog } = options;
 
-   const [currentDialog, setCurrentDialog] = useState({});
-   const [currentDialogSettings, setCurrentDialogSettings] = useState({});
+	const [currentDialog, setCurrentDialog] = useState({});
+	const [currentDialogSettings, setCurrentDialogSettings] = useState({});
 
-   const userInfo = useSelector(getUserInfo);
+	const userInfo = useSelector(getUserInfo);
 
-   const [showPopperMessage, setShowPopperMessage] = useState(false);
+	const [showPopperMessage, setShowPopperMessage] = useState(false);
+	const [showPopperMessagePosition, setShowPopperMessagePosition] = useState(null);
 
-   const [dialogs, setDialogs] = useState([]);
-   const [cachedDialog, setCachedDialog] = useState({});
-   const [isLoadingDialogs, setIsLoadingDialogs] = useState(true);
+	const [dialogs, setDialogs] = useState([]);
+	const [cachedDialog, setCachedDialog] = useState({});
+	const [isLoadingDialogs, setIsLoadingDialogs] = useState(true);
+	const [showMenuDialog, setShowMenuDialog] = useState(false);
 
-   const [filesUpload, setFilesUpload] = useState([]);
+	const [filesUpload, setFilesUpload] = useState([]);
 
-   const [messageText, setMessageText] = useState(tag ? CHAT_TAGS.find(item => item.id === +tag)?.text || '' : '');
+	const [messageText, setMessageText] = useState(tag ? CHAT_TAGS.find(item => item.id === +tag)?.text || "" : "");
 
-   const [isLoadingDialog, setIsLoadingDialog] = useState(true);
-   const [allowScroll, setAllowScroll] = useState(true);
+	const [isLoadingDialog, setIsLoadingDialog] = useState(false);
+	const [allowScroll, setAllowScroll] = useState(true);
 
-   const chatRootRef = useRef(null);
-   const chatBottomRef = useRef(null);
+	const chatRootRef = useRef(null);
+	const chatBottomRef = useRef(null);
 
-   const [deleteMessagesModal, setDeleteMessagesModal] = useState(false);
-   const [isVoiceRecording, setIsVoiceRecording] = useState(false);
+	const [deleteMessagesModal, setDeleteMessagesModal] = useState(false);
+	const [deleteDialogModal, setDeleteDialogModal] = useState(false);
+	const [isVoiceRecording, setIsVoiceRecording] = useState(false);
 
-   const [isOpenMenu, setIsOpenMenu] = useState(false);
-   const [isOpenSmileMenu, setIsOpenSmileMenu] = useState(false);
-   const [isVisibleBtnArrow, setIsVisibleBtnArrow] = useState(false);
-   const [forwardMessageId, setForwardMessageId] = useState(false);
-   const [createEventModal, setCreateEventModal] = useState(false);
-   const [apartmentsByBuildingModal, setApartmentsByBuildingModal] = useState(false);
+	const [isOpenMenu, setIsOpenMenu] = useHistoryState(false);
+	const [isOpenSmileMenu, setIsOpenSmileMenu] = useHistoryState(false);
+	const [isVisibleBtnArrow, setIsVisibleBtnArrow] = useState(false);
+	const [forwardMessageId, setForwardMessageId] = useState(false);
+	const [createEventModal, setCreateEventModal] = useState(false);
+	const [apartmentsByBuildingModal, setApartmentsByBuildingModal] = useState(false);
+	const [sidebarModalOpen, setSidebarModalOpen] = useHistoryState(false);
 
-   const [isEdit, setIsEdit] = useState(false);
+	const [createDialogWithDevelopModal, setCreateDialogWithDevelopModal] = useHistoryState(false);
+	const [createDialogWithSpecialistModal, setCreateDialogWithSpecialistModal] = useHistoryState(false);
 
-   const dialogBuilding = currentDialog.building ? convertFieldsJSON(currentDialog.building) : null;
-   const isVisibleVideoCall = !currentDialog.is_fake && currentDialog?.dialog_type === CHAT_TYPES.CHAT;
+	const [isEdit, setIsEdit] = useState(false);
 
-   const [searchParams, setSearchParams] = useSearchParams();
-   const dialogsActions = useChatDialogs();
-   const chatPinMessages = usePinMessage({ refactDialog: dialogsActions.refactDialog });
-   const messageCommentsOptions = useChatMessageComments({ refactDialog: dialogsActions.refactDialog });
-   const { fakeDialogDeleteAndSetDialogId } = useChatParamsActions({ tag, messageText, fake_dialog, userInfo, setCurrentDialog });
-   const blockUserOptins = useBlockUser();
-   const themeOptions = useTheme();
+	const dialogBuilding = currentDialog.building ? convertFieldsJSON(currentDialog.building) : null;
+	const isVisibleVideoCall = !currentDialog.is_fake && currentDialog?.dialog_type === CHAT_TYPES.CHAT;
 
-   const currentChannel = useRef(null);
+	const [searchParams, setSearchParams] = useSearchParams();
+	const dialogsActions = useChatDialogs();
+	const chatPinMessages = usePinMessage({ refactDialog: dialogsActions.refactDialog });
+	const messageCommentsOptions = useChatMessageComments({ refactDialog: dialogsActions.refactDialog });
+	const blockUserOptins = useBlockUser();
+	const themeOptions = useTheme();
 
-   const chatHelpers = useChatHelpers({ currentDialog, userInfo });
-   const chatMessages = useChatMessagesPagination({
-      currentDialog,
-      chatPinMessages,
-      dialogsActions,
-      setIsLoadingDialog,
-      cachedDialog,
-      setCachedDialog,
-      mainBlockBar: chatHelpers.mainBlockBar,
-      setDialogs,
-   });
+	const currentChannel = useRef(null);
 
-   const debouncedHandleDataDialogs = useCallback(
-      debounce(async () => {
-         const res = await dialogsActions.getDialogs();
-         setDialogs(res);
-      }, 1200),
-      []
-   );
+	const authUser = useSelector(checkAuthUser);
+	const authLoading = useSelector(authLoadingSelector);
+	const notAuth = !authUser && !authLoading && !isLoadingDialogs && !isLoadingDialog;
+	const { isConnectEcho } = useSelector(getHelpSliceSelector);
 
-   const debouncedHandleDataDialog = useCallback(
-      debounce(async ({ dialog_id }) => {
-         const dialogs = await dialogsActions.getDialogs();
-         setDialogs(dialogs);
-         setCurrentDialog(prev => {
-            const dialog = dialogs.find(item => item.id === prev.id);
-            if (dialog) {
-               return dialog;
-            }
+	const chatHelpers = useChatHelpers({ currentDialog, userInfo });
+	const chatMessages = useChatMessagesPagination({
+		currentDialog,
+		chatPinMessages,
+		dialogsActions,
+		setIsLoadingDialog,
+		cachedDialog,
+		setCachedDialog,
+		mainBlockBar: chatHelpers.mainBlockBar,
+		setDialogs
+	});
 
-            return prev;
-         });
+	const chatAllReset = useCallback(() => {
+		setIsLoadingDialog(false);
+		setCurrentDialog({});
+		chatMessages.setMessages([]);
+		chatPinMessages.setPinMessages([]);
+		setCachedDialog({});
+		setIsOpenSmileMenu(false);
+		setIsOpenMenu(false);
+		setShowPopperMessage(false);
+		setShowPopperMessagePosition(null);
+		setAllowScroll(false);
+	}, []);
 
-         const scrollbar = chatHelpers.mainBlockBar.current;
+	const { fakeDialogDeleteAndSetDialogId } = useChatParamsActions({
+		tag,
+		messageText,
+		fake_dialog,
+		userInfo,
+		setCurrentDialog,
+		setIsLoadingDialog,
+		chatAllReset,
+		setAllowScroll,
+		setMessages: chatMessages.setMessages,
+		setPinMessages: chatPinMessages.setPinMessages,
+		setCachedDialog
+	});
 
-         const isBottom = scrollbar && scrollbar.scrollTop + scrollbar.clientHeight >= scrollbar.scrollHeight - 150;
-         if (dialogs.find(item => item.id === dialog_id)) {
-            await chatMessages.getDialog(dialog_id);
-         } else {
-            const newSearchParams = new URLSearchParams(searchParams);
-            newSearchParams.delete('dialog');
-            setSearchParams(newSearchParams);
-         }
+	const deleteDialogParams = () => {
+		const newSearchParams = new URLSearchParams(searchParams);
+		newSearchParams.delete("dialog");
+		newSearchParams.delete("not_dialog");
+		newSearchParams.delete("building_id");
+		newSearchParams.delete("organization_id");
+		newSearchParams.delete("recipients_id");
+		setSearchParams(newSearchParams);
+	};
 
-         if (isBottom) {
-            scrollbar.scrollTop = scrollbar.scrollHeight;
-         }
-      }, 1200),
-      [currentDialog]
-   );
+	const debouncedHandleDataDialogs = useCallback(
+		debounce(async () => {
+			const res = await dialogsActions.getDialogs();
+			setDialogs(res);
+		}, 500),
+		[]
+	);
 
-   const updateDialogsAndDialogSettings = async () => {
-      const dialogsData = await dialogsActions.getDialogs();
-      setDialogs(dialogsData);
-      if (currentDialog.id) {
-         setCurrentDialog(dialogsData.find(item => item.id === currentDialog.id) || {});
-      }
+	const debouncedHandleDataDialog = useCallback(
+		debounce(async ({ dialog_id }) => {
+			const dialogs = await dialogsActions.getDialogs();
+			setDialogs(dialogs);
+			setCurrentDialog(prev => {
+				const dialog = dialogs.find(item => item.id === prev.id);
+				if (dialog) {
+					return dialog;
+				}
 
-      const currentIdSettings = currentDialogSettings?.id;
-      if (currentIdSettings) {
-         setCurrentDialogSettings(dialogsData.find(item => item.id === currentIdSettings) || {});
-      }
-   };
+				return prev;
+			});
 
-   useEffect(() => {
-      if (isEmptyArrObj(userInfo)) return;
+			const scrollbar = chatHelpers.mainBlockBar.current;
 
-      const fetchData = async () => {
-         setIsLoadingDialogs(true);
+			const isBottom = scrollbar && scrollbar.scrollTop + scrollbar.clientHeight >= scrollbar.scrollHeight - 150;
+			if (dialogs.find(item => item.id === dialog_id)) {
+				await chatMessages.getDialog(dialog_id);
+			} else {
+				deleteDialogParams();
+			}
 
-         const dialogsData = await dialogsActions.getDialogs();
-         setDialogs(dialogsData);
+			if (isBottom) {
+				scrollbar.scrollTop = scrollbar.scrollHeight;
+			}
+		}, 500),
+		[currentDialog]
+	);
 
-         setIsLoadingDialogs(false);
+	const updateDialogsAndDialogSettings = async () => {
+		const dialogsData = await dialogsActions.getDialogs();
+		setDialogs(dialogsData);
+		if (currentDialog.id) {
+			setCurrentDialog(dialogsData.find(item => item.id === currentDialog.id) || {});
+		}
 
-         const channelDialog = window.Echo.join(`user-dialogs.${userInfo.id}`);
-         channelDialog.stopListening('UserDialogsEvent');
-         channelDialog.listen('UserDialogsEvent', data => {
-            debouncedHandleDataDialogs();
-         });
-      };
+		const currentIdSettings = currentDialogSettings?.id;
+		if (currentIdSettings) {
+			setCurrentDialogSettings(dialogsData.find(item => item.id === currentIdSettings) || {});
+		}
+	};
 
-      fetchData();
-   }, [userInfo]);
+	useEffect(() => {
+		if (authLoading) return;
+		if (isEmptyArrObj(userInfo)) {
+			setIsLoadingDialogs(false);
+			return;
+		}
 
-   useEffect(() => {
-      if (isEmptyArrObj(userInfo)) return;
+		const fetchData = async () => {
+			setIsLoadingDialogs(true);
 
-      if (!defaultDialogId) {
-         setIsLoadingDialog(false);
-         setCurrentDialog({});
-         chatMessages.setMessages([]);
-         chatPinMessages.setPinMessages([]);
-         setCachedDialog({});
-         return;
-      }
+			const dialogsData = await dialogsActions.getDialogs();
 
-      fetchData();
+			setDialogs(dialogsData);
 
-      async function fetchData() {
-         setIsLoadingDialog(true);
-         setAllowScroll(true);
-         const dialogsData = await dialogsActions.getDialogs();
+			setIsLoadingDialogs(false);
 
-         const dialogById = dialogsData.find(item => item.id === defaultDialogId);
-         if (dialogById) {
-            setCachedDialog({});
-            chatMessages.setMessages([]);
+			const channelDialog = window.Echo.join(`user-dialogs.${userInfo.id}`);
+			channelDialog.stopListening("UserDialogsEvent");
+			channelDialog.listen("UserDialogsEvent", data => {
+				debouncedHandleDataDialogs();
+			});
+		};
 
-            setCurrentDialog(dialogById);
-            await chatMessages.getDialog(defaultDialogId);
-            connectToChat(defaultDialogId);
-         }
-         // await new Promise(resolve => setTimeout(resolve, 400));
-         setIsLoadingDialog(false);
-      }
-   }, [defaultDialogId, userInfo]);
+		if (isConnectEcho) {
+			fetchData();
+		}
+	}, [userInfo, authLoading, isConnectEcho]);
 
-   useEffect(() => {
-      if (!currentDialog.is_fake || !fake_dialog) return;
+	useEffect(() => {
+		if (authLoading) return;
+		if (isEmptyArrObj(userInfo) || !defaultDialogId) {
+			if (fake_dialog) return;
+			chatAllReset();
+			return;
+		}
 
-      const fetchData = async () => {
-         const dialog_id = await getDialogId(fake_dialog);
-         fakeDialogDeleteAndSetDialogId(dialog_id);
-      };
+		const abortController = new AbortController();
+		const signal = abortController.signal;
 
-      fetchData();
-   }, [fake_dialog, currentDialog.is_fake]);
+		const fetchData = async () => {
+			chatAllReset();
+			setIsLoadingDialog(true);
+			setAllowScroll(true);
 
-   const connectToChat = id => {
-      if (currentChannel.current) {
-         window.Echo.leave(currentChannel.current.name);
-      }
+			try {
+				const dialogsData = await dialogsActions.getDialogs(signal);
+				const dialogById = dialogsData.find(item => item.id === defaultDialogId);
+				if (dialogById) {
+					setCurrentDialog(dialogById);
+					await chatMessages.getDialog(defaultDialogId, true, signal);
+					connectToChat(defaultDialogId);
+				} else {
+					const dialog = await chatMessages.getDialog(defaultDialogId, true, signal);
+					setCurrentDialog({ ...dialog, is_member: false, is_fake: true });
+					connectToChat(dialog.id);
+				}
+			} catch (error) {
+				if (!abortController.signal.aborted) {
+					deleteDialogParams();
+				} else {
+					console.log("отмена");
+				}
+			} finally {
+				setIsLoadingDialog(false);
+			}
+		};
 
-      currentChannel.current = window.Echo.join(`dialog.${id}`);
-      currentChannel.current.listen('DialogEvent', () => {
-         debouncedHandleDataDialog({ dialog_id: id });
-      });
-   };
+		fetchData();
 
-   const sendMessage = async (audioBlob = null, videoBlob = null) => {
-      if (!isEdit) {
-         const obj = {
-            dialog_id: currentDialog.id,
-            text: messageText || '',
-            photos: filesUpload.filter(item => item.type === 'image'),
-            video: videoBlob ? [videoBlob] : filesUpload.filter(item => item.type === 'video'),
-         };
+		return () => {
+			abortController.abort();
+		};
+	}, [defaultDialogId, userInfo, fake_dialog]);
 
-         const formData = new FormData();
+	useEffect(() => {
+		const handleMessage = event => {
+			try {
+				let data = event.data;
 
-         if (currentDialog.is_fake) {
-            const dialog_id = await getDialogId(fake_dialog);
-            formData.append('dialog_id', dialog_id);
-            fakeDialogDeleteAndSetDialogId(dialog_id);
-         } else {
-            formData.append('dialog_id', obj.dialog_id);
-         }
+				// Если это строка → парсим
+				if (typeof data === "string") {
+					data = JSON.parse(data);
+				}
+				if (data.type === "open-dialog" && data.dialog_id) {
+					console.log(data.dialog_id);
+					// 👉 например navigate(`/chat/${data.dialog_id}`)
+				}
+			} catch (e) {
+				console.error("Ошибка при обработке сообщения:", e, event.data);
+			}
+		};
 
-         formData.append('text', obj.text);
+		document.addEventListener("message", handleMessage);
+		window.addEventListener("message", handleMessage); // для iOS
 
-         if (obj.photos?.length) {
-            obj.photos = refactPhotoStageOne(obj.photos);
-            refactPhotoStageAppend(obj.photos, formData);
-            obj.photos = refactPhotoStageTwo(obj.photos);
-            formData.append('photos', JSON.stringify(obj.photos));
-         }
+		return () => {
+			document.removeEventListener("message", handleMessage);
+			window.removeEventListener("message", handleMessage);
+		};
+	}, []);
+	const connectToChat = id => {
+		if (currentChannel.current) {
+			window.Echo.leave(currentChannel.current.name);
+		}
 
-         if (obj.video?.length) {
-            formData.append('video', obj.video[0].file);
-            formData.append('is_story', obj.video[0].is_story ? 1 : 0);
-         }
+		currentChannel.current = window.Echo.join(`dialog.${id}`);
+		currentChannel.current.listen("DialogEvent", () => {
+			debouncedHandleDataDialog({ dialog_id: id });
+		});
+	};
 
-         if (audioBlob) {
-            let file = new File([audioBlob], 'audio.ogg', {
-               type: 'audio/ogg',
-            });
+	const sendMessage = async (audioBlob = null, videoBlob = null) => {
+		if (!isEdit) {
+			const obj = {
+				dialog_id: currentDialog.id,
+				text: hasText(messageText) ? messageText : "",
+				photos: filesUpload.filter(item => item.type === "image"),
+				video: videoBlob ? [videoBlob] : filesUpload.filter(item => item.type === "video")
+			};
 
-            formData.append('audio', file);
-         }
+			const formData = new FormData();
 
-         setMessageText('');
-         setFilesUpload([]);
+			if (currentDialog.is_fake) {
+				const dialog_id = await getDialogId(fake_dialog);
+				formData.append("dialog_id", dialog_id);
+				fakeDialogDeleteAndSetDialogId(dialog_id);
+			} else {
+				formData.append("dialog_id", obj.dialog_id);
+			}
 
-         const dialogAddMessageFetch = async formData => {
-            const updatedMessages = await dialogsActions.dialogAddMessage(chatMessages.messages, formData);
+			formData.append("text", obj.text);
 
-            chatMessages.setMessages(updatedMessages);
-         };
-         await dialogAddMessageFetch(formData);
+			if (obj.photos?.length) {
+				obj.photos = refactPhotoStageOne(obj.photos);
+				refactPhotoStageAppend(obj.photos, formData);
+				obj.photos = refactPhotoStageTwo(obj.photos);
+				formData.append("photos", JSON.stringify(obj.photos));
+			}
 
-         setTimeout(() => {
-            chatHelpers.scrollMainBlock();
-         }, 100);
+			if (obj.video?.length) {
+				formData.append("video", obj.video[0].file);
+				formData.append("is_story", obj.video[0].is_story ? 1 : 0);
+			}
 
-         await sendPostRequest('/api/messages/new-message', formData, {
-            'Content-Type': 'multipart/form-data',
-            'Accept-Encodin': 'gzip, deflate, br, zstd',
-            Accept: 'application/json',
-         });
-      } else {
-         const obj = {
-            text: isEdit.text || '',
-            id: isEdit.id,
-            dialog_id: isEdit.dialog_id,
-            photos: filesUpload.filter(item => item.type === 'image').map(item => ({ ...item, image: item.image.url })),
-         };
+			if (audioBlob) {
+				let file = new File([audioBlob], "audio.ogg", {
+					type: "audio/ogg"
+				});
 
-         const formData = new FormData();
+				formData.append("audio", file);
+			}
 
-         formData.append('text', obj.text);
-         formData.append('id', obj.id);
-         formData.append('dialog_id', obj.dialog_id);
+			setIsOpenMenu(false);
+			setMessageText("");
+			setFilesUpload([]);
 
-         if (obj.photos?.length) {
-            obj.photos = refactPhotoStageOne(obj.photos);
-            refactPhotoStageAppend(obj.photos, formData);
-            obj.photos = refactPhotoStageTwo(obj.photos);
-            formData.append('photos', JSON.stringify(obj.photos));
-         }
+			const dialogAddMessageFetch = async formData => {
+				const updatedMessages = await dialogsActions.dialogAddMessage(chatMessages.messages, formData);
 
-         await sendPostRequest('/api/messages/update-message', formData, {
-            'Content-Type': 'multipart/form-data',
-            'Accept-Encodin': 'gzip, deflate, br, zstd',
-            Accept: 'application/json',
-         });
-         setIsEdit(false);
-         setFilesUpload([]);
-      }
-   };
+				chatMessages.setMessages(updatedMessages);
+			};
+			await dialogAddMessageFetch(formData);
 
-   const sendVoiceRecorder = blob => {
-      sendMessage(blob);
-   };
+			setTimeout(() => {
+				chatHelpers.scrollMainBlock();
+			}, 100);
 
-   const deleteMessages = (ids = [], dialog_id = null, all = false) => {
-      if (dialog_id === null) return;
-      setDeleteMessagesModal({
-         ids,
-         dialog_id,
-         all,
-      });
-   };
+			await sendPostRequest("/api/messages/new-message", formData, {
+				"Content-Type": "multipart/form-data",
+				"Accept-Encodin": "gzip, deflate, br, zstd",
+				Accept: "application/json"
+			});
+		} else {
+			const obj = {
+				text: hasText(isEdit.text) ? isEdit.text : "",
+				id: isEdit.id,
+				dialog_id: isEdit.dialog_id
+			};
 
-   const forwardMessage = (messageId, toDialogId) => {
-      console.log(messageId, toDialogId);
-   };
+			const formData = new FormData();
 
-   return {
-      dialogs,
-      currentDialog,
-      setCurrentDialog,
-      connectToChat,
-      setIsLoadingDialog,
-      isLoadingDialog,
-      sendMessage,
-      ...chatHelpers,
-      messageText,
-      setMessageText,
-      chatBottomRef,
-      chatRootRef,
-      sendVoiceRecorder,
-      setDialogs,
-      deleteMessages,
-      ...dialogsActions,
-      ...chatMessages,
-      isEdit,
-      setIsEdit,
-      isVoiceRecording,
-      setIsVoiceRecording,
-      filesUpload,
-      setFilesUpload,
-      dialogBuilding,
-      isOpenSmileMenu,
-      setIsOpenSmileMenu,
-      isOpenMenu,
-      setIsOpenMenu,
-      isVisibleBtnArrow,
-      setIsVisibleBtnArrow,
-      deleteMessagesModal,
-      setDeleteMessagesModal,
-      userInfo,
-      isLoadingDialogs,
-      forwardMessage,
-      forwardMessageId,
-      setForwardMessageId,
-      createEventModal,
-      setCreateEventModal,
-      chatPinMessages,
-      currentDialogSettings,
-      setCurrentDialogSettings,
-      updateDialogsAndDialogSettings,
-      messageCommentsOptions,
-      cachedDialog,
-      setCachedDialog,
-      blockUserOptins,
-      themeOptions,
-      showPopperMessage,
-      setShowPopperMessage,
-      fakeDialogDeleteAndSetDialogId,
-      allowScroll,
-      setAllowScroll,
-      isVisibleVideoCall,
-      apartmentsByBuildingModal,
-      setApartmentsByBuildingModal,
-   };
+			formData.append("text", obj.text);
+			formData.append("id", obj.id);
+			formData.append("dialog_id", obj.dialog_id);
+
+			await sendPostRequest("/api/messages/update-message", formData, {
+				"Content-Type": "multipart/form-data",
+				"Accept-Encodin": "gzip, deflate, br, zstd",
+				Accept: "application/json"
+			});
+			setIsEdit(false);
+		}
+	};
+
+	const sendVoiceRecorder = blob => {
+		sendMessage(blob);
+	};
+
+	const sendNoteVideo = options => {
+		sendMessage(null, options);
+	};
+
+	const deleteMessages = (ids = [], dialog_id = null, all = false) => {
+		if (dialog_id === null) return;
+		setDeleteMessagesModal({
+			ids,
+			dialog_id,
+			all
+		});
+	};
+
+	const forwardMessage = (messageId, toDialogId) => {
+		console.log(messageId, toDialogId);
+	};
+
+	return {
+		dialogs,
+		currentDialog,
+		setCurrentDialog,
+		connectToChat,
+		setIsLoadingDialog,
+		isLoadingDialog,
+		sendMessage,
+		...chatHelpers,
+		messageText,
+		setMessageText,
+		chatBottomRef,
+		chatRootRef,
+		sendVoiceRecorder,
+		sendNoteVideo,
+		setDialogs,
+		deleteMessages,
+		...dialogsActions,
+		...chatMessages,
+		isEdit,
+		setIsEdit,
+		isVoiceRecording,
+		setIsVoiceRecording,
+		filesUpload,
+		setFilesUpload,
+		dialogBuilding,
+		isOpenSmileMenu,
+		setIsOpenSmileMenu,
+		isOpenMenu,
+		setIsOpenMenu,
+		isVisibleBtnArrow,
+		setIsVisibleBtnArrow,
+		deleteMessagesModal,
+		setDeleteMessagesModal,
+		userInfo,
+		isLoadingDialogs,
+		forwardMessage,
+		forwardMessageId,
+		setForwardMessageId,
+		createEventModal,
+		setCreateEventModal,
+		chatPinMessages,
+		currentDialogSettings,
+		setCurrentDialogSettings,
+		updateDialogsAndDialogSettings,
+		messageCommentsOptions,
+		cachedDialog,
+		setCachedDialog,
+		blockUserOptins,
+		themeOptions,
+		showPopperMessage,
+		setShowPopperMessage,
+		showPopperMessagePosition,
+		setShowPopperMessagePosition,
+		fakeDialogDeleteAndSetDialogId,
+		allowScroll,
+		setAllowScroll,
+		isVisibleVideoCall,
+		apartmentsByBuildingModal,
+		setApartmentsByBuildingModal,
+		authUser,
+		authLoading,
+		notAuth,
+		showMenuDialog,
+		setShowMenuDialog,
+		deleteDialogModal,
+		setDeleteDialogModal,
+		chatAllReset,
+		sidebarModalOpen,
+		setSidebarModalOpen,
+		createDialogWithDevelopModal,
+		setCreateDialogWithDevelopModal,
+		createDialogWithSpecialistModal,
+		setCreateDialogWithSpecialistModal
+	};
 };

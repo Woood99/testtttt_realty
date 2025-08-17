@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import cn from 'classnames';
 
 import styles from './TitleIcon.module.scss';
-import { getIsDesktop } from '../../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 
 const TitleIcon = ({ icon, text = '', link, className = '' }) => {
    const isDesktop = useSelector(getIsDesktop);

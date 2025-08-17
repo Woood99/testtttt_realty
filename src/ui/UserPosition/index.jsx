@@ -7,7 +7,7 @@ const UserPosition = ({ role = 1, buildingName = '' }) => {
       return 'Застройщик';
    }
    if (currentRole.id === ROLE_SELLER.id) {
-      return `Менеджер ${buildingName ? `отдела продаж ${buildingName}` : ''}`;
+      return `Менеджер${buildingName ? ` отдела продаж ${buildingName}` : ''}`;
    }
    if (currentRole.id === ROLE_BUYER.id) {
       return `Покупатель`;

@@ -14,7 +14,7 @@ import { refactPhotoStageAppend, refactPhotoStageOne, refactPhotoStageTwo } from
 import { PrivateRoutesPath, RoutesPath } from '../../constants/RoutesPath';
 import { useParams } from 'react-router-dom';
 import getSrcImage from '../../helpers/getSrcImage';
-import { getCitiesSelector } from '../../redux/helpers/selectors';
+import { getCitiesSelector } from '@/redux';
 
 const SpecialistCreate = ({ edit = false }) => {
    const params = useParams();
@@ -116,9 +116,9 @@ const SpecialistCreate = ({ edit = false }) => {
 
          descr: data.descr,
 
-         surname: data.surname,
-         name: data.name,
-         father_name: data.father_name,
+         surname: data.surname.trim(),
+         name: data.name.trim(),
+         father_name: data.father_name.trim(),
          phone: data.phone.slice(1),
          email: data.email,
          password: data.password,

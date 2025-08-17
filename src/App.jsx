@@ -1,23 +1,24 @@
-import React from 'react';
+import React from "react";
 
-import Router from './unifComponents/Router';
-import MainProvider from './unifComponents/Provider/MainProvider';
-import ToastChatContainer from './components/Toasts/ToastChatContainer';
-import PopupInstallPromo from './components/PopupInstallPromo';
-import IncomingCall from './components/VideoCall/IncomingCall';
-import OutgoingCall from './components/VideoCall/OutgoingCall';
+import PopupInstallPromo from "./components/PopupInstallPromo";
+import ToastChatContainer from "./components/Toasts/ToastChatContainer";
+import ToastPrimary from "./components/Toasts/ToastPrimary";
+import VideoCall from "./components/VideoCall/VideoCall";
+import LayoutProvider from "./unifComponents/Provider/LayoutProvider";
+import SecondProvider from "./unifComponents/Provider/SecondProvider";
+import Router from "./unifComponents/Router";
 
 const App = () => {
-   return (
-      <>
-         <Router />
-         <MainProvider />
-         <ToastChatContainer />
-         <PopupInstallPromo />
-         <IncomingCall />
-         <OutgoingCall />
-      </>
-   );
+	return (
+		<LayoutProvider>
+			<Router />
+			<SecondProvider />
+			<ToastChatContainer />
+			<ToastPrimary />
+			<PopupInstallPromo />
+			<VideoCall />
+		</LayoutProvider>
+	);
 };
 
 export default App;

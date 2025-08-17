@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 
 import styles from './CardStock.module.scss';
@@ -13,7 +14,7 @@ import cn from 'classnames';
 import { BlockDescrMore } from '../../components/BlockDescr/BlockDescr';
 import { sendPostRequest } from '../../api/requestsApi';
 import { useSelector } from 'react-redux';
-import { getUserIsAdmin } from '../../redux/helpers/selectors';
+import { getUserIsAdmin } from '@/redux';
 import ModalWrapper from '../Modal/ModalWrapper';
 import DeleteModal from '../../ModalsMain/DeleteModal';
 import Button from '../../uiForm/Button';

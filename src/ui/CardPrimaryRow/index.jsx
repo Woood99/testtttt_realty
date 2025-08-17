@@ -70,7 +70,7 @@ const CardPrimaryRow = props => {
                         <CardPrimaryRowApartments />
                      </div>
                      <div className={styles.CardPrimaryRowAdd}>
-                        {apartments && apartments.length > 0 ? <h3 className="title-2 mb-3">от {numberReplace(minPrice)} ₽</h3> : ''}
+                        {apartments && apartments.length > 0 ? <h3 className="title-2 mb-2">от {numberReplace(minPrice)} ₽</h3> : ''}
                         <CardPrimaryRowTagsTop />
                      </div>
                      <CardPrimaryRowControls />

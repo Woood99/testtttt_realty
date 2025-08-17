@@ -32,7 +32,6 @@ export const useMainHelpers = () => {
    useEffect(() => {
       window.io = io;
 
-      // Очистка (если нужно)
       return () => {
          delete window.io;
       };

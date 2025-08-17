@@ -1,4 +1,4 @@
-import { ROLE_ADMIN, ROLE_BUYER, ROLE_SELLER } from '../constants/roles';
+import { ROLE_ADMIN, ROLE_BUYER, ROLE_SELLER } from '@/constants';
 
 export const isSeller = userInfo => userInfo?.role?.id === ROLE_SELLER.id;
 export const isBuyer = userInfo => userInfo?.role?.id === ROLE_BUYER.id;

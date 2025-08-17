@@ -15,14 +15,13 @@ import { ControllerFieldMultiSelect } from '../../../uiForm/ControllerFields/Con
 import { ControllerFieldCheckbox } from '../../../uiForm/ControllerFields/ControllerFieldCheckbox';
 import ObjectRibbon from './ObjectRibbon';
 import ObjectPresents from './ObjectPresents';
-import { PrivateRoutesPath, RoutesPath } from '../../../constants/RoutesPath';
+import { RoutesPath } from '../../../constants/RoutesPath';
 import BuildingApartments from '../../../pages/Building/BuildingApartments';
 import ObjectVideo from './ObjectVideo';
 import ObjectSpecialCondition from './ObjectSpecialCondition';
 import FixedBlock from '../../../components/FixedBlock';
 import { BuildingContext } from '../../../context';
 import MapAddressInput from '../../../unifComponents/ymap/AddressInput';
-import ObjectAdvantages from './ObjectAdvantages';
 import isEmptyArrObj from '../../../helpers/isEmptyArrObj';
 import { useObject } from './useObject';
 import { BtnActionText } from '../../../ui/ActionBtns';
@@ -151,14 +150,7 @@ const ObjectEdit = () => {
                         <div className="white-block mt-4">
                            <h2 className="title-2 mb-6">Параметры</h2>
                            <div className="mb-4 grid grid-cols-3 gap-2">
-                              <ControllerFieldInput
-                                 control={control}
-                                 requiredValue
-                                 errors={errors}
-                                 beforeText="Срок сдачи"
-                                 name="deadline"
-                                 defaultValue={data?.deadline || ''}
-                              />
+                              <ControllerFieldInput control={control} beforeText="Срок сдачи" name="deadline" defaultValue={data?.deadline || ''} />
                            </div>
                            <div>
                               {Boolean(attributes) &&
@@ -325,6 +317,7 @@ const ObjectEdit = () => {
                         </div>
                         <div className="white-block mt-4">
                            <h2 className="title-2 mb-6">Цена</h2>
+
                            <div className="grid grid-cols-3 gap-2">
                               <ControllerFieldInput
                                  control={control}
@@ -355,6 +348,13 @@ const ObjectEdit = () => {
                                  maxLength={4}
                               />
                            </div>
+                           <ControllerFieldCheckbox
+                              className="mt-4"
+                              control={control}
+                              option={{ label: 'Скрыть цены' }}
+                              name="hide-prices"
+                              defaultValue={data.hidePrices}
+                           />
                         </div>
                         <ObjectPresents
                            data={data}
@@ -445,7 +445,7 @@ const ObjectEdit = () => {
                   </form>
                   <div className="container">
                      <div className="mt-4">
-                        <BuildingApartments data={data} frames={frames} tags={data.tags} advantages={advantagesComplex} userRole={ROLE_ADMIN.name}/>
+                        <BuildingApartments data={data} frames={frames} tags={data.tags} advantages={advantagesComplex} userRole={ROLE_ADMIN.name} />
                      </div>
                      <div ref={buttonSubmitRef} className="mt-8">
                         <Button onClick={handleSubmit(data => onSubmitHandler(data))} type="button" className="w-full" disabled={isLoadingSend}>

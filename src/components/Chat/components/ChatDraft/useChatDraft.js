@@ -21,7 +21,7 @@ export const useChatDraft = options => {
       editorRef,
    };
 
-   const { htmlToEditorState, getHtml, getTextLength, hasText, onFocusEditor } = useChatDraftEditorUtils({
+   const { htmlToEditorState, getHtml, onFocusEditor } = useChatDraftEditorUtils({
       ...optionsState,
    });
 
@@ -29,7 +29,6 @@ export const useChatDraft = options => {
       ...optionsState,
       getHtml,
       htmlToEditorState,
-      getTextLength,
    });
 
    const { handleKeyCommand, handleReturn, handleEditorFocus, handleEditorBlur, handleResetEditor } = useChatDraftEditorEvents({
@@ -84,8 +83,6 @@ export const useChatDraft = options => {
       confirmLink,
       linkModal,
       setLinkModal,
-      getTextLength,
-      hasText,
       handleResetEditor,
       isFormattingRemovable,
       removeFormattingSmart,

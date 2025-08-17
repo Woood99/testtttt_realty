@@ -12,7 +12,7 @@ import { PrivateRoutesPath } from '../../../constants/RoutesPath';
 import { ControllerPhoto } from '../../../uiForm/ControllerFields/ControllerFiles';
 import { refactPhotoStageAppend, refactPhotoStageOne, refactPhotoStageTwo } from '../../../helpers/photosRefact';
 import isEmptyArrObj from '../../../helpers/isEmptyArrObj';
-import { getCitiesSelector } from '../../../redux/helpers/selectors';
+import { getCitiesSelector } from '@/redux';
 
 const TagCreate = ({ type = 'tag' }) => {
    const citiesItems = useSelector(getCitiesSelector);

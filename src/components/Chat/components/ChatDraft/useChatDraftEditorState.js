@@ -1,8 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import { EditorState, Modifier } from 'draft-js';
+import getTextLength from './getTextLength';
 
 export const useChatDraftEditorState = options => {
-   const { onChange, initialValue = '', maxLength = 2000, getHtml, htmlToEditorState, setHasSelection, getTextLength, isEdit } = options;
+   const { onChange, initialValue = '', maxLength = 2000, getHtml, htmlToEditorState, setHasSelection, isEdit } = options;
 
    const [editorState, setEditorState] = useState(() => htmlToEditorState(initialValue));
 
@@ -22,7 +23,7 @@ export const useChatDraftEditorState = options => {
 
             const block = content.getBlockForKey(selection.getStartKey());
             const html = getHtml(newEditorState);
-
+            
             const currentLength = getTextLength(html);
 
             if (currentLength > maxLength) {

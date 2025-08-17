@@ -1,11 +1,14 @@
 import { useCallback, useState } from 'react';
 import { sendPostRequest } from '../../../api/requestsApi';
+import axios from 'axios';
+import { useHistoryState } from '@/hooks';
 
 export const usePinMessage = options => {
    const { refactDialog } = options;
 
    const [pinMessages, setPinMessages] = useState([]);
-   const [isPinMessagePanelOpen, setIsPinMessagePanelOpen] = useState(false);
+   const [isLoadingPinMessages, setIsLoadingPinMessages] = useState(false);
+   const [isPinMessagePanelOpen, setIsPinMessagePanelOpen] = useHistoryState(false);
 
    const pinMessageCreateFake = useCallback(async (current, data) => {
       try {
@@ -55,14 +58,17 @@ export const usePinMessage = options => {
       }
    }, []);
 
-   const pinMessageGetAll = useCallback(async dialog_id => {
+   const pinMessageGetAll = useCallback(async (dialog_id, signal) => {
+      setIsLoadingPinMessages(true);
       try {
          const {
             data: { result },
-         } = await sendPostRequest('/api/dialogs/message/pin/all', { dialog_id });
+         } = await sendPostRequest('/api/dialogs/message/pin/all', { dialog_id }, null, signal);
          setPinMessages(refactDialog(result));
       } catch (error) {
-         console.log(error);
+         throw error;
+      } finally {
+         setIsLoadingPinMessages(false);
       }
    }, []);
 
@@ -96,5 +102,6 @@ export const usePinMessage = options => {
       setPinMessages,
       pinMessageCreateFake,
       pinMessageDeleteFake,
+      isLoadingPinMessages,
    };
 };

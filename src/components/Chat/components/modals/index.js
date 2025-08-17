@@ -7,3 +7,5 @@ export { default as ChannelGroupInfoModal } from './ChannelGroupInfoModal';
 export { default as ChatModalDeleteMessages } from './ChatModalDeleteMessages';
 export { default as ChatModalBlockedUserList } from './ChatModalBlockedUserList';
 export { default as ChatApartmentsByBuilding } from './ChatApartmentsByBuilding';
+export { default as ChatModalDeleteDialog } from './ChatModalDeleteDialog';
+export { default as ChatContacts } from './ChatContacts';

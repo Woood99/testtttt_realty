@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
-
+import { useSelector } from 'react-redux';
+import dayjs from 'dayjs';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 
@@ -7,10 +8,8 @@ import '../../styles/components/calendar-block.scss';
 import ModalWrapper from '../../ui/Modal/ModalWrapper';
 import Modal from '../../ui/Modal';
 import CardSmall from '../../ui/CardSmall';
-import dayjs from 'dayjs';
 import UserInfo from '../../ui/UserInfo';
-import { useSelector } from 'react-redux';
-import { getIsDesktop, getUserInfo } from '../../redux/helpers/selectors';
+import { getIsDesktop, getUserInfo } from '@/redux';
 
 const CalendarBlock = ({ data }) => {
    const calendarRef = useRef(null);

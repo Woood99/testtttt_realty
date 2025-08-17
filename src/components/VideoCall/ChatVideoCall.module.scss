@@ -32,28 +32,32 @@
 }
 
 .userVideo {
-   max-width: 12%;
-   width: 100%;
-   min-width: 225px;
+   width: 175px;
+   min-width: 175px;
    position: absolute;
-   left: 0;
-   bottom: 0;
-   border-radius: 12px 12px 0 0;
+   left: 12px;
+   bottom: 12px;
+   border-radius: 12px;
    z-index: 2;
 
    overflow: hidden;
 
-   margin: 0;
-   padding: 0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
 
-   font-size: var(--small-fz);
-
-   .videoEmpty {
-      background-color: var(--primary400) !important;
+   &.userVideoPlug {
+      width: 250px;
+      height: 150px;
+      @media (max-width:$desktop){
+           width: 120px;
+      }
    }
+
    @media (max-width: $desktop) {
       border: none;
-      min-width: 150px;
+      min-width: 120px;
+      width: 120px;
    }
 }
 
@@ -63,19 +67,12 @@
    position: absolute;
    inset: 0;
    z-index: 1;
-   margin: 0;
-   padding: 0;
    overflow: hidden;
-   background: #e3efff;
-}
+   background-color: #0e1319;
 
-.ChatVideoBg {
-   background: #e3efff;
-}
-
-.videoNone {
-   opacity: 0;
-   visibility: hidden;
+   display: flex;
+   align-items: center;
+   justify-content: center;
 }
 
 .actionBtns {
@@ -90,7 +87,7 @@
    justify-content: center;
    gap: 16px;
 
-   background-color: var(--dark);
+   background-color: #0e1319;
    padding: 16px 32px;
 }
 
@@ -118,37 +115,6 @@
 
 .actionBtnActiveRed {
    background-color: #f9dedc;
-}
-
-.videoEmpty {
-   background-color: var(--gray);
-   color: var(--white);
-
-   position: absolute;
-   top: 0;
-   left: 0;
-   right: 0;
-   bottom: 0;
-
-   padding: 8px 12px;
-   line-height: 1;
-
-   display: flex;
-   align-items: center;
-   justify-content: center;
-}
-
-.videoEmptyInner {
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
-   align-items: center;
-   min-width: 320px;
-   min-height: 250px;
-
-   background-color: var(--white);
-   box-shadow: var(--shadow-primary);
-   border-radius: 20px;
 }
 
 .VideoCallIncomingCallModal {

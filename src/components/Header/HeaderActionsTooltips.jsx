@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { HeaderContext } from '../../context';
@@ -12,9 +11,6 @@ import NotificationsModal from '../../ModalsMain/NotificationsModal';
 import convertFieldsJSON from '../../helpers/convertFieldsJSON';
 import { IconChat, IconComparison, IconFavorite, IconNotif } from '../../ui/Icons';
 import { RoutesPath } from '../../constants/RoutesPath';
-import { getUrlNavigateToChat } from '../../api/getDialogId';
-import { setSelectAccLogModalOpen } from '../../redux/slices/helpSlice';
-import { checkAuthUser } from '../../redux/helpers/selectors';
 import isEmptyArrObj from '../../helpers/isEmptyArrObj';
 
 const HeaderActionsTooltips = () => {
@@ -22,8 +18,6 @@ const HeaderActionsTooltips = () => {
 
    const [notifData, setNotifData] = useState([]);
    const [popupNotifOpen, setPopupNotifOpen] = useState(false);
-   const authUser = useSelector(checkAuthUser);
-   const dispatch = useDispatch();
 
    useEffect(() => {
       if (isEmptyArrObj(userInfo)) return;
@@ -67,18 +61,10 @@ const HeaderActionsTooltips = () => {
               textTooltip: 'Чат',
               mobileVisible: true,
               body: (
-                 <button
-                    className={`${styles.headerAction} relative`}
-                    onClick={() => {
-                       if (authUser) {
-                          getUrlNavigateToChat();
-                       } else {
-                          dispatch(setSelectAccLogModalOpen(true));
-                       }
-                    }}>
+                 <a href={RoutesPath.chat} className={`${styles.headerAction} relative`}>
                     {Boolean(userInfo.counts?.dialogs) && <div className={styles.notifCount}>{userInfo.counts.dialogs}</div>}
                     <IconChat width={16} height={16} />
-                 </button>
+                 </a>
               ),
            }
          : {},
@@ -101,15 +87,15 @@ const HeaderActionsTooltips = () => {
             </Link>
          ),
       },
-      {
-         mobileVisible: false,
-         textTooltip: 'Сравнение',
-         body: (
-            <Link to={RoutesPath.comparison} className={`${styles.headerAction}`}>
-               <IconComparison width={16} height={16} />
-            </Link>
-         ),
-      },
+      // {
+      //    mobileVisible: false,
+      //    textTooltip: 'Сравнение',
+      //    body: (
+      //       <Link to={RoutesPath.comparison} className={`${styles.headerAction}`}>
+      //          <IconComparison width={16} height={16} />
+      //       </Link>
+      //    ),
+      // },
       // {
       //    mobileVisible: false,
       //    textTooltip: 'Календарь',

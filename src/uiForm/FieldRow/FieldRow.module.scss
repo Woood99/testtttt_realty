@@ -2,7 +2,7 @@
 
 .FieldRowRoot {
    display: flex;
-   align-items: center;
+   align-items: start;
    gap: 24px;
    @media (max-width:$smallTablet-max){
       flex-direction: column;
@@ -23,6 +23,7 @@
 }
 
 .FieldRowName {
+   margin-top: 14px;
    width: var(--width-name);
    flex: 0 0 var(--width-name);
 

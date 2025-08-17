@@ -3,7 +3,7 @@ import cn from 'classnames';
 import styles from './FullscreenBtn.module.scss';
 import { IconFullscreen } from '../Icons';
 import { useSelector } from 'react-redux';
-import { getIsDesktop } from '../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 
 const FullscreenBtn = props => {
    const isDesktop = useSelector(getIsDesktop);

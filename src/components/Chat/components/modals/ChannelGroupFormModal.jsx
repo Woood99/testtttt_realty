@@ -6,7 +6,7 @@ import Modal from '../../../../ui/Modal';
 import DragDropImageSolo from '../../../DragDrop/DragDropImageSolo';
 import AVATAR from '../../../../assets/img/avatar.png';
 import getImagesObj from '../../../../unifComponents/getImagesObj';
-import { getIsDesktop } from '../../../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 import { ControllerFieldInput } from '../../../../uiForm/ControllerFields/ControllerFieldInput';
 import Button from '../../../../uiForm/Button';
 import { ControllerFieldCheckbox } from '../../../../uiForm/ControllerFields/ControllerFieldCheckbox';

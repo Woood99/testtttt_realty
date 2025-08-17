@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useParams } from 'react-router-dom';
+
 import Tabs from '../../../ui/Tabs';
 import Button from '../../../uiForm/Button';
 import { getDataRequest, sendPostRequest } from '../../../api/requestsApi';
-import { useParams } from 'react-router-dom';
 import VideoCard from '../../../ui/VideoCard';
 import ModalWrapper from '../../../ui/Modal/ModalWrapper';
 import { DragDropElements } from '../../../components/DragDrop/DragDropItems';
 import ControlsVideoCreate from '../../../components/ControlsVideo/ControlsVideoCreate';
 import ControlsVideoEdit from '../../../components/ControlsVideo/ControlsVideoEdit';
-import { createPortal } from 'react-dom';
 import { NotificationTimer } from '../../../ui/Tooltip';
 
 const ObjectVideo = ({ dataObject, sendingForm, frames = [], specialists = [], tags = [], setData, authorDefault }) => {

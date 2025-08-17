@@ -111,6 +111,10 @@
    background-color: var(--red);
    color: var(--white);
    padding: 0 32px;
+   &:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+   }
    @media (min-width: $desktop-min) {
       &:hover {
          background-color: var(--red-dark);

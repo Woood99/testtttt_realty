@@ -7,7 +7,7 @@ import getCardsBuildings from '../../../api/getCardsBuildings';
 import { getSpecialistsOrganization } from '../../../api/Building/getSpecialists';
 import { getMapBuildings } from '../../../api/getMapBuildings';
 import isEmptyArrObj from '../../../helpers/isEmptyArrObj';
-import { getCitiesSelector, getUserInfo } from '../../../redux/helpers/selectors';
+import { getCitiesSelector, getUserInfo } from '@/redux';
 import { getFilteredObject, mergeArraysFromObject } from '../../../helpers/objectMethods';
 import { useQueryParams } from '../../../hooks/useQueryParams';
 import { isAdmin } from '../../../helpers/utils';

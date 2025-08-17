@@ -10,6 +10,7 @@ import { getDataRequest, sendPostRequest } from '../../../api/requestsApi';
 import { ChatContext } from '../../../context';
 import { CHAT_TYPES } from '../constants';
 import { ROLE_BUYER } from '../../../constants/roles';
+import { useSearchParams } from 'react-router-dom';
 
 const ChatTooltipDialog = ({ options }) => {
    const [addParticipants, setAddParticipants] = useState(false);
@@ -20,10 +21,10 @@ const ChatTooltipDialog = ({ options }) => {
       setCurrentDialogSettings,
       updateDialogsAndDialogSettings,
       userInfo,
-      setCachedDialog,
       blockUserOptins,
       setDialogs,
       currentDialog,
+      setDeleteDialogModal,
    } = useContext(ChatContext);
 
    const { data, showPopper, setShowPopper, classNameTarget, ElementTargetLayout } = options;
@@ -80,19 +81,7 @@ const ChatTooltipDialog = ({ options }) => {
                   className={styles.ChatMessageButton}
                   onClick={async () => {
                      setShowPopper(false);
-                     if (myChannelOrGroup) {
-                        await getDataRequest(`/api/dialogs/${data.id}/delete`);
-                     } else {
-                        if (type_channel || type_group) {
-                           await getDataRequest(`/api/dialogs/${data.id}/user/leave`);
-                        } else if (type_chat) {
-                           await getDataRequest(`/api/dialogs/${data.id}/delete`);
-                        }
-                     }
-                     setCurrentDialog({});
-                     setCachedDialog({});
-                     setCurrentDialogSettings({});
-                     updateDialogsAndDialogSettings();
+                     setDeleteDialogModal(data);
                   }}>
                   <IconTrash width={15} height={15} className="fill-red" />
                   {myChannelOrGroup ? 'Удалить и покинуть' : `${type_channel ? 'Покинуть канал' : type_group ? 'Покинуть группу' : 'Удалить диалог'}`}
@@ -167,6 +156,42 @@ const ChatTooltipDialog = ({ options }) => {
                />
             </ModalWrapper>
          )}
+      </>
+   );
+};
+
+export const ChatMenuDialog = () => {
+   const { setChannelGroupInfoModal, setCurrentDialogSettings, showMenuDialog, setShowMenuDialog, setDeleteDialogModal } = useContext(ChatContext);
+
+   const type_channel = showMenuDialog.dialog_type === CHAT_TYPES.CHANNEL;
+   const type_group = showMenuDialog.dialog_type === CHAT_TYPES.GROUP;
+
+   if (!showMenuDialog) return;
+
+   return (
+      <>
+         <div className="ml-auto flex items-center">
+            {(type_channel || type_group) && (
+               <div
+                  className={cn(styles.ChatMessageButton, 'p-2.5')}
+                  onClick={() => {
+                     setShowMenuDialog(false);
+                     setCurrentDialogSettings(showMenuDialog);
+                     setChannelGroupInfoModal(true);
+                  }}>
+                  <IconAdd width={15} height={15} />
+               </div>
+            )}
+
+            <div
+               className={cn(styles.ChatMessageButton, 'p-2.5')}
+               onClick={async () => {
+                  setShowMenuDialog(false);
+                  setDeleteDialogModal(showMenuDialog);
+               }}>
+               <IconTrash width={15} height={15} className="fill-red" />
+            </div>
+         </div>
       </>
    );
 };

@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { PrivateRoutesPath } from '../../../constants/RoutesPath';
 import { getDataRequest } from '../../../api/requestsApi';
 import ModalWrapper from '../../../ui/Modal/ModalWrapper';
-import { getCitiesSelector } from '../../../redux/helpers/selectors';
+import { getCitiesSelector } from '@/redux';
 
 const CityList = () => {
   const citiesItems = useSelector(getCitiesSelector);

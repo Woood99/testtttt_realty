@@ -5,7 +5,7 @@ import cn from 'classnames';
 import 'video.js/dist/video-js.css';
 import { IconPause, IconPlay } from '../../ui/Icons';
 
-const AdaptiveVideoPlayer = ({ src, type = 'video/mp4', className, onPlayVideo, full = false, dblclickHandler, id }) => {
+const AdaptiveVideoPlayer = ({ src, id }) => {
    const videoRef = useRef(null);
    const playerRef = useRef(null);
    const [isVertical, setIsVertical] = useState(false);
@@ -17,7 +17,6 @@ const AdaptiveVideoPlayer = ({ src, type = 'video/mp4', className, onPlayVideo, 
 
       const handlePlay = () => {
          setIsPaused(false);
-         onPlayVideo?.(videoRef.current.id);
       };
       const handlePause = () => setIsPaused(true);
 
@@ -30,27 +29,22 @@ const AdaptiveVideoPlayer = ({ src, type = 'video/mp4', className, onPlayVideo, 
             nativeFullscreen: false,
          },
          userActions: {
-            doubleClick: false, // Отключает двойной клик
+            doubleClick: false,
          },
       });
 
       const player = playerRef.current;
-      player.volume(0.3);
+      console.log(player);
 
       player.on('loadedmetadata', () => {
+         player.volume(0.3);
+
          const videoWidth = player.videoWidth();
          const videoHeight = player.videoHeight();
          const aspectRatio = videoWidth / videoHeight;
 
          const vertical = aspectRatio < 0.8;
          setIsVertical(vertical);
-         if (!full) {
-            if (vertical) {
-               player.addClass('vjs-vertical-video');
-            } else {
-               player.addClass('vjs-horizontal-video');
-            }
-         }
       });
 
       player.on('play', handlePlay);
@@ -58,7 +52,6 @@ const AdaptiveVideoPlayer = ({ src, type = 'video/mp4', className, onPlayVideo, 
 
       player.on('dblclick', () => {
          playerRef.current.pause();
-         dblclickHandler?.();
       });
 
       player.on('useractive', function () {
@@ -104,14 +97,10 @@ const AdaptiveVideoPlayer = ({ src, type = 'video/mp4', className, onPlayVideo, 
       <div
          id={id}
          className={cn(
-            'max-w-full rounded-xl video-player adaptive-video-player',
-            isVertical ? 'w-full !max-w-[330px] aspect-shorts' : 'aspect-video',
-            full && '!w-full !h-full !max-w-fit flex items-center',
-            className
+            'rounded-xl video-player adaptive-video-playe !w-full !h-full !max-w-fit md1:!max-w-fit flex items-center',
+            isVertical ? 'w-full !max-w-[330px] md1:!max-w-[300px] aspect-shorts' : 'aspect-video'
          )}>
-         <video ref={videoRef} className="video-js w-full h-full" playsInline>
-            <source src={src} type={type} />
-         </video>
+         <video ref={videoRef} src={src} className="video-js w-full h-full" playsInline />
          {(isActivePanel || isPaused) && (
             <button
                type="button"

@@ -9,7 +9,7 @@ import { getSpecialists } from '../../api/Building/getSpecialists';
 import { getApartmentTitle } from '../../helpers/getApartmentTitle';
 import { getFirstElementArray } from '../../helpers/arrayMethods';
 import { ROLE_BUYER } from '../../constants/roles';
-import { checkAuthUser, getUserInfo } from '../../redux/helpers/selectors';
+import { checkAuthUser, getUserInfo } from '@/redux';
 import { getDialogId, getUrlNavigateToChatDialog } from '../../api/getDialogId';
 import { setSelectAccLogModalOpen } from '../../redux/slices/helpSlice';
 import { useQueryParams } from '../../hooks/useQueryParams';

@@ -12,16 +12,17 @@ export const instance = axios.create({
    },
 });
 
-export const sendPostRequest = async (endpoint, data = {}, headersAttr = {}) => {
+export const sendPostRequest = async (endpoint, data = {}, headersAttr = {}, signal) => {
    try {
       const token = cookies.get('access_token') || '';
-      
+
       const response = await instance.post(endpoint, data, {
          headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${token}`,
             ...headersAttr,
          },
+         signal,
       });
 
       return response;
@@ -61,7 +62,8 @@ export const deleteRequest = async endpoint => {
    }
 };
 
-export const getDataRequest = async (endpoint, data = '') => {
+export const getDataRequest = async (endpoint, data = '', signal) => {
+
    try {
       const token = cookies.get('access_token') || '';
 
@@ -71,6 +73,7 @@ export const getDataRequest = async (endpoint, data = '') => {
             Accept: 'application/json',
             Authorization: `Bearer ${token}`,
          },
+         signal,
       });
 
       return response;

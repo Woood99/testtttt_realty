@@ -10,6 +10,7 @@ import buildingApartSlice from './slices/buildingApartSlice';
 import apartmentSlice from './slices/apartmentSlice';
 import helpSlice from './slices/helpSlice';
 import videoCallSlice from './slices/videoCallSlice';
+import toastPrimarySlice from './slices/toastPrimarySlice';
 
 export const store = configureStore({
    reducer: {
@@ -22,5 +23,6 @@ export const store = configureStore({
       videoCall: videoCallSlice,
       listingFlats: listingFlatsSlice,
       feed: feedSlice,
+      toastPrimary: toastPrimarySlice,
    },
 });

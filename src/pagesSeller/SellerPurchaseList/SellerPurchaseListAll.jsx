@@ -1,7 +1,7 @@
-import SellerPurchaseList from './SellerPurchaseList';
+import SellerPurchaseList from "./SellerPurchaseList";
 
 const SellerPurchaseListAll = () => {
-   return <SellerPurchaseList pageTitle="Мои покупатели" namePage="all" />;
+	return <SellerPurchaseList pageTitle="Мои покупатели" namePage="all" />;
 };
 
 export default SellerPurchaseListAll;

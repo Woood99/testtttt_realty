@@ -1,125 +1,143 @@
-import React, { useContext, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import cn from 'classnames';
+import { ChatMessages, ChatPinMessagesPanel, ChatPinTop } from "..";
+import cn from "classnames";
+import React, { useContext } from "react";
+import { useSelector } from "react-redux";
 
-import { ChatContext } from '../../../../context';
-import { IconArrow, IconLock } from '../../../../ui/Icons';
+import { Spinner } from "@/ui";
+import { IconLock } from "@/ui/Icons";
 
-import styles from '../../Chat.module.scss';
-import isEmptyArrObj from '../../../../helpers/isEmptyArrObj';
-import { getIsDesktop } from '../../../../redux/helpers/selectors';
-import ChatMainUserTop from './ChatMainUserTop';
-import ChatMainBuildingTop from './ChatMainBuildingTop';
-import { ChatMessages, ChatPinMessagesPanel, ChatPinTop } from '..';
-import { CHAT_TYPES } from '../../constants';
-import { ChatMessageCommentsPanel } from '../ChatMessages/ui';
-import { useQueryParams } from '../../../../hooks/useQueryParams';
+import { isEmptyArrObj } from "@/helpers";
 
-import CHAT_BG from '../../../../assets/img/chat-bg.jpg';
-import Spinner from '../../../../ui/Spinner';
-import { useChatDraft } from '../ChatDraft/useChatDraft';
+import { useQueryParams } from "@/hooks";
+
+import CHAT_BG from "../../../../assets/img/chat-bg.jpg";
+import styles from "../../Chat.module.scss";
+import { useChatDraft } from "../ChatDraft/useChatDraft";
+import { ChatMessageCommentsPanel } from "../ChatMessages/ui";
+
+import ChatMainBuildingTop from "./ChatMainBuildingTop";
+import ChatMainUserTop from "./ChatMainUserTop";
+import { ChatContext } from "@/context";
+import { getIsDesktop } from "@/redux";
 
 const ChatMain = () => {
-   const {
-      currentDialog,
-      setCurrentDialog,
-      isLoadingDialog,
-      setIsOpenSmileMenu,
-      setIsOpenMenu,
-      messages,
-      deleteMessages,
-      setCachedDialog,
-      allowScroll,
-      showPopperMessage,
-      setShowPopperMessage,
-      sendMessage,
-      messageText,
-      isEdit,
-      setIsEdit,
-      setMessageText,
-   } = useContext(ChatContext);
+	const {
+		currentDialog,
+		isLoadingDialog,
+		messages,
+		deleteMessages,
+		allowScroll,
+		showPopperMessage,
+		setShowPopperMessage,
+		showPopperMessagePosition,
+		setShowPopperMessagePosition,
+		sendMessage,
+		messageText,
+		isEdit,
+		setIsEdit,
+		setMessageText,
+		authUser,
+		authLoading,
+		isLoadingDialogs
+	} = useContext(ChatContext);
 
-   const isDesktop = useSelector(getIsDesktop);
-   const [searchParams, setSearchParams] = useSearchParams();
-   const params = useQueryParams();
+	const isDesktop = useSelector(getIsDesktop);
+	const params = useQueryParams();
 
-   const draftOptions = useChatDraft({
-      send: sendMessage,
-      messageText,
-      initialValue: isEdit ? isEdit.text : messageText,
-      isEdit: isEdit,
-      setIsEdit,
-      onChange: value => {
-         if (isEdit) {
-            setIsEdit(prev => ({
-               ...prev,
-               text: value,
-            }));
-         } else {
-            setMessageText(value);
-         }
-      },
-   });
+	const draftOptions = useChatDraft({
+		send: sendMessage,
+		messageText,
+		initialValue: isEdit ? isEdit.text : messageText,
+		isEdit: isEdit,
+		setIsEdit,
+		onChange: value => {
+			if (isEdit) {
+				setIsEdit(prev => ({
+					...prev,
+					text: value
+				}));
+			} else {
+				setMessageText(value);
+			}
+		}
+	});
 
-   return (
-      <div className={cn(styles.ChatMain, !isDesktop && `${!isEmptyArrObj(currentDialog) ? styles.ChatMainActive : ''}`)}>
-         <div className={styles.ChatMainInner} style={{ backgroundImage: `url(${CHAT_BG})` }}>
-            <div className="min-h-16 h-16 px-4 flex items-center border-b border-b-primary800 bg-white pl-2.5">
-               {!isDesktop && !isEmptyArrObj(currentDialog) && (
-                  <button
-                     onClick={() => {
-                        setIsOpenSmileMenu(false);
-                        setIsOpenMenu(false);
-                        setCurrentDialog({});
-                        setCachedDialog({});
-
-                        searchParams.delete('dialog');
-                        setSearchParams(searchParams);
-                     }}
-                     className="mr-3 flex-center-all">
-                     <IconArrow className="rotate-180 fill-dark" width={28} height={28} />
-                  </button>
-               )}
-               <ChatMainUserTop />
-            </div>
-            <ChatMainBuildingTop />
-            <ChatPinTop />
-            {params.dialog || (currentDialog.is_fake && !currentDialog.is_member) ? (
-               <>
-                  {(isLoadingDialog || isEmptyArrObj(currentDialog)) && (
-                     <div className="title-2-5 h-full flex-center-all gap-3 mx-4 text-center md1:flex-col">
-                        <IconLock width={25} height={25} />
-                        <span>Защищено сквозным шифрованием</span>
-                     </div>
-                  )}
-                  {!isLoadingDialog && !isEmptyArrObj(currentDialog) && allowScroll && (
-                     <div className="title-2-5 h-full flex-center-all gap-3 mx-4 text-center md1:flex-col">
-                        <Spinner className="!border-dark !border-b-[transparent]" />
-                     </div>
-                  )}
-                  {(+params.dialog === currentDialog.id || (currentDialog.is_fake && !currentDialog.is_member)) && (
-                     <ChatMessages
-                        messages={messages}
-                        comments={currentDialog.dialog_type === CHAT_TYPES.CHANNEL}
-                        deleteMessage={data => {
-                           if (!data) return;
-                           deleteMessages(data.ids, data.dialog_id, data.myMessage);
-                        }}
-                        showPopperMessage={showPopperMessage}
-                        setShowPopperMessage={setShowPopperMessage}
-                        draftOptions={draftOptions}
-                     />
-                  )}
-               </>
-            ) : (
-               <div className="title-2-5 h-full flex-center-all gap-3 mx-4 text-center">Выберите, кому хотели бы написать</div>
-            )}
-         </div>
-         <ChatPinMessagesPanel />
-         <ChatMessageCommentsPanel />
-      </div>
-   );
+	return (
+		<div
+			className={cn(
+				styles.ChatMain,
+				!isDesktop &&
+					(params.dialog ||
+						params.not_dialog ||
+						!isEmptyArrObj(currentDialog)) &&
+					styles.ChatMainActive
+			)}
+		>
+			<div
+				className={styles.ChatMainInner}
+				style={{ backgroundImage: `url(${CHAT_BG})` }}
+			>
+				{params.dialog ||
+				params.not_dialog ||
+				(currentDialog.is_fake && !currentDialog.is_member) ? (
+					<>
+						<ChatMainUserTop />
+						<ChatMainBuildingTop />
+						<ChatPinTop />
+						{allowScroll && (
+							<div className="h-full flex-center-all flex-col gap-8 mx-4">
+								<div className="title-2-5">
+									<Spinner className="!border-dark !border-b-[transparent]" />
+								</div>
+								<div className="title-2-5 flex items-center gap-3 mx-4 text-center md1:flex-col">
+									<IconLock width={25} height={25} />
+									<span>Защищено сквозным шифрованием</span>
+								</div>
+							</div>
+						)}
+						{Boolean(
+							+params.dialog === currentDialog.id ||
+								(currentDialog.is_fake &&
+									!currentDialog.is_member)
+						) && (
+							<ChatMessages
+								messages={messages}
+								comments={false}
+								deleteMessage={data => {
+									if (!data) return;
+									deleteMessages(
+										data.ids,
+										data.dialog_id,
+										data.myMessage
+									);
+								}}
+								showPopperMessage={showPopperMessage}
+								setShowPopperMessage={setShowPopperMessage}
+								showPopperMessagePosition={showPopperMessagePosition}
+								setShowPopperMessagePosition={setShowPopperMessagePosition}
+								draftOptions={draftOptions}
+							/>
+						)}
+					</>
+				) : (
+					<>
+						{!(
+							!authUser &&
+							!authLoading &&
+							!isLoadingDialogs &&
+							!isLoadingDialog
+						) && (
+							<div className="title-2-5 h-full flex-center-all gap-3 mx-4 text-center">
+								Выберите, кому хотели бы написать
+							</div>
+						)}
+					</>
+				)}
+			</div>
+			<ChatPinMessagesPanel />
+			<ChatMessageCommentsPanel />
+		</div>
+	);
 };
 
 export default ChatMain;

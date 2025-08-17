@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import styles from './Textarea.module.scss';
-import { isNumber } from '../../helpers/isEmptyArrObj';
-import { ChatSmile } from '../../components/Chat/components';
+import { isNumber } from '@/helpers';
+import { ChatSmile } from '@/components/Chat/components';
 
 const Textarea = props => {
    const {

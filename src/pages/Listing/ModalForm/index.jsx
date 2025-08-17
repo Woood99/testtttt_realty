@@ -1,291 +1,193 @@
-import React from 'react';
+import cn from "classnames";
+import React, { createContext, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import Modal from '../../../ui/Modal';
-import ModalHeader from '../../../ui/Modal/ModalHeader';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-   additionalParametersToggle,
-   changeFieldAdditional,
-   changeFieldInput,
-   resetFilters,
-   roomsToggle,
-   setMapLocationCoordinates,
-   tagsToggle,
-} from '../../../redux/slices/listingSlice';
-import Button from '../../../uiForm/Button';
+import { getIsDesktop } from "@/redux";
 
-import Rooms from '../../../uiForm/FiltersComponent/Rooms';
-import PriceFromTo from '../../../uiForm/FiltersComponent/PriceFromTo';
+import { RoutesPath } from "../../../constants/RoutesPath";
+import { declensionBuilding } from "../../../helpers/declensionWords";
+import { changeFieldAdditional, changeFieldInput, resetFilters, roomsToggle } from "../../../redux/slices/listingSlice";
+import Modal from "../../../ui/Modal";
+import ModalHeader from "../../../ui/Modal/ModalHeader";
+import { SpinnerForBtn } from "../../../ui/Spinner";
+import Button from "../../../uiForm/Button";
+import FieldRow from "../../../uiForm/FieldRow";
+import PriceFromTo from "../../../uiForm/FiltersComponent/PriceFromTo";
+import Rooms from "../../../uiForm/FiltersComponent/Rooms";
+import { mapLocationListingClear } from "../MapLocation";
 
-import styles from './ModalForm.module.scss';
-import { FiltersFromDataRow } from '../../../unifComponents/FiltersFromData';
-import FieldRow from '../../../uiForm/FieldRow';
-import { IconFinger, IconTrash } from '../../../ui/Icons';
-import Tag from '../../../ui/Tag';
-import { SpinnerForBtn } from '../../../ui/Spinner';
-import CheckboxToggle from '../../../uiForm/CheckboxToggle';
-import { filterTypeMultipleSelect } from '../../../data/selectsField';
-import AdvantageCard from '../../../ui/AdvantageCard';
-import { mapLocationListingClear } from '../MapLocation';
-import { getIsDesktop } from '../../../redux/helpers/selectors';
+import { ListingFilterAdvantages } from "./ListingFilterAdvantages";
+import { ListingFilterFromData } from "./ListingFilterFromData";
+import { ListingFilterLocation } from "./ListingFilterLocation";
+import { ListingFilterMain } from "./ListingFilterMain";
+import { ListingFilterStickers } from "./ListingFilterStickers";
+import { ListingFilterTags } from "./ListingFilterTags";
+import styles from "./ModalForm.module.scss";
+
+export const ListingFiltersContext = createContext();
 
 const ModalForm = ({ condition, set, filterCount, options }) => {
-   const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-   const isDesktop = useSelector(getIsDesktop);
-   const { type, mapLocationCoordinates } = useSelector(state => state.listing);
+	const isDesktop = useSelector(getIsDesktop);
 
-   const filtersOther = useSelector(state => state.listing.filtersOther);
-   const { rooms, price } = useSelector(state => state.listing.filtersMain);
-   const filtersSelector = useSelector(state => state.listing.filtersAdditional);
+	const filtersOther = useSelector(state => state.listing.filtersOther);
+	const { rooms, price } = useSelector(state => state.listing.filtersMain);
+	const filtersSelector = useSelector(state => state.listing.filtersAdditional);
 
-   const optionsStyle = {
-      '--modal-space': '40px',
-      '--modal-height': 'calc(var(--vh) - 80px)',
-      '--modal-width': '1000px',
-   };
+	const handleChange = useCallback((name, selectedOptions) => {
+		dispatch(changeFieldAdditional({ name, selectedOptions }));
+	}, []);
 
-   const optionsStyleMobile = {
-      '--modal-space': '0',
-      '--modal-height': 'var(--vh)',
-      '--modal-width': '100%',
-   };
+	const handleChangeInput = useCallback((name, type, value) => {
+		dispatch(
+			changeFieldInput({
+				name: type,
+				value,
+				path: `filtersAdditional.${name}`
+			})
+		);
+	}, []);
 
-   const ModalHeaderLayout = () => {
-      return (
-         <ModalHeader set={set} className="px-8 py-6 md1:px-4 md1:py-4">
-            <h2 className="title-2">Фильтры</h2>
-         </ModalHeader>
-      );
-   };
+	const confirmedFilters = [
+		"filter_developer_ids",
+		"filter_building_ids",
+		"area",
+		"Класс жилья",
+		"Год сдачи ЖК",
+		"Тип дома",
+		"Безопасность",
+		"Безбарьерная среда",
+		"Отделка",
+		"Парковка",
+		"Инфраструктура",
+		"Благоустройство"
+	];
 
-   const ModalFooterLayout = () => {
-      return (
-         <div className="ModalFooter">
-            {filterCount > 0 ? (
-               <Button
-                  variant="secondary"
-                  size="Small"
-                  onClick={() => {
-                     mapLocationListingClear();
-                     dispatch(resetFilters());
-                  }}>
-                  Очистить {isDesktop && `фильтр ⋅ ${filterCount}`}
-               </Button>
-            ) : (
-               <div />
-            )}
-            <Button size="Small" onClick={() => set(false)} className="min-w-[220px]">
-               {options.isLoading ? <SpinnerForBtn size={16} variant="second" /> : <>Показать {options.total} новостроек</>}
-            </Button>
-         </div>
-      );
-   };
+	return (
+		<Modal
+			options={{ modalClassNames: `HeaderSticky !px-0 ${styles.ModalFormRoot}`, modalContentClassNames: "!py-0 !pl-8 !pr-12 md1:!px-4" }}
+			style={
+				window.innerWidth > 1222
+					? {
+							"--modal-space": "40px",
+							"--modal-height": "calc(var(--vh) - 80px)",
+							"--modal-width": "75%"
+						}
+					: {
+							"--modal-space": "0",
+							"--modal-height": "var(--vh)",
+							"--modal-width": "100%"
+						}
+			}
+			set={set}
+			condition={condition}
+			closeBtn={false}
+			ModalHeader={() => (
+				<ModalHeader set={set} className='px-8 py-6 md1:px-4 md1:py-4'>
+					<h2 className='title-2'>Фильтры</h2>
+				</ModalHeader>
+			)}
+			ModalFooter={() => (
+				<div className='ModalFooter'>
+					{filterCount > 0 ? (
+						<Button
+							variant='secondary'
+							className='!text-red'
+							size='Small'
+							onClick={() => {
+								mapLocationListingClear();
+								dispatch(resetFilters());
+							}}>
+							Очистить {isDesktop && `фильтр ⋅ ${filterCount}`}
+						</Button>
+					) : (
+						<div />
+					)}
 
-   const handleChange = (name, selectedOptions) => {
-      dispatch(changeFieldAdditional({ name, selectedOptions }));
-   };
+					{options.onlyFilter ? (
+						<a href={`${RoutesPath.listing}?${options.paramsUrl}`} className={cn(options.isLoading && "pointer-events-none")}>
+							<Button size='Small' className='min-w-[220px]' disabled={options.isLoading}>
+								{options.isLoading ? <SpinnerForBtn size={16} variant='second' /> : <>Показать {declensionBuilding(options.total)}</>}
+							</Button>
+						</a>
+					) : (
+						<Button size='Small' onClick={() => set(false)} className='min-w-[220px]' disabled={options.isLoading}>
+							{options.isLoading ? <SpinnerForBtn size={16} variant='second' /> : <>Показать {declensionBuilding(options.total)}</>}
+						</Button>
+					)}
+				</div>
+			)}>
+			<ListingFiltersContext.Provider value={{ options, filtersSelector, filtersOther, handleChange, handleChangeInput }}>
+				<div className='flex flex-col gap-7 mt-6 mb-4'>
+					<ListingFilterMain />
+					<div className='border-top-lightgray' />
+					<ListingFilterStickers />
+					<FieldRow name='Количество комнат' widthChildren={512} classNameName='font-medium'>
+						<Rooms dispatchChange={roomsToggle} roomsSelector={rooms} />
+					</FieldRow>
+					<FieldRow name='Цена' widthChildren={512} classNameName='font-medium'>
+						<PriceFromTo dispatchChange={changeFieldInput} priceSelector={price} nameLabelFirst='От' />
+					</FieldRow>
+					<ListingFilterLocation />
 
-   const handleChangeInput = (name, type, value) => {
-      dispatch(
-         changeFieldInput({
-            name: type,
-            value,
-            path: `filtersAdditional.${name}`,
-         })
-      );
-   };
+					<div className='border-top-lightgray' />
+					<ListingFilterTags />
+					<div className='border-top-lightgray' />
+					<ListingFilterFromData name='filter_developer_ids' />
+					<ListingFilterFromData name='filter_building_ids' />
+					<ListingFilterFromData name='area' />
+					<ListingFilterFromData name='Класс жилья' />
+					<ListingFilterFromData name='Год сдачи ЖК' />
+					<ListingFilterFromData name='Тип дома' />
+					<ListingFilterFromData name='Безопасность' />
+					<ListingFilterFromData name='Безбарьерная среда' />
+					<ListingFilterFromData
+						name='Отделка'
+						tooltipLayout={
+							<div className='max-w-[220px] flex flex-col gap-6'>
+								<div>
+									<h4 className='title-4 !text-white'>Черновая</h4>
+									<p className='mt-1.5'>
+										В черновой отделке встречаются помещения без межкомнатных перегородок. Электричество проведено до щитка в
+										подъезде. Радиаторов отопления может не быть — только трубы. Стены не оштукатурены. Нет откосов, подоконников
+										и сантехники
+									</p>
+								</div>
 
-   return (
-      <Modal
-         options={{ modalClassNames: `HeaderSticky !px-0 ${styles.ModalFormRoot}`, modalContentClassNames: '!py-0 !pl-8 !pr-12 md1:!px-4' }}
-         style={window.innerWidth > 1222 ? optionsStyle : optionsStyleMobile}
-         set={set}
-         condition={condition}
-         closeBtn={false}
-         ModalHeader={ModalHeaderLayout}
-         ModalFooter={ModalFooterLayout}>
-         <div className="flex flex-col gap-7 mt-6 mb-4">
-            <div>
-               {options.additionalParameters.map((item, index) => {
-                  return (
-                     <div className="bg-primary700 rounded-lg py-4 px-4 flex justify-between gap-4" key={index}>
-                        <div>
-                           <h3 className="title-4">{item.label}</h3>
-                           <p className="text-small text-primary400 mt-1">{item.descr}</p>
-                        </div>
-                        <CheckboxToggle
-                           checked={filtersOther[item.value]}
-                           set={e => {
-                              dispatch(additionalParametersToggle({ value: e.target.checked, option: item }));
-                           }}
-                        />
-                     </div>
-                  );
-               })}
-            </div>
-            <div className="border-top-lightgray" />
-            {Boolean(options.stickers.length) && (
-               <div>
-                  <FieldRow name="Лидер продаж" widthChildren={512} classNameName="font-medium">
-                     <div className="flex flex-wrap gap-2">
-                        {options.stickers.map((item, index) => {
-                           const currentTag = {
-                              value: item.id,
-                              label: item.name,
-                           };
-                           return (
-                              <Tag
-                                 color="select"
-                                 onClick={value => dispatch(tagsToggle({ value, option: currentTag, type: 'stickers' }))}
-                                 value={filtersOther.stickers.find(item => item === currentTag.value)}
-                                 key={index}>
-                                 {currentTag.label}
-                              </Tag>
-                           );
-                        })}
-                     </div>
-                  </FieldRow>
-               </div>
-            )}
-            {Object.keys(filtersSelector).map((key, index) => {
-               if (key !== 'filter_developer_ids' && key !== 'filter_building_ids' && key !== 'area') {
-                  return;
-               }
+								<div>
+									<h4 className='title-4 !text-white'>Предчистовая</h4>
+									<p className='mt-1.5'>
+										В предчистовой отделке или whitebox стены и потолки белые, покрыты шпаклёвкой. На полу ровная чистовая стяжка.
+										Сделана электрика. Трубы в ванной и на кухне разведены
+									</p>
+								</div>
+								<div>
+									<h4 className='title-4 !text-white'>Чистовая</h4>
+									<p className='mt-1.5'>
+										Квартира с такой отделкой готова к переезду: на стенах — обои или краска, на полу — ламинат или линолеум.
+										Розетки и выключатели установлены. Есть сантехника. Иногда застройщики устанавливают базовую мебель
+									</p>
+								</div>
+							</div>
+						}
+					/>
+					<ListingFilterFromData name='Парковка' />
+					<ListingFilterFromData name='Инфраструктура' />
+					<ListingFilterFromData name='Благоустройство' />
 
-               const data = filtersSelector[key];
-               let currentType = data.type;
-               if (data.type === 'list-multiple' && !filterTypeMultipleSelect(data.label) && data.options.length <= 10) {
-                  currentType = 'tags-multiple';
-               }
-               if (data.type === 'list-single' && data.options.length <= 10) {
-                  currentType = 'tags-single';
-               }
+					{Object.keys(filtersSelector).map(key => {
+						if (confirmedFilters.includes(key)) return;
 
-               return (
-                  <FiltersFromDataRow
-                     data={{ ...data, type: currentType }}
-                     key={index}
-                     handleChangeInput={handleChangeInput}
-                     handleChange={handleChange}
-                     filtersSelector={filtersSelector}
-                     widthChildren={512}
-                  />
-               );
-            })}
-            <FieldRow name="Цена" widthChildren={512} classNameName="font-medium">
-               <PriceFromTo dispatchChange={changeFieldInput} priceSelector={price} nameLabelFirst="От" />
-            </FieldRow>
-            {Object.keys(filtersSelector).map((key, index) => {
-               if (key === 'filter_developer_ids' || key === 'filter_building_ids' || key === 'area') {
-                  return;
-               }
+						return <ListingFilterFromData name={key} key={key} />;
+					})}
 
-               const data = filtersSelector[key];
-               let currentType = data.type;
-               if (data.type === 'list-multiple' && !filterTypeMultipleSelect(data.label) && data.options.length <= 50) {
-                  currentType = 'tags-multiple';
-               }
-               if (data.type === 'list-single' && data.options.length <= 50) {
-                  currentType = 'tags-single';
-               }
-
-               return (
-                  <FiltersFromDataRow
-                     data={{ ...data, type: currentType }}
-                     key={index}
-                     handleChangeInput={handleChangeInput}
-                     handleChange={handleChange}
-                     filtersSelector={filtersSelector}
-                     widthChildren={512}
-                  />
-               );
-            })}
-            <FieldRow name="Количество комнат" widthChildren={512} classNameName="font-medium">
-               <Rooms dispatchChange={roomsToggle} roomsSelector={rooms} />
-            </FieldRow>
-            {type === 'list' && (
-               <FieldRow name="Расположение" widthChildren={512} classNameName="font-medium">
-                  <div className="flex items-center gap-2 w-full">
-                     <Button
-                        variant="secondary"
-                        size="Small"
-                        className="!rounded-xl w-full"
-                        onClick={() => options.setLocationModal(true)}
-                        active={mapLocationCoordinates && mapLocationCoordinates.length}>
-                        {mapLocationCoordinates && mapLocationCoordinates.length ? (
-                           <>Вы указали область на карте</>
-                        ) : (
-                           <>
-                              Нарисовать область на карте
-                              <IconFinger width={18} height={18} className="ml-3" />
-                           </>
-                        )}
-                     </Button>
-                     {Boolean(mapLocationCoordinates && mapLocationCoordinates.length) && (
-                        <button
-                           type="button"
-                           title="Очистить"
-                           onClick={() => {
-                              dispatch(setMapLocationCoordinates([]));
-                              mapLocationListingClear();
-                           }}>
-                           <IconTrash width={15} height={15} className="fill-red" />
-                        </button>
-                     )}
-                  </div>
-               </FieldRow>
-            )}
-
-            <div className="border-top-lightgray" />
-            {Boolean(options.tags.length) && (
-               <div>
-                  <h3 className="title-3 mb-3">Часто ищут</h3>
-                  <div className="flex-wrap flex gap-1.5">
-                     {options.tags.map((item, index) => {
-                        const currentTag = {
-                           value: item.id,
-                           label: item.name,
-                        };
-                        return (
-                           <Tag
-                              size="medium"
-                              className="!rounded-xl"
-                              onClick={value => dispatch(tagsToggle({ value, option: currentTag, type: 'tags' }))}
-                              value={filtersOther.tags.find(item => item === currentTag.value)}
-                              key={index}>
-                              {currentTag.label}
-                           </Tag>
-                        );
-                     })}
-                  </div>
-               </div>
-            )}
-            {Boolean(options.advantages.length) && (
-               <div>
-                  <h3 className="title-3">Уникальные преимущества объекта</h3>
-                  <div className="mt-4 grid grid-cols-4 gap-x-3 gap-y-4 md3:grid-cols-2">
-                     {options.advantages.map(item => {
-                        const currentTag = {
-                           value: item.id,
-                           label: item.name,
-                        };
-                        return (
-                           <AdvantageCard
-                              key={item.id}
-                              data={item}
-                              onChange={value => dispatch(tagsToggle({ value, option: currentTag, type: 'advantages' }))}
-                              value={filtersOther.advantages.find(item => item === currentTag.value)}
-                              textVisible={false}
-                           />
-                        );
-                     })}
-                  </div>
-               </div>
-            )}
-         </div>
-      </Modal>
-   );
+					<div className='border-top-lightgray' />
+					<ListingFilterAdvantages />
+				</div>
+			</ListingFiltersContext.Provider>
+		</Modal>
+	);
 };
 
 export default ModalForm;

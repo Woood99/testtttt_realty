@@ -8,7 +8,7 @@ import CardPrimary from '../../../ui/CardPrimary';
 import EmptyBlock from '../../../components/EmptyBlock';
 import { ControllerFieldInputRangeSlider } from '../../../uiForm/ControllerFields/ControllerFieldInput';
 import { BuildingContext } from '../../../context';
-import { getCitiesSelector } from '../../../redux/helpers/selectors';
+import { getCitiesSelector } from '@/redux';
 import { CardPrimarySkeleton } from '../../../ui/CardPrimary/CardPrimarySkeleton';
 
 const BuildingSimilarCity = ({ id, currentCity, defaultPrice }) => {

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { NotificationTimer } from '../../ui/Tooltip';
-import { createPortal } from 'react-dom';
-import Button from '../../uiForm/Button';
 import { Link } from 'react-router-dom';
+import { createPortal } from 'react-dom';
+
+import { NotificationTimer } from '../../ui/Tooltip';
+import Button from '../../uiForm/Button';
 import { RoutesPath } from '../../constants/RoutesPath';
 
 const CookieBlock = () => {

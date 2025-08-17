@@ -11,3 +11,4 @@ export { useChatMessagesPagination } from './useChatMessagesPagination';
 export { useBlockUser } from './useBlockUser';
 export { useTheme } from './useTheme';
 export { useChatParamsActions } from './useChatParamsActions';
+export { useChatVoiceRecorder } from './useChatVoiceRecorder';

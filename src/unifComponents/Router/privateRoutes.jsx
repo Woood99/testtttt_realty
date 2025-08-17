@@ -16,10 +16,7 @@ import EditCharApart from '../../admin/pages/Types/EditCharApart';
 import TypesCreate from '../../admin/pages/Types/TypesCreate';
 import TypesList from '../../admin/pages/Types/TypesList';
 import TypesShow from '../../admin/pages/Types/TypesShow';
-import StreamBroadcaster from '../../components/Stream/StreamBroadcaster';
-import StreamList from '../../components/Stream/StreamList';
-import StreamView from '../../components/Stream/StreamView';
-import { PrivateRoutesPath, RoutesPath } from '../../constants/RoutesPath';
+import { PrivateRoutesPath } from '../../constants/RoutesPath';
 import DevelopersCreate from '../../pages/Developers/DevelopersCreate';
 import ListingFlats from '../../pages/ListingFlats';
 import PurchaseCreate from '../../pages/PurchaseCreate';
@@ -139,21 +136,6 @@ export const privateRoutes = [
       path: `${PrivateRoutesPath.developers.edit}:id`,
       body: <DevelopersCreate edit />,
    },
-
-   {
-      path: RoutesPath.stream.broadcaster,
-      body: <StreamBroadcaster />,
-   },
-   {
-      path: `${RoutesPath.stream.view}:stream_key`,
-      body: <StreamView />,
-      main_layout_hidden: true,
-   },
-   {
-      path: RoutesPath.stream.list,
-      body: <StreamList />,
-   },
-
    {
       path: PrivateRoutesPath.purchase.create,
       body: <PurchaseCreate isAdmin />,

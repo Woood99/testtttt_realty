@@ -1,17 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ApartmentContext } from '../../../context';
+import { useSelector } from 'react-redux';
 
 import styles from './ApartmentInfo.module.scss';
 
-import { TagCashback, TagDiscount, TagPresent, TagTop } from '../../../ui/Tag';
-
-import { Chars } from '../../../ui/Chars';
-import BtnShow from '../../../ui/BtnShow';
-import { TagsMoreHeight } from '../../../ui/TagsMore';
-import { useSelector } from 'react-redux';
-import { getIsDesktop, getWindowSize } from '../../../redux/helpers/selectors';
 import ApartmentPrice from '../components/ApartmentPrice';
-import dayjs from 'dayjs';
+import { BtnShow, Chars, TagCashback, TagDiscount, TagPresent, TagsMoreHeight } from '@/ui';
+import { ApartmentContext } from '@/context';
+import { getIsDesktop } from '@/redux';
 
 const ApartmentInfo = () => {
    const {
@@ -23,7 +18,6 @@ const ApartmentInfo = () => {
       attributes,
       complex,
       deadline,
-      priceOld,
       housing,
       rooms,
       area,
@@ -73,8 +67,8 @@ const ApartmentInfo = () => {
          {Boolean(!isDesktop && (buildingDiscount || cashbackValue || present)) && (
             <div className="flex gap-2 flex-wrap items-center">
                <TagDiscount {...buildingDiscount} />
-               <TagCashback cashback={cashbackValue} prefix="Кешбэк" increased={buildingCashback} />
                {present && <TagPresent present={present} />}
+               <TagCashback cashback={cashbackValue} prefix="Кешбэк" increased={buildingCashback} />
             </div>
          )}
          {apartment_tags.length > 0 && (

@@ -11,9 +11,10 @@ import Button from '../../../uiForm/Button';
 import { RoutesPath } from '../../../constants/RoutesPath';
 import { IconArrowY, IconClose } from '../../../ui/Icons';
 import getApartmentsPlayer from './getApartmentsPlayer';
-import { getIsDesktop } from '../../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 import RepeatContent from '../../../components/RepeatContent';
 import WebSkeleton from '../../../ui/Skeleton/WebSkeleton';
+import { openUrl } from '../../../helpers/openUrl';
 
 export const ApartmentsCardsVertical = ({ options = {} }) => {
    const { params = {}, player, condition, set, showMoreUrl = '', className, title = '' } = options;
@@ -113,7 +114,7 @@ export const ApartmentsCardsVertical = ({ options = {} }) => {
                         if (player) {
                            player.pause();
                         }
-                        window.open(showMoreUrl);
+                        openUrl(showMoreUrl);
                      }}>
                      Смотреть все квартиры
                   </Button>
@@ -129,7 +130,7 @@ export const ApartmentsCardsVertical = ({ options = {} }) => {
                      if (player) {
                         player.pause();
                      }
-                     window.open(showMoreUrl);
+                     openUrl(showMoreUrl);
                   }}>
                   Смотреть все квартиры
                </Button>
@@ -243,7 +244,7 @@ export const ApartmentsCardsHorizontal = ({ options = {} }) => {
                if (player) {
                   player.pause();
                }
-               window.open(showMoreUrl);
+               openUrl(showMoreUrl);
             }}>
             Смотреть все квартиры
          </Button>

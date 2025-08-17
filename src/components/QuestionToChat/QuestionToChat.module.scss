@@ -1,0 +1,14 @@
+.QuestionToChatSend {
+   --size: 54px;
+   width: var(--size);
+   height: var(--size);
+   flex: 0 0 var(--size);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background-color: var(--blue);
+   border-radius: 50%;
+   align-self: end;
+   transition: all 0.2s ease-in-out;
+   overflow: hidden;
+}

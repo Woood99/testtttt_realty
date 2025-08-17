@@ -24,7 +24,7 @@ import { FeedBlockPrimary } from '../../components/Ribbon';
 import { CardRowPurchaseBasic } from '../../ui/CardsRow';
 import { RoutesPath } from '../../constants/RoutesPath';
 import ChoiceSpecialistForChat from '../../ModalsMain/ChoiceSpecialistForChat';
-import { checkAuthUser, getIsDesktop, getUserInfo } from '../../redux/helpers/selectors';
+import { checkAuthUser, getIsDesktop, getUserInfo } from '@/redux';
 import ParallaxComponent from '../../components/ParallaxComponent';
 import { BtnActionComparison, BtnActionFavorite, BtnActionShare } from '../../ui/ActionBtns';
 import ShareModal from '../../ModalsMain/ShareModal';
@@ -149,14 +149,14 @@ const Apartment = () => {
                                                 Boolean(userRole === ROLE_SELLER.name && params.purchase) ? 'opacity-60 pointer-events-none' : ''
                                              }
                                           />
-                                          <BtnActionComparison
+                                          {/* <BtnActionComparison
                                              id={id}
                                              type="apartment"
                                              variant="circle"
                                              className={
                                                 Boolean(userRole === ROLE_SELLER.name && params.purchase) ? 'opacity-60 pointer-events-none' : ''
                                              }
-                                          />
+                                          /> */}
                                           <BtnActionShare variant="circle" set={setIsOpenShareModal} />
                                        </div>
                                     )}
@@ -184,7 +184,7 @@ const Apartment = () => {
 
                                  {Boolean(specialistsData.length) && (
                                     <section className="relative z-10">
-                                       <BuildingSpecialists descr="" specialists={specialistsData} building_id={apartmentData.building_id} />
+                                       <BuildingSpecialists descr="" specialists={specialistsData} building_id={apartmentData.building_id} toChat />
                                     </section>
                                  )}
 
@@ -219,11 +219,16 @@ const Apartment = () => {
                                     organization_id={apartmentData.developer.id}
                                     isSpecialist={Boolean(specialistsData.length)}
                                  />
-                                 {apartmentData?.historyPrice && apartmentData?.historyPrice.length > 0 && (
-                                    <section className="relative z-10">
-                                       <BlockHistoryPrice data={apartmentData.historyPrice} />
-                                    </section>
+                                 {userRole === ROLE_ADMIN.name && (
+                                    <>
+                                       {apartmentData?.historyPrice && apartmentData?.historyPrice.length > 0 && (
+                                          <section className="relative z-10">
+                                             <BlockHistoryPrice data={apartmentData.historyPrice} />
+                                          </section>
+                                       )}
+                                    </>
                                  )}
+
                                  <FeedBlockPrimary
                                     data={[
                                        ...apartmentData?.videos.filter(item => !item.is_short).map(item => ({ link: item.video_url, type: 'video' })),
@@ -260,14 +265,14 @@ const Apartment = () => {
                                  : 'pt-2.5'
                            }`}>
                            <Button size="Small" onClick={goToChat} className="relative">
+                       Написать в чат
+                           </Button>
+                           <Button size="Small" variant="secondary" onClick={() => setIsOpenRecordView(true)} className="relative">
                               {Boolean(apartmentSelector.selectedPresents.length + apartmentSelector.defaultPresents.length) && (
                                  <BadgeText color="dark" variant="absolute" className="-top-3 -right-3" animated>
                                     Подарки закреплены за вами
                                  </BadgeText>
                               )}
-                              Задать вопрос в чат
-                           </Button>
-                           <Button size="Small" variant="secondary" onClick={() => setIsOpenRecordView(true)} className="relative">
                               <AnimatedText texts={['Записаться на просмотр', 'Записаться на онлайн-показ']} intervalTime={3000} />
                            </Button>
                         </div>
@@ -303,6 +308,7 @@ const Apartment = () => {
                                     setIsOpenRecordView(false);
                                     setApplicationSentModal(true);
                                  }}
+                                 visibleCard={false}
                               />
                            </ModalWrapper>
                         </>

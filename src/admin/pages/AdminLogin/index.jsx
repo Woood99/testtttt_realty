@@ -1,33 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
-import { ControllerFieldInput } from '../../../uiForm/ControllerFields/ControllerFieldInput';
-import Button from '../../../uiForm/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { sendPostRequest } from '../../../api/requestsApi';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
-import { PrivateRoutesPath, RoutesPath, SellerRoutesPath } from '../../../constants/RoutesPath';
-import { useLogout } from '../../../api/useLogout';
 import { createPortal } from 'react-dom';
+
+import { ControllerFieldInput } from '../../../uiForm/ControllerFields/ControllerFieldInput';
+import Button from '../../../uiForm/Button';
+import { sendPostRequest } from '../../../api/requestsApi';
+import { PrivateRoutesPath, RoutesPath, SellerRoutesPath } from '../../../constants/RoutesPath';
 import { NotificationTimer } from '../../../ui/Tooltip';
-import { toggleNotificationLogout } from '../../../redux/slices/helpSlice';
 import { COOKIE_MAX_AGE } from '../../../constants/general';
 import { ROLE_ADMIN, ROLE_SELLER } from '../../../constants/roles';
-import { getHelpSliceSelector, getUserInfo } from '../../../redux/helpers/selectors';
-import { useUserAuth } from '../../../unifComponents/Provider/useUserAuth';
+import { useAuth } from '@/hooks';
+import { toggleNotificationLogout, getHelpSliceSelector, getUserInfo } from '@/redux';
 
 const AdminLogin = () => {
    const [cookies, setCookie] = useCookies();
    const navigate = useNavigate();
    const dispatch = useDispatch();
    const { handleSubmit, control } = useForm();
+   const [isLoadingHandler, setIsLoadingHandler] = useState(false);
 
    const userInfo = useSelector(getUserInfo);
    const { notificationLogout } = useSelector(getHelpSliceSelector);
 
-   const { setAuthUser } = useUserAuth();
-   const { logout } = useLogout();
+   const { setAuthUser, userConnectionEcho, logout } = useAuth();
 
    const [showNotification, setShowNotification] = useState(false);
 
@@ -38,17 +37,22 @@ const AdminLogin = () => {
    }, [userInfo]);
 
    const onSubmitHandler = async data => {
+      setIsLoadingHandler(true);
       if (cookies.loggedIn) {
          await logout();
       }
+      console.log(data);
 
-      sendPostRequest('/api/login', { ...data })
+      await sendPostRequest('/api/login', { ...data })
          .then(res => {
             const token = res.data.result;
             setCookie('loggedIn', true, { maxAge: COOKIE_MAX_AGE, path: '/' });
             setCookie('access_token', token, { maxAge: COOKIE_MAX_AGE, path: '/' });
-            setAuthUser().then(response => {
-               const roleId = response.role.id;
+            setAuthUser().then(async user => {
+               await new Promise(resolve => setTimeout(resolve, 100));
+               userConnectionEcho(user, res.data.result);
+
+               const roleId = user.role.id;
                if (roleId === ROLE_ADMIN.id) {
                   navigate(PrivateRoutesPath.dashboardAdmin);
                } else if (roleId === ROLE_SELLER.id) {
@@ -56,6 +60,7 @@ const AdminLogin = () => {
                } else {
                   navigate(RoutesPath.home);
                }
+               setIsLoadingHandler(false);
             });
          })
          .catch(error => {
@@ -79,7 +84,9 @@ const AdminLogin = () => {
                      <div className="max-w-[400px] flex flex-col gap-4 m-auto my-2">
                         <ControllerFieldInput control={control} requiredValue beforeText="Email" name="email" size="48" />
                         <ControllerFieldInput control={control} requiredValue beforeText="Пароль" name="password" size="48" type="password" />
-                        <Button className="w-full">Войти</Button>
+                        <Button className="w-full" isLoading={isLoadingHandler}>
+                           Войти
+                        </Button>
                      </div>
                   </form>
                </div>

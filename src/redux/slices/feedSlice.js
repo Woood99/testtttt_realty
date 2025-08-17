@@ -45,8 +45,10 @@ const feedSlice = createSlice({
       setType(state, action) {
          state.type = action.payload;
       },
-      resetFiltersFeed(state) {
-         state.values.city = {};
+      resetFiltersFeed(state, action) {
+         if (action.payload.city) {
+            state.values.city = action.payload.city;
+         }
          state.values.developers = [];
          state.values.complexes = [];
          state.values.authors = [];
@@ -59,6 +61,6 @@ const feedSlice = createSlice({
    },
 });
 
-export const { setFiltersFeed, setValueFeed, setTagsFeed, resetFiltersFeed, setCurrentPage,setType } = feedSlice.actions;
+export const { setFiltersFeed, setValueFeed, setTagsFeed, resetFiltersFeed, setCurrentPage, setType } = feedSlice.actions;
 
 export default feedSlice.reducer;

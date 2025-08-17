@@ -15,7 +15,7 @@ import { setMapLocationCoordinates, setVisiblePlacemarks } from '../../../redux/
 import { SpinnerForBtn } from '../../../ui/Spinner';
 import { sendPostRequest } from '../../../api/requestsApi';
 import calculateCenter from '../../../unifComponents/ymap/calculateCenter';
-import { getCurrentCityNameSelector, getIsDesktop } from '../../../redux/helpers/selectors';
+import { getCurrentCityNameSelector, getIsDesktop } from '@/redux';
 
 let COORDINATES = [];
 let drawingsCollection = {};

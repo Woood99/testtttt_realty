@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 import cn from 'classnames';
-import { getIsDesktop } from '../../redux/helpers/selectors';
-import WebSkeleton from '../../ui/Skeleton/WebSkeleton';
-import BodyAndSidebar from '../../components/BodyAndSidebar';
+import { BodyAndSidebar } from '@/components';
+import { WebSkeleton } from '@/ui';
+import { getIsDesktop } from '@/redux';
 
 const ApartmentSkeleton = () => {
    const isDesktop = useSelector(getIsDesktop);

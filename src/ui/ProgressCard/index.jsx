@@ -6,10 +6,11 @@ import Tag from '../Tag';
 import stylesDragDropItems from '../../components/DragDrop/DragDropItems.module.scss';
 import { IconEdit, IconTrash } from '../Icons';
 import { useSelector } from 'react-redux';
-import { getIsDesktop } from '../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 
 const ProgressCard = ({ data, isAdmin, deleteCard, onClick = () => {}, editCard }) => {
   const isDesktop = useSelector(getIsDesktop);
+  
    return (
       <article style={{ height: `${isDesktop ? 400 : 420}px` }} className={styles.ProgressCardRoot}>
          <div className="CardLinkElement z-10" onClick={onClick} />

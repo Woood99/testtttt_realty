@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
-import { getCitiesSelector } from '../../../redux/helpers/selectors';
 import { useEffect, useRef, useState } from 'react';
 import { useGetTags } from '../../../api/other/useGetTags';
 import { useGetDevelopersAll } from '../../../api/other/useGetDevelopersAll';
@@ -11,6 +10,7 @@ import { getDataRequest, sendPostRequest } from '../../../api/requestsApi';
 import { getFormData } from './getFormData';
 import isEmptyArrObj from '../../../helpers/isEmptyArrObj';
 import { PrivateRoutesPath } from '../../../constants/RoutesPath';
+import { getCitiesSelector } from '@/redux';
 
 const defaultObjectData = {
    photos: [],
@@ -210,31 +210,32 @@ export const useObject = (params, type = 'create') => {
       });
    }, [dataRenov, dataPhotos, dataEcologyParks, dataGeo]);
 
-   const onSubmitHandler = (dataForm, additionalData = { reload: true }) => {
+   const onSubmitHandler = async (dataForm, additionalData = { reload: true }) => {
       setIsLoadingSend(true);
+
       if (type === 'edit') {
-         sendPostRequest(`/admin-api/update/object/${params.id}`, getFormData({ ...data, ...additionalData.data }, dataForm, attributes), {
+         await sendPostRequest(`/admin-api/update/object/${params.id}`, getFormData({ ...data, ...additionalData.data }, dataForm, attributes), {
             'Content-Type': 'multipart/form-data',
-         }).then(res => {
-            if (additionalData.reload) {
-               window.location.reload();
-            } else {
-               fetchDataBuilding();
-            }
-            setIsLoadingSend(false);
          });
+         if (additionalData.reload) {
+            window.location.reload();
+         } else {
+            await fetchDataBuilding();
+         }
+         setIsLoadingSend(false);
       }
       if (type === 'create') {
-         sendPostRequest(`/admin-api/create/object`, getFormData(data, dataForm, attributes), { 'Content-Type': 'multipart/form-data' }).then(res => {
-            setIsLoadingSend(false);
-            window.location.href = `${PrivateRoutesPath.objects.edit}${res.data.id}`;
+         const res = await sendPostRequest(`/admin-api/create/object`, getFormData(data, dataForm, attributes), {
+            'Content-Type': 'multipart/form-data',
          });
+         setIsLoadingSend(false);
+         window.location.href = `${PrivateRoutesPath.objects.edit}${res.data.id}`;
       }
    };
 
    const sendingForm = async additionalData => {
       setIsLoadingSend(true);
-      handleSubmit(onSubmitHandler)({ data: additionalData, reload: false });
+      await handleSubmit(onSubmitHandler)({ data: additionalData, reload: false });
    };
 
    return {

@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { sendPostRequest } from '../../../api/requestsApi';
 import { PrivateRoutesPath } from '../../../constants/RoutesPath';
 import MapSetPlacemark from '../../../components/MapSetPlacemark';
-import { getCitiesSelector } from '../../../redux/helpers/selectors';
+import { getCitiesSelector } from '@/redux';
 
 const CityEdit = () => {
    const params = useParams();

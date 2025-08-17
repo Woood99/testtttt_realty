@@ -6,7 +6,6 @@ import cn from 'classnames';
 import { ROLE_ADMIN } from '../../constants/roles';
 import getSrcImage from '../../helpers/getSrcImage';
 import Modal from '../../ui/Modal';
-import { ShortPlayer } from '../../ModalsMain/VideoModal';
 import { IconClose } from '../../ui/Icons';
 import { NavBtnNext, NavBtnPrev } from '../../ui/NavBtns';
 import { Link } from 'react-router-dom';
@@ -14,6 +13,7 @@ import { RoutesPath } from '../../constants/RoutesPath';
 import UserInfo from '../../ui/UserInfo';
 import { capitalizeWords } from '../../helpers/changeString';
 import { useStoriesModal } from './useStoriesModal';
+import { ShortPlayer } from '../../ui/ShortPlayer';
 
 const StoriesModal = ({ data = [], currentId, set }) => {
    const { activeIndex, onSlideChange, handlePrev, handleNext, init, swiperRef } = useStoriesModal(currentId);

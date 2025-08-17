@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import cn from 'classnames';
 import styles from './PresentCard.module.scss';
@@ -14,7 +15,7 @@ import { NotificationTimer } from '../Tooltip';
 import { createPortal } from 'react-dom';
 import Quantity from '../../uiForm/Quantity';
 import { useSelector } from 'react-redux';
-import { getWindowSize } from '../../redux/helpers/selectors';
+import { getWindowSize } from '@/redux';
 
 export const PresentCard = props => {
    const {
@@ -39,7 +40,7 @@ export const PresentCard = props => {
       count = 0,
    } = props;
    const [modalOpen, setModalOpen] = useState(false);
-   const { isDesktop, width } = useSelector(getWindowSize);
+   const { isDesktop } = useSelector(getWindowSize);
 
    const [showNotification, setShowNotification] = useState(false);
    return (

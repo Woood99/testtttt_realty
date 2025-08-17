@@ -99,8 +99,8 @@ const CardSecondRow = props => {
                      {Boolean(cashbackValue || present || buildingDiscount) && (
                         <div className="flex flex-wrap gap-1.5 mb-1.5">
                            <TagDiscount {...buildingDiscount} />
-                           <TagCashback cashback={cashbackValue} increased={buildingCashback} />
                            {Boolean(present) && <TagPresent present={present} />}
+                           <TagCashback cashback={cashbackValue} increased={buildingCashback} />
                         </div>
                      )}
 
@@ -113,7 +113,7 @@ const CardSecondRow = props => {
                   <div className="ml-auto flex flex-col gap-2">
                      {!controlsAdmin ? (
                         <>
-                           {btnComparisonVisible && <BtnActionComparison id={id} type="apartment" variant="tooltip" placement="left" />}
+                           {/* {btnComparisonVisible && <BtnActionComparison id={id} type="apartment" variant="tooltip" placement="left" />} */}
                            {btnFavoriteVisible && <BtnActionFavorite id={id} type="apartment" variant="tooltip" placement="left" />}
                            {geoVisible && (
                               <Tooltip

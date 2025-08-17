@@ -73,7 +73,7 @@ const ChatMessageCommentsPanel = () => {
             !messageCommentsIsOpen && 'hidden',
             !isActive && 'left-full invisible'
          )}>
-         <div className="min-h-16 h-16 px-4 flex items-center border-b border-b-primary800 bg-white">
+         <div className="min-h-16 h-16 px-4 flex items-center border-b border-b-primary800 bg-white md1:min-h-[56px] md1:h-[56px]">
             <button type="button" className="flex-center-all" onClick={messageCommentPanelClose}>
                <IconArrow className="rotate-180 fill-primary400" width={32} height={32} />
             </button>

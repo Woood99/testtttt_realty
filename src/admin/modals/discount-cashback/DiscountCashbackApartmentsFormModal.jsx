@@ -3,12 +3,12 @@ import { memo } from 'react';
 import ChoiceApartmentsFilter from '../../../components/ChoiceApartmentsFilter';
 import Modal from '../../../ui/Modal';
 import ModalHeader from '../../../ui/Modal/ModalHeader';
-import Button from '../../../uiForm/Button';
 import { ControllerFieldSelect } from '../../../uiForm/ControllerFields/ControllerFieldSelect';
 import { ControllerFieldInput } from '../../../uiForm/ControllerFields/ControllerFieldInput';
 import { ControllerFieldCheckboxesSingle } from '../../../uiForm/ControllerFields/ControllerFieldCheckbox';
 import { useDiscountCashbackApartmentsForm } from './useDiscountCashbackApartmentsForm';
 import { OPTIONS_SUMM, OPTIONS_TYPE } from './constants';
+import { Button } from '@/uiForm';
 
 const DiscountCashbackApartmentsFormModal = ({ condition, set, options, fetchData }) => {
    const {

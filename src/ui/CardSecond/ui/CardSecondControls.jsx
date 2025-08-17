@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { CardSecondContext } from '..';
 import { isAdmin } from '../../../helpers/utils';
 import { useSelector } from 'react-redux';
-import { getUserInfo } from '../../../redux/helpers/selectors';
+import { getUserInfo } from '@/redux';
 import CardSecondaryAdminControls from '../CardSecondaryAdminControls';
 import { Tooltip } from '../../Tooltip';
 import { BtnAction, BtnActionFavorite } from '../../ActionBtns';

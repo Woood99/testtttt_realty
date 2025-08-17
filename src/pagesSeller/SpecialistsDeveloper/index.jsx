@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import SellerLayout from '../../layouts/SellerLayout';
 import Specialist from '../../ui/Specialist';
 import { useSelector } from 'react-redux';
-import { getUserInfo } from '../../redux/helpers/selectors';
+import { getUserInfo } from '@/redux';
 import isEmptyArrObj from '../../helpers/isEmptyArrObj';
 import { getSpecialistsOrganization } from '../../api/Building/getSpecialists';
 import { useNavigateToChat } from '../../hooks/useNavigateToChat';

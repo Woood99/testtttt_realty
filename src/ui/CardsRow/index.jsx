@@ -8,12 +8,11 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { SellerRoutesPath } from '../../constants/RoutesPath';
 import { getLastSeenOnline } from '../../helpers/changeDate';
-import { IconChat, IconChecked, IconLocation } from '../Icons';
+import { IconChat, IconChecked } from '../Icons';
 import { getFirstLetter, getShortNameSurname } from '../../helpers/changeString';
-import { getIsDesktop, getUserInfo } from '../../redux/helpers/selectors';
+import { getIsDesktop, getUserInfo } from '@/redux';
 import cn from 'classnames';
 import { ExternalLink } from '../ExternalLink';
-import { BtnAction } from '../ActionBtns';
 import Avatar from '../Avatar';
 import { CharsColItems } from '../Chars';
 import WebSkeleton from '../Skeleton/WebSkeleton';
@@ -150,9 +149,9 @@ export const UserCardBasic = ({ data, href = '#', className, charsData = [], onC
             </div>
             <div className="flex gap-4 items-center flex-grow md1:flex-col md1:items-start">
                <div className="mr-6">
-                  <div className="flex gap-2 flex-col">
-                     <h3 className="title-4 cut-one w-[165px]">{getShortNameSurname(data.name, data.surname)}</h3>
-                     {Boolean(data.agency) && <p className="text-primary400 text-small">{data.agency}</p>}
+                  <div className="flex gap-2 flex-col w-[165px]">
+                     <h3 className="title-4 cut-one">{getShortNameSurname(data.name, data.surname)}</h3>
+                     {Boolean(data.agency) && <p className="text-primary400 text-small cut-one">{data.agency}</p>}
                      {Boolean(data.year) && <p className="text-primary400 text-small">Год основания {data.year} г.</p>}
                   </div>
                </div>

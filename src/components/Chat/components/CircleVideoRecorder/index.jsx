@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Webcam from 'react-webcam';
 import Button from '../../../../uiForm/Button';
 import { useCircleVideoRecorder } from './useCircleVideoRecorder';
@@ -20,6 +20,8 @@ const CircleVideoRecorder = ({ submit }) => {
       canvasRef,
       setVideoUrl,
    } = useCircleVideoRecorder({ submit, WIDTH, HEIGHT });
+
+   const inputRef = useRef(null);
 
    return (
       <div className="flex flex-col items-center gap-5">
@@ -51,12 +53,30 @@ const CircleVideoRecorder = ({ submit }) => {
          </div>
 
          <canvas ref={canvasRef} className="hidden" />
+         <input
+            ref={inputRef}
+            className="!hidden"
+            type="file"
+            accept="video/*"
+            onChange={e => {
+               const file = e.target?.files?.[0];
+               if (!file) return;
+               if (submit) {
+                  submit(file);
+               }
+            }}
+         />
 
          <div className="flex gap-3">
             {!isRecording && !videoUrl && (
-               <Button onClick={startRecording} size="Small">
-                  Начать запись
-               </Button>
+               <>
+                  <Button onClick={startRecording} size="Small">
+                     Начать запись
+                  </Button>
+                  <Button onClick={() => inputRef.current?.click()} size="Small">
+                     Загрузить готовое
+                  </Button>
+               </>
             )}
 
             {isRecording && (

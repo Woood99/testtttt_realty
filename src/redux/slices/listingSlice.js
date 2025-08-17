@@ -10,6 +10,10 @@ import roomsToggleFunc from '../helpers/roomsToggleFunc';
 import changeFieldInputFunc from '../helpers/changeFieldInput';
 import clearData from '../../helpers/clearData';
 import { getDataRequest } from '../../api/requestsApi';
+import { isNumber } from '../../helpers/isEmptyArrObj';
+import resetFiltersFunc from '../helpers/resetFiltersFunc';
+
+const urlParams = new URLSearchParams(window.location.search);
 
 export const fetchFilters = createAsyncThunk('listing/fetchFilters', async params => {
    const { data } = await getDataRequest('/api/catalog/filters', params);
@@ -25,18 +29,47 @@ export const listingDefaultValue = {
    startIsLoading: true,
    isInitMap: false,
    lastTrigger: 'filter',
-   sortBy: 'price_asc',
+   sortBy: urlParams.get('sort') || 'price_asc',
    mapLocationCoordinates: [],
    filtersOther: {
-      tags: [],
-      advantages: [],
-      stickers: [],
-      is_video: false,
-      is_gift: false,
+      tags: urlParams.has('tags')
+         ? urlParams
+              .getAll('tags')
+              .join(',')
+              .split(',')
+              .map(item => +item)
+         : [],
+      advantages: urlParams.has('advantages')
+         ? urlParams
+              .getAll('advantages')
+              .join(',')
+              .split(',')
+              .map(item => +item)
+         : [],
+      stickers: urlParams.has('stickers')
+         ? urlParams
+              .getAll('stickers')
+              .join(',')
+              .split(',')
+              .map(item => +item)
+         : [],
+      is_video: !!urlParams.get('is_video'),
+      is_gift: !!urlParams.get('is_gift'),
+      is_discount: !!urlParams.get('is_discount'),
+      is_cashback: !!urlParams.get('is_cashback'),
    },
    filtersMain: {
-      price: updateAdditionalFilters([filterPrice]).price,
-      rooms: updateAdditionalFilters([filterRooms]).rooms,
+      price: {
+         ...updateAdditionalFilters([filterPrice]).price,
+         value: {
+            ...(urlParams.has('priceFrom') && { priceFrom: urlParams.get('priceFrom') }),
+            ...(urlParams.has('priceTo') && { priceTo: urlParams.get('priceTo') }),
+         },
+      },
+      rooms: {
+         ...updateAdditionalFilters([filterRooms]).rooms,
+         value: urlParams.has('rooms') ? [+urlParams.get('rooms')] : [],
+      },
    },
    filtersAdditional: {},
 };
@@ -77,11 +110,18 @@ const listingSlice = createSlice({
       },
 
       resetFilters(state) {
-         state.filtersMain = cloneDeep(listingDefaultValue.filtersMain);
-         state.filtersOther = cloneDeep(listingDefaultValue.filtersOther);
-         Object.keys(state.filtersAdditional).forEach(key => {
-            clearData(state.filtersAdditional[key].value);
-         });
+         state.filtersMain = resetFiltersFunc(state.filtersMain);
+         state.filtersOther = {
+            tags: [],
+            advantages: [],
+            stickers: [],
+            is_video: false,
+            is_gift: false,
+            is_discount: false,
+            is_cashback: false,
+         };
+         state.filtersAdditional = resetFiltersFunc(state.filtersAdditional);
+
          if (state.type === 'list') {
             state.mapVisiblePlacemarks = null;
             state.mapLocationCoordinates = [];
@@ -151,10 +191,50 @@ const listingSlice = createSlice({
          })
          .addCase(fetchFilters.fulfilled, (state, action) => {
             const updateFilters = action.payload.map(filter => {
-               if (filter.type === 'field-fromTo') {
-                  return { ...filter, value: {} };
+               let currentFilter = filter;
+
+               if (currentFilter.type === 'field-fromTo') {
+                  currentFilter = {
+                     ...currentFilter,
+                     value: {},
+                  };
                }
-               return filter;
+               const filterName = currentFilter.name;
+
+               if (urlParams.has(filterName)) {
+                  const valuesOptions = currentFilter.options.filter(item => {
+                     return urlParams
+                        .getAll(filterName)
+                        .join(',')
+                        .split(',')
+                        .map(el => (isNumber(item.value) ? +el : el))
+                        .includes(item.value);
+                  });
+
+                  currentFilter = {
+                     ...currentFilter,
+                     value: valuesOptions,
+                  };
+               }
+               if (urlParams.has('area__From') && filterName === 'area') {
+                  currentFilter = {
+                     ...currentFilter,
+                     value: {
+                        ...currentFilter.value,
+                        area__From: urlParams.get('area__From'),
+                     },
+                  };
+               }
+               if (urlParams.has('area__To') && filterName === 'area') {
+                  currentFilter = {
+                     ...currentFilter,
+                     value: {
+                        ...currentFilter.value,
+                        area__To: urlParams.get('area__To'),
+                     },
+                  };
+               }
+               return currentFilter;
             });
 
             state.filtersAdditional = updateAdditionalFilters(updateFilters);

@@ -15,9 +15,6 @@ const AddModal = ({ condition, set }) => {
             <CardLink href={BuyerRoutesPath.purchase.create}>
                <span>Заявка на покупку недвижимости</span>
             </CardLink>
-            {/* <CardLink href="link2">
-               <span>Объект на продажу</span>
-            </CardLink> */}
          </div>
       </Modal>
    );

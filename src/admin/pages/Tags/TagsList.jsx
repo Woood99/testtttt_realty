@@ -18,7 +18,7 @@ import Input from '../../../uiForm/Input';
 import FormRow from '../../../uiForm/FormRow';
 import ResetBtn from '../../../uiForm/ResetBtn';
 import isEmptyArrObj from '../../../helpers/isEmptyArrObj';
-import { getCitiesSelector, getCurrentCitySelector } from '../../../redux/helpers/selectors';
+import { getCitiesSelector, getCurrentCitySelector } from '@/redux';
 import { useQueryParams } from '../../../hooks/useQueryParams';
 import { useGetTagsAllTypes } from '../../../api/other/useGetTags';
 import { useObjectTypes } from '../../../api/other/useObjectTypes';

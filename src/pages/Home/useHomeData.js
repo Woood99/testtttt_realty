@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { getDataRequest } from '../../api/requestsApi';
-import { authLoadingSelector, getCurrentCitySelector, getUserInfo } from '../../redux/helpers/selectors';
+import { authLoadingSelector, getCurrentCitySelector, getUserInfo } from '@/redux';
 import { useEffect, useState } from 'react';
 import { isAdmin, isSeller } from '../../helpers/utils';
 import { ROLE_ADMIN, ROLE_BUYER, ROLE_SELLER } from '../../constants/roles';

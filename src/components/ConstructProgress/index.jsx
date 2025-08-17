@@ -1,28 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import ProgressCard from '../../ui/ProgressCard';
 import { NavBtnNext, NavBtnPrev } from '../../ui/NavBtns';
-import { nearestYearsOptions, quartersOptions } from '../../data/selectsField';
+import { quartersOptions } from '../../data/selectsField';
 import { sendPostRequest } from '../../api/requestsApi';
 import Modal from '../../ui/Modal';
 import CreateConstructProgress from '../../admin/pages/Object/CreateConstructProgress';
 import ModalWrapper from '../../ui/Modal/ModalWrapper';
 import { getVideos } from '../../api/other/getVideos';
-import { GalleryModal, GalleryRowTabs } from '../GalleryRow';
-import { useSelector } from 'react-redux';
-import { getIsDesktop, getWindowSize } from '../../redux/helpers/selectors';
+import { GalleryModal } from '../GalleryRow';
 import Select from '../../uiForm/Select';
 import isEmptyArrObj from '../../helpers/isEmptyArrObj';
 import EmptyBlock from '../EmptyBlock';
 
-const ConstructProgress = ({ data, isAdmin = false, desktopLength = 3, sidebar, sending = () => {}, options }) => {
+const ConstructProgress = ({ data, isAdmin = false, desktopLength = 3, sending = () => {}, options }) => {
    const [editModalOpen, setEditModalOpen] = useState(false);
 
-   const isDesktop = useSelector(getIsDesktop);
-   const { viewportHeight } = useSelector(getWindowSize);
-
    const [isModalActive, setIsModalActive] = useState(false);
+   const modalContentRef = useRef(null);
 
    const [formValues, setFormValues] = useState({
       frame: {},
@@ -107,20 +103,6 @@ const ConstructProgress = ({ data, isAdmin = false, desktopLength = 3, sidebar, 
          {data.length > 0 && (
             <div>
                <div className="grid grid-cols-[repeat(3,minmax(240px,1fr))] gap-2 mb-6">
-                  {/* <Select
-                     options={options.frames}
-                     nameLabel="Корпус"
-                     onChange={selectedOption => setFormValues(prev => ({ ...prev, frame: selectedOption }))}
-                     value={formValues.frame}
-                     defaultOption
-                  />
-                  <Select
-                     options={nearestYearsOptions}
-                     nameLabel="Год"
-                     onChange={selectedOption => setFormValues(prev => ({ ...prev, year: selectedOption }))}
-                     value={formValues.year}
-                     defaultOption
-                  /> */}
                   <Select
                      options={quartersOptions}
                      nameLabel="Квартал"
@@ -176,8 +158,9 @@ const ConstructProgress = ({ data, isAdmin = false, desktopLength = 3, sidebar, 
             <Modal
                condition={isModalActive !== false}
                set={setIsModalActive}
-               closeBtnWhite
-               options={{ overlayClassNames: '_full', modalContentClassNames: '!p-8 !pt-0 md1:!px-0 bg-[#0e1319] flex flex-col items-center' }}>
+               options={{ overlayClassNames: '_full', modalContentClassNames: '!p-8 !pt-0 !pb-0 md1:!px-0 bg-[#0e1319] flex flex-col items-center' }}
+               closeBtn={false}
+               modalContentRef={modalContentRef}>
                <GalleryModal
                   data={
                      isModalActive
@@ -188,6 +171,9 @@ const ConstructProgress = ({ data, isAdmin = false, desktopLength = 3, sidebar, 
                         : []
                   }
                   setIsOpenModal={setIsModalActive}
+                  set={setIsModalActive}
+                  modalContentRef={modalContentRef}
+                  condition={isModalActive ? 0 : false}
                />
             </Modal>
          </ModalWrapper>

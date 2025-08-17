@@ -1,9 +1,8 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkAuthUser } from '../redux/helpers/selectors';
 import { CHAT_TYPES } from '../components/Chat/constants';
-import { checkDialogId, getUrlNavigateToChatDialog, getUrlNavigateToChatDialogFake } from '../api/getDialogId';
-import { setSelectAccLogModalOpen } from '../redux/slices/helpSlice';
+import { checkDialogId, getUrlNavigateToChatDialog, getUrlNavigateToChatDialogFake } from '@/api/getDialogId';
+import { checkAuthUser, setSelectAccLogModalOpen } from '@/redux';
 
 export const useNavigateToChat = () => {
    const authUser = useSelector(checkAuthUser);

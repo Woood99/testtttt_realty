@@ -3,11 +3,9 @@ import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 
 import { choiceApartmentsFilterOptions } from '../../../data/selectsField';
-import convertToDate from '../../../helpers/convertToDate';
-import { stringToNumber } from '../../../helpers/changeString';
 import { sendPostRequest } from '../../../api/requestsApi';
-import { isNumber } from '../../../helpers/isEmptyArrObj';
 import { OPTIONS_SUMM, OPTIONS_TYPE } from './constants';
+import { convertToDate, isNumber, stringToNumber } from '@/helpers';
 
 export const useDiscountCashbackApartmentsForm = optionsData => {
    const {

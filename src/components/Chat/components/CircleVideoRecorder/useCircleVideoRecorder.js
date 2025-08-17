@@ -107,6 +107,7 @@ export const useCircleVideoRecorder = options => {
       if (recordedChunks.length === 0) return;
 
       const blob = new Blob(recordedChunks, { type: 'video/webm' });
+
       if (submit) {
          submit(blob);
       }

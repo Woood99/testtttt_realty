@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './CityModal.module.scss';
 
 import Modal from '../../ui/Modal';
-import { getCitiesSelector, getUserInfo } from '../../redux/helpers/selectors';
+import { getCitiesSelector, getUserInfo } from '@/redux';
 import { isAdmin } from '../../helpers/utils';
 import { useSelector } from 'react-redux';
 import isEmptyArrObj from '../../helpers/isEmptyArrObj';

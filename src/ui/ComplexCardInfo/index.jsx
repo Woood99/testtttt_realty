@@ -71,7 +71,7 @@ const ComplexCardInfo = ({ data, loading = false }) => {
                <Button Selector="div" variant="secondary" size="Small">
                   Подробнее о ЖК
                </Button>
-               <BtnActionComparison id={data.id} type="complex" variant="tooltip" placement="bottom" className="relative z-10" />
+               {/* <BtnActionComparison id={data.id} type="complex" variant="tooltip" placement="bottom" className="relative z-10" /> */}
                <BtnActionFavorite id={data.id} type="complex" variant="tooltip" placement="bottom" className="relative z-10" />
                <Tooltip
                   placement="bottom"

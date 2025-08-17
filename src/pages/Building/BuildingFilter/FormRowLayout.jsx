@@ -1,21 +1,85 @@
-import React from 'react';
-import FormRow from '../../../uiForm/FormRow';
-import FilterButton from '../../../uiForm/FilterButton';
-import Rooms from '../../../uiForm/FiltersComponent/Rooms';
-import { useSelector } from 'react-redux';
-import { changeFieldInput, roomsToggle } from '../../../redux/slices/buildingApartSlice';
-import PriceFromTo from '../../../uiForm/FiltersComponent/PriceFromTo';
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const FormRowLayout = ({ filterCount, setIsOpenMoreFilter }) => {
-   const { rooms, price } = useSelector(state => state.buildingApartFilter.filtersMain);
+import { getIsDesktop } from "@/redux";
+import { changeFieldAdditional, changeFieldInput, filterToggle } from "@/redux/slices/buildingApartSlice";
 
-   return (
-      <FormRow shadow={false} className="grid-cols-[145px_max-content_450px] scrollbarPrimary md1:mx-4">
-         <FilterButton count={filterCount} onClick={() => setIsOpenMoreFilter(prev => !prev)} />
-         <Rooms dispatchChange={roomsToggle} roomsSelector={rooms} />
-         <PriceFromTo dispatchChange={changeFieldInput} priceSelector={price} />
-      </FormRow>
-   );
+import { ButtonSelect, FormRow, PriceFromTo, Select } from "@/uiForm";
+
+const FormRowLayout = () => {
+	const dispatch = useDispatch();
+	const { price } = useSelector(state => state.buildingApartFilter.filtersMain);
+	const buildingApartFilter = useSelector(state => state.buildingApartFilter);
+	const isDesktop = useSelector(getIsDesktop);
+
+	const filtersSelector = useSelector(state => state.buildingApartFilter.filtersAdditional);
+
+	const handleChange = (name, selectedOptions) => {
+		dispatch(changeFieldAdditional({ name, selectedOptions }));
+	};
+
+	return (
+		<FormRow
+			shadow={false}
+			className='mmd1:grid-cols-[max-content_max-content_max-content_1fr] md1:grid-cols-[max-content_max-content_max-content_230px_1fr] scrollbarPrimary'>
+			<ButtonSelect
+				type='present'
+				isActive={buildingApartFilter.is_gift}
+				onClick={() => {
+					dispatch(
+						filterToggle({
+							name: "is_gift",
+							value: !buildingApartFilter.is_gift
+						})
+					);
+				}}
+			/>
+			<ButtonSelect
+				type='discount'
+				isActive={buildingApartFilter.is_discount}
+				onClick={() => {
+					dispatch(
+						filterToggle({
+							name: "is_discount",
+							value: !buildingApartFilter.is_discount
+						})
+					);
+				}}
+			/>
+			<ButtonSelect
+				type='cashback'
+				isActive={buildingApartFilter.is_cashback}
+				onClick={() => {
+					dispatch(
+						filterToggle({
+							name: "is_cashback",
+							value: !buildingApartFilter.is_cashback
+						})
+					);
+				}}
+			/>
+			{!isDesktop && (
+				<PriceFromTo
+					dispatchChange={changeFieldInput}
+					priceSelector={price}
+					variant='white'
+					priceFromVisible={false}
+					priceToBefore='Цена до'
+				/>
+			)}
+
+			{filtersSelector.frame && (
+				<Select
+					variant='third'
+					nameLabel='Корпус'
+					options={filtersSelector.frame.options}
+					onChange={value => handleChange(filtersSelector.frame.name, value)}
+					value={filtersSelector.frame.value}
+					defaultOption
+				/>
+			)}
+		</FormRow>
+	);
 };
 
 export default FormRowLayout;

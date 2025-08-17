@@ -1,41 +1,91 @@
 import { AuthRoutesPath, RoutesPath } from '../../../constants/RoutesPath';
 
+import HOME_NAV_1 from '../../../assets/img/home-nav/home-nav-1.png';
+import HOME_NAV_2 from '../../../assets/img/home-nav/home-nav-2.webp';
+import HOME_NAV_3 from '../../../assets/img/home-nav/home-nav-3.png';
+import HOME_NAV_4 from '../../../assets/img/home-nav/home-nav-4.png';
+import HOME_NAV_5 from '../../../assets/img/home-nav/home-nav-5.png';
+import HOME_NAV_6 from '../../../assets/img/home-nav/home-nav-6.png';
+import HOME_NAV_7 from '../../../assets/img/home-nav/home-nav-7.png';
+import HOME_NAV_8 from '../../../assets/img/home-nav/home-nav-8.png';
+
 export const HOME_NAV = [
    {
       name: 'Новостройки',
       link: RoutesPath.listing,
-      image: 'https://statics.dmclk.ru/confer/static/3610/998908/c946d7f/ec6aeb92321cfd50c2da.png',
+      image: HOME_NAV_1,
    },
    {
-      name: 'Застройщики',
-      link: RoutesPath.developers.list,
-      image: 'https://img.dmclk.ru/s200x200q80/blog/frame-270988339.webp',
-   },
-   {
-      name: 'Менеджеры',
-      link: RoutesPath.specialists.list,
-      image: 'https://statics.dmclk.ru/confer/static/3610/998908/c946d7f/4b5da8dd76d8771779a0.png',
-   },
-   {
-      name: 'Заявки',
-      link: RoutesPath.purchase.list,
-      image: 'https://statics.dmclk.ru/confer/static/3610/998908/c946d7f/7303e2cd8f5dc323b76e.png',
+      name: 'Чат',
+      link: RoutesPath.chat,
+      image: HOME_NAV_7,
    },
    {
       name: 'Скидки и подарки',
       link: RoutesPath.feedPromos,
-      image: 'https://statics.dmclk.ru/confer/static/3610/998908/c946d7f/098a7ca7a63fd7c0a6a1.png',
+      image: HOME_NAV_5,
    },
    {
       name: 'Видео и Клипы',
       link: RoutesPath.feedVideos,
-      image: 'https://statics.dmclk.ru/confer/static/3610/998908/c946d7f/919e993efd94bbaa921e.png',
+      image: HOME_NAV_6,
+   },
+   {
+      name: 'Застройщики',
+      link: RoutesPath.developers.list,
+      image: HOME_NAV_2,
+   },
+   {
+      name: 'Менеджеры',
+      link: RoutesPath.specialists.list,
+      image: HOME_NAV_3,
+   },
+   {
+      name: 'Заявки',
+      link: RoutesPath.purchase.list,
+      image: HOME_NAV_4,
+   },
+];
+
+export const HOME_NAV_MOBILE = [
+   {
+      name: 'Новостройки',
+      link: RoutesPath.listing,
+      image: HOME_NAV_1,
+   },
+   {
+      name: 'Застройщики',
+      link: RoutesPath.developers.list,
+      image: HOME_NAV_2,
+   },
+   {
+      name: 'Скидки и подарки',
+      link: RoutesPath.feedPromos,
+      image: HOME_NAV_5,
+   },
+   {
+      name: 'Менеджеры',
+      link: RoutesPath.specialists.list,
+      image: HOME_NAV_3,
+   },
+   {
+      name: 'Видео и Клипы',
+      link: RoutesPath.feedVideos,
+      image: HOME_NAV_6,
+   },
+   {
+      name: 'Заявки',
+      link: RoutesPath.purchase.list,
+      image: HOME_NAV_4,
+   },
+   {
+      name: 'Live',
+      link: RoutesPath.stream.list,
+      image: HOME_NAV_8,
    },
    {
       name: 'Чат',
-      link: AuthRoutesPath.chat,
-      image: 'https://statics.dmclk.ru/confer/static/3610/998908/c946d7f/fe9881e6babbec2bd8ff.png',
-      authRequired: true,
-      mobileFull: true,
+      link: RoutesPath.chat,
+      image: HOME_NAV_7,
    },
 ];

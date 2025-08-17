@@ -7,7 +7,7 @@ import { IconLocation } from '../../ui/Icons';
 import { sendPostRequest } from '../../api/requestsApi';
 import { updateMainInfo } from '../../redux/slices/mainInfoSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCurrentCitySelector } from '../../redux/helpers/selectors';
+import { getCurrentCitySelector } from '@/redux';
 import CityModal from '../../ModalsMain/CityModal';
 
 const CityBlock = () => {

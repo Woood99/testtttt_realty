@@ -11,7 +11,7 @@ import getSrcImage from '../../helpers/getSrcImage';
 import { ROLE_ADMIN } from '../../constants/roles';
 import cn from 'classnames';
 import { useSelector } from 'react-redux';
-import { getUserIsAdmin } from '../../redux/helpers/selectors';
+import { getUserIsAdmin } from '@/redux';
 import stylesDragDropItems from '../../components/DragDrop/DragDropItems.module.scss';
 import ModalWrapper from '../Modal/ModalWrapper';
 import DeleteModal from '../../ModalsMain/DeleteModal';
@@ -32,7 +32,7 @@ const ShortCard = ({
 }) => {
    const userIsAdmin = useSelector(getUserIsAdmin);
    const [isDeleteVideoModal, setIsDeleteVideoModal] = useState(false);
-   const { isPlaying, handleMouseEnter, handleMouseLeave, videoRef } = useVideoHover(shouldPlayOnHover);
+   const { isPlaying, handleMouseEnter, handleMouseLeave, videoRef, isFirstHover } = useVideoHover(shouldPlayOnHover);
 
    if (isEmptyArrObj(data)) return;
 
@@ -64,20 +64,28 @@ const ShortCard = ({
          <div
             className={cn('ibg cursor-pointer', styles.ShortCardImage, classNameImage, shouldPlayOnHover && '!overflow-visible')}
             onClick={setShortsOpen}>
-            <img src={data.image_url ? getSrcImage(data.image_url) : `${BASE_URL}/api/video/${data.id}/preview/0`} alt="" />
-            {isPlaying && (
+            <img
+               src={data.image_url ? getSrcImage(data.image_url) : `${BASE_URL}/api/video/${data.id}/preview/0`}
+               loading="lazy"
+               width="212"
+               height="365"
+               alt=""
+            />
+            {(!isFirstHover || isPlaying) && (
                <video
                   ref={videoRef}
                   src={videoSrc}
                   muted
                   className={cn(
-                     'w-full h-full object-cover absolute inset-0 z-[999] rounded-xl scale-0 opacity-0',
-                     isPlaying && '!opacity-100 !scale-110'
+                     'w-full h-full object-cover absolute inset-0 z-[999] rounded-xl',
+                     !isPlaying ? 'opacity-0 scale-0' : 'opacity-100 scale-[115%]'
                   )}
-                  style={{ transition: 'all 2s ease-in-out' }}
-                  preload="metadata"
+                  style={{ transition: 'all 0.1s ease-in-out' }}
+                  preload="none"
+                  playsInline
                />
             )}
+
             {Boolean(!onlyImage && userData) && (
                <UserInfo
                   classListName={`!text-white ${variant === 'small' ? 'text-verySmall' : 'text-[12px]'}`}

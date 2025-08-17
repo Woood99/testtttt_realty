@@ -1,7 +1,7 @@
 import React from 'react';
 import VideoCard from '../../../ui/VideoCard';
 import { useSelector } from 'react-redux';
-import { getIsDesktop } from '../../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 
 const PlayerSimilarVideo = ({ data, title = '' }) => {
    const isDesktop = useSelector(getIsDesktop);

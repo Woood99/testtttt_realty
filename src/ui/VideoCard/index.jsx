@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import cn from 'classnames';
@@ -16,7 +16,7 @@ import getSrcImage from '../../helpers/getSrcImage';
 import { ROLE_ADMIN } from '../../constants/roles';
 import { VideoPlayer } from '../../ModalsMain/VideoModal';
 import { BlockDescrMore } from '../../components/BlockDescr/BlockDescr';
-import { getUserIsAdmin } from '../../redux/helpers/selectors';
+import { getUserIsAdmin } from '@/redux';
 import ModalWrapper from '../Modal/ModalWrapper';
 import DeleteModal from '../../ModalsMain/DeleteModal';
 import { useVideoHover } from './useVideoHover';
@@ -36,11 +36,13 @@ const VideoCard = ({
    controlsAdmin = false,
    visibleContent = true,
    shouldPlayOnHover = false,
+   widthImage,
+   heightImage,
 }) => {
    const userIsAdmin = useSelector(getUserIsAdmin);
    const [isDeleteVideoModal, setIsDeleteVideoModal] = useState(false);
    const videoSrc = `${BASE_URL}${data.video_url}`;
-   const { isPlaying, handleMouseEnter, handleMouseLeave, videoRef } = useVideoHover(shouldPlayOnHover);
+   const { isPlaying, handleMouseEnter, handleMouseLeave, videoRef, isFirstHover } = useVideoHover(shouldPlayOnHover);
 
    const classVariant = () => {
       switch (variant) {
@@ -62,49 +64,21 @@ const VideoCard = ({
 
    const link = `${RoutesPath.videosPage.videoPage}${data.id}`;
 
-   const ImageLayout = () => {
-      return (
-         <>
-            <img src={data.image_url ? getSrcImage(data.image_url) : `${BASE_URL}/api/video/${data.id}/preview/0`} alt="" />
-            {isPlaying && (
-               <video
-                  ref={videoRef}
-                  src={videoSrc}
-                  muted
-                  className={cn(
-                     'w-full h-full object-cover absolute inset-0 z-[999] rounded-xl scale-0 opacity-0',
-                     isPlaying && '!opacity-100 !scale-110'
-                  )}
-                  style={{ transition: 'all 2s ease-in-out' }}
-                  preload="metadata"
-               />
-            )}
-         </>
-      );
-   };
-
-   const UserLayout = ({ className = '', classListName = '' }) => {
-      return (
-         Boolean(userVisible && userData) && (
-            <UserInfo
-               className={className}
-               avatar={userData.avatar_url || userData.image}
-               name={capitalizeWords(userData.name, userData.surname)}
-               pos={userData.pos || 'Менеджер отдела продаж'}
-               centered
-               classListName={`text-[12px] ${classListName}`}
-               sizeAvatar={26}
-               classListUser="!text-white"
-            />
-         )
-      );
-   };
-
    if (!data || isEmptyArrObj(data)) return;
 
    return (
       <article className={cn(styles.VideoCard, classVariant, className)} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-         {Boolean(userTop) && <UserLayout className="mb-3" />}
+         {Boolean(userTop) && Boolean(userVisible && userData) && (
+            <UserInfo
+               className="mb-3"
+               avatar={userData.avatar_url || userData.image}
+               name={capitalizeWords(userData.name, userData.surname)}
+               pos={userData.pos || 'Менеджер отдела продаж'}
+               centered
+               classListName={`text-[12px]`}
+               sizeAvatar={32}
+            />
+         )}
          {userIsAdmin && controlsAdmin && (
             <>
                {edit && (
@@ -141,8 +115,39 @@ const VideoCard = ({
                to={link}
                className={cn('ibg cursor-pointer', styles.VideoCardImage, shouldPlayOnHover && '!overflow-visible')}
                target={variant !== 'row' && variant !== 'text-white' ? '_blank' : ''}>
-               <ImageLayout />
-               {Boolean(!userTop) && <UserLayout className="absolute bottom-2 left-2 z-10 max-w-[93%]" classListName="!text-white" />}
+               <img
+                  src={data.image_url ? getSrcImage(data.image_url) : `${BASE_URL}/api/video/${data.id}/preview/0`}
+                  width={widthImage}
+                  height={heightImage}
+                  alt=""
+               />
+               {(!isFirstHover || isPlaying) && (
+                  <video
+                     ref={videoRef}
+                     src={videoSrc}
+                     muted
+                     className={cn(
+                        'w-full h-full object-cover absolute inset-0 z-[999] rounded-xl',
+                        !isPlaying ? 'opacity-0 scale-0' : 'opacity-100 scale-[115%]',
+                     )}
+                     style={{ transition: 'all 0.1s ease-in-out' }}
+                     preload="none"
+                     playsInline
+                  />
+               )}
+
+               {Boolean(!userTop) && Boolean(userVisible && userData) && (
+                  <UserInfo
+                     className="absolute bottom-2 left-2 z-10 max-w-[93%]"
+                     avatar={userData.avatar_url || userData.image}
+                     name={capitalizeWords(userData.name, userData.surname)}
+                     pos={userData.pos || 'Менеджер отдела продаж'}
+                     centered
+                     classListName={`text-[12px] !text-white`}
+                     sizeAvatar={26}
+                     classListUser="!text-white"
+                  />
+               )}
             </Link>
          )}
 
@@ -180,4 +185,4 @@ const VideoCard = ({
    );
 };
 
-export default VideoCard;
+export default memo(VideoCard);

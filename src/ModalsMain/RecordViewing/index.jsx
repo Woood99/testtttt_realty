@@ -13,9 +13,11 @@ import CardSmall from '../../ui/CardSmall';
 import { CardRowPurchaseSelect } from '../../ui/CardsRow';
 import convertToDate from '../../helpers/convertToDate';
 import isEmptyArrObj from '../../helpers/isEmptyArrObj';
-import { getCitiesSelector } from '../../redux/helpers/selectors';
+import { getCitiesSelector, getUserInfo } from '@/redux';
 import CheckboxToggle from '../../uiForm/CheckboxToggle';
 import { ControllerFieldCheckbox } from '../../uiForm/ControllerFields/ControllerFieldCheckbox';
+import Input from '../../uiForm/Input';
+import Radio from '../../uiForm/Radio';
 
 function filterTimesRelativeToDate(timeList, dateStr) {
    if (!dateStr) {
@@ -50,12 +52,15 @@ const RecordViewing = ({
    objectData = {},
    editData = null,
    orderId = null,
+   visibleCard = true,
 }) => {
    const cities = useSelector(getCitiesSelector);
+   const userInfo = useSelector(getUserInfo);
    const currentCityId = cities.find(el => el.name === objectData.city)?.id || 1;
    const [videoCommunication, setVideoCommunication] = useState(false);
 
    const [orders, setOrders] = useState([]);
+   const [activeRadio, setActiveRadio] = useState(editData ? 1 : 0);
 
    useEffect(() => {
       if (!currentCityId) return;
@@ -77,13 +82,14 @@ const RecordViewing = ({
    const dateWatch = watch('date');
 
    const onSubmitHandler = data => {
+      const isCurrentTime = activeRadio === 0;
       const params = {
          city_id: currentCityId,
          property_type: type,
          property_id: id,
 
-         date: dayjs(convertToDate(data.date, 'DD-MM-YYYY'), 'DD.MM.YYYY').format('YYYY-MM-DD'),
-         time: data.time,
+         date: isCurrentTime ? dayjs().format('YYYY-MM-DD') : dayjs(convertToDate(data.date, 'DD-MM-YYYY'), 'DD.MM.YYYY').format('YYYY-MM-DD'),
+         time: isCurrentTime ? dayjs().format('HH:mm') : data.time,
          specialist: data.specialist,
          order_id: orderId || data.order_id,
          video_communication: videoCommunication,
@@ -112,11 +118,12 @@ const RecordViewing = ({
    return (
       <Modal options={{ overlayClassNames: '_center-max-content', modalClassNames: 'mmd1:!w-[800px]' }} set={set} condition={condition}>
          <form onSubmit={handleSubmit(onSubmitHandler)} className="flex flex-col">
-            <h2 className="title-2 mb-6">
+            <h2 className="title-2 mb-1.5">
                {title}
                {Boolean(subtitle) && <span className="ml-2 title-4 !text-primary400">{subtitle}</span>}
             </h2>
-            {objectData && !isEmptyArrObj(objectData) && <CardSmall className="mb-6 w-max" data={{ ...objectData, type }} />}
+            <p className="mb-6">Выберите удобное время и дождитесь подтверждения от застройщика {developName}</p>
+            {objectData && visibleCard && !isEmptyArrObj(objectData) && <CardSmall className="mb-6 w-max" data={{ ...objectData, type }} />}
             <div
                className="bg-pageColor rounded-xl mb-4 flex justify-between items-center p-3 cursor-pointer"
                onClick={() => setVideoCommunication(prev => !prev)}>
@@ -133,45 +140,57 @@ const RecordViewing = ({
                </div>
                <CheckboxToggle checked={videoCommunication} className="pointer-events-none" />
             </div>
-            <p className="bg-primary700 p-4 rounded-xl">Выберите удобное время и дождитесь подтверждения от застройщика {developName}</p>
-            <div className="grid grid-cols-2 gap-2 mt-4 md3:grid-cols-1">
-               <ControllerFieldInput
-                  control={control}
-                  datePicker
-                  minDate={new Date()}
-                  maxDate={new Date(new Date().getTime() + 12 * 24 * 60 * 60 * 1000)}
-                  beforeText="Дата"
-                  name="date"
-                  requiredValue
-                  errors={errors}
-                  defaultValue={editData ? editData.date : ''}
-               />
+            <div className="mt-4">
+               <div className="grid grid-cols-2 gap-2 md3:grid-cols-1">
+                  <Input disabled before="Имя" value={userInfo.name || ''} />
+                  <Input disabled before="Ваш номер телефона" value={userInfo.phone || ''} />
+               </div>
+               <div className="mt-6 flex gap-5">
+                  <Radio text="Как можно скорее" checked={activeRadio === 0} onChange={() => setActiveRadio(0)} />
+                  <Radio text="Выбрать время" checked={activeRadio === 1} onChange={() => setActiveRadio(1)} />
+               </div>
+               {activeRadio === 1 && (
+                  <div className="mt-4 grid grid-cols-2 gap-2 md3:grid-cols-1">
+                     <ControllerFieldInput
+                        control={control}
+                        datePicker
+                        minDate={new Date()}
+                        maxDate={new Date(new Date().getTime() + 12 * 24 * 60 * 60 * 1000)}
+                        beforeText="Дата"
+                        name="date"
+                        requiredValue
+                        errors={errors}
+                        defaultValue={editData ? editData.date : ''}
+                     />
 
-               <ControllerFieldInput
-                  control={control}
-                  mask="hhmmMask"
-                  selectionButtons={{
-                     options: filterTimesRelativeToDate(
-                        timesOptions.map(item => item.value),
-                        dateWatch
-                     ),
-                     className: 'grid grid-cols-4 gap-2',
-                     required: true,
-                     emptyText: dateWatch ? 'Нету доступного времени, выберите другой день' : 'Выберите день',
-                  }}
-                  beforeText="Время"
-                  name="time"
-                  requiredValue
-                  errors={errors}
-                  defaultValue={editData ? editData.time : ''}
-                  disabled={
-                     !filterTimesRelativeToDate(
-                        timesOptions.map(item => item.value),
-                        dateWatch
-                     ).length
-                  }
-               />
+                     <ControllerFieldInput
+                        control={control}
+                        mask="hhmmMask"
+                        selectionButtons={{
+                           options: filterTimesRelativeToDate(
+                              timesOptions.map(item => item.value),
+                              dateWatch
+                           ),
+                           className: 'grid grid-cols-4 gap-2',
+                           required: true,
+                           emptyText: dateWatch ? 'Нету доступного времени, выберите другой день' : 'Выберите день',
+                        }}
+                        beforeText="Время"
+                        name="time"
+                        requiredValue
+                        errors={errors}
+                        defaultValue={editData ? editData.time : ''}
+                        disabled={
+                           !filterTimesRelativeToDate(
+                              timesOptions.map(item => item.value),
+                              dateWatch
+                           ).length
+                        }
+                     />
+                  </div>
+               )}
             </div>
+
             {!isSpecialistValue && <Button className="w-full mt-8">Отправить</Button>}
             {specialistsShow && (
                <SpecialistsSliderToggle specialists={specialists} options={{ setValue, control, developName, isSpecialistValue, errors }} />

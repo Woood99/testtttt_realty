@@ -78,8 +78,6 @@ const CardSecond = props => {
                         {Boolean(cashbackValue || present || buildingDiscount) && (
                            <div className="flex flex-wrap gap-1.5 mb-1.5">
                               <TagDiscount {...buildingDiscount} />
-                              <TagCashback cashback={cashbackValue} increased={buildingCashback} />
-
                               {Boolean(present) && <TagPresent present={present} />}
                            </div>
                         )}

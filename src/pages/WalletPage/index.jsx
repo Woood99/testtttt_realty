@@ -4,7 +4,7 @@ import MainLayout from '../../layouts/MainLayout';
 import Header from '../../components/Header';
 import WalletHistory from './WalletHistory';
 import { useSelector } from 'react-redux';
-import { getUserInfo } from '../../redux/helpers/selectors';
+import { getUserInfo } from '@/redux';
 import WalletInfoBuyer from './WalletInfo';
 
 const WalletPage = () => {

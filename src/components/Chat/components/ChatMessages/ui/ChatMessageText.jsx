@@ -1,15 +1,16 @@
 import { useContext } from 'react';
-import { ChatMessageContext } from '../../../../../context';
+import { ChatMessageContext, ChatMessagesContext } from '../../../../../context';
 import isLink from '../../../../../helpers/isLink';
 import normalizeLink from '../../../../../helpers/normalizeLink';
 
 import styles from '../../../Chat.module.scss';
 import { GetDescrHTML } from '../../../../BlockDescr/BlockDescr';
+import hasText from '../../ChatDraft/hasText';
 
 const ChatMessageText = () => {
    const { data, dataText } = useContext(ChatMessageContext);
 
-   if (data.is_json || !dataText) return;
+   if (data.is_json || !(dataText && hasText(dataText))) return;
 
    const is_link = isLink(dataText);
 

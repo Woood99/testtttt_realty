@@ -2,9 +2,9 @@ import React, { createContext, useContext, useEffect } from 'react';
 import { ControllerFieldMultiSelect } from '../../uiForm/ControllerFields/ControllerFieldMultiSelect';
 import { ControllerFieldSelect } from '../../uiForm/ControllerFields/ControllerFieldSelect';
 import { useSelector } from 'react-redux';
-import { getCitiesValuesSelector } from '../../redux/helpers/selectors';
 import { sendPostRequest } from '../../api/requestsApi';
 import { getOptionsFromData } from '../../helpers/getOptionsFromData';
+import { getCitiesValuesSelector } from '@/redux';
 
 export const FiltersDataChainContext = createContext();
 

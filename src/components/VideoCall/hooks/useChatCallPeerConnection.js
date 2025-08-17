@@ -1,20 +1,31 @@
 import SimplePeer from 'simple-peer';
+import { useDispatch } from 'react-redux';
+import useSound from 'use-sound';
+import { useContext } from 'react';
 
-import { getPermissions, settingsIceServersPeer, updateUI } from '../helpers/chatVideoCallHelpers';
+import { getPermissions, sendMediaState, updateUI } from '../helpers/chatVideoCallHelpers';
 import { sendPostRequest } from '../../../api/requestsApi';
 import { videoCallParamsDefault } from '../helpers/videoCallParamsDefault';
-import { useDispatch } from 'react-redux';
 import { setIsCalling, setIsReceivingCall, setVideoCallDelayTimer } from '../../../redux/slices/videoCallSlice';
+import { checkMediaDevices, settingsIceServersPeer } from '../../../helpers/mediaStreamUtils';
+
+import screenShareSound from '../../../assets/ringtone-4.mp3';
+import { VideoCallContext } from '../../../context';
 
 export const useChatCallPeerConnection = options => {
-   const { authuserid, currentDialog, userVideoRef, partnerVideoRef, videoCallParams, setVideoCallParams, setIsOpenModalCancelCall } = options;
+   const { authuserid, currentDialog, userVideoRef, partnerVideoRef, videoCallParams, setVideoCallParams, setIsLoadingAccept, setIsLoadingCancel } =
+      options;
 
+   const { setModalError } = useContext(VideoCallContext);
+
+   const [playScreenShareSound] = useSound(screenShareSound, { volume: 0.5 });
    const dispatch = useDispatch();
 
    const initialize = async (videoCallData = null) => {
       const channel = window.Echo.join(`video-dialog.${currentDialog.id}`);
+      const { hasVideo, hasAudio } = await checkMediaDevices();
       await new Promise(resolve => setTimeout(resolve, 300));
-      setVideoCallParams(prev => ({ ...prev, channel }));
+      setVideoCallParams(prev => ({ ...prev, channel, hasVideo, hasAudio, mutedAudio: !hasAudio }));
 
       channel.here(users => {
          setVideoCallParams(prev => ({ ...prev, users }));
@@ -55,7 +66,11 @@ export const useChatCallPeerConnection = options => {
                },
             }));
          }
+         if (data.type === 'callAccepted') {
+            dispatch(setIsReceivingCall(false));
+         }
          if (data.type === 'callCanceled') {
+            dispatch(setIsReceivingCall(false));
             reset();
          }
       });
@@ -71,6 +86,7 @@ export const useChatCallPeerConnection = options => {
             },
          }));
       }
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       return channel;
    };
@@ -85,7 +101,7 @@ export const useChatCallPeerConnection = options => {
 
       setVideoCallParams(prev => ({ ...prev, callPlaced: true, callPartner: partnerInfo }));
 
-      const stream = await getPermissions(userVideoRef, 'getUserMedia', value => {
+      const { stream, statuses } = await getPermissions(userVideoRef, 'getUserMedia', value => {
          setVideoCallParams(prev => ({ ...prev, statusMedia: value }));
       });
 
@@ -102,9 +118,12 @@ export const useChatCallPeerConnection = options => {
          try {
             const message = JSON.parse(data);
             if (message.type === 'mediaState') {
-               updateUI(message.video, message.audio, value => {
+               updateUI(message.video, message.audio, message.screenSharing, value => {
                   setVideoCallParams(prev => ({ ...prev, statusCompanionMedia: value }));
                });
+            }
+            if (message.type === 'screen-share-start') {
+               playScreenShareSound();
             }
          } catch (error) {
             console.error('Ошибка при обработке сообщения:', error);
@@ -126,47 +145,60 @@ export const useChatCallPeerConnection = options => {
 
       peer1.on('stream', remoteStream => {
          setVideoCallParams(prev => ({ ...prev, callPlaced: true, callPartner: partnerInfo }));
-
          if (partnerVideoRef.current) {
             partnerVideoRef.current.srcObject = remoteStream;
          }
       });
 
       peer1.on('connect', () => {
-         setVideoCallParams(prev => ({ ...prev, callPlaced: true, callPartner: partnerInfo }));
+         setVideoCallParams(prev => ({ ...prev, callPlaced: true, callPartner: partnerInfo, isConnect: true, partnerConnectIsLoading: false }));
+         sendMediaState(peer1, false, statuses.audio, false);
       });
 
-      peer1.on('error', err => {
-         console.log(err);
+      peer1.on('error', () => {
+         setModalError({
+            title: 'Произошла ошибка',
+            descr: 'При установке соединения возникла ошибка, проверьте ваше соединение и попробуйте еще раз',
+         });
+         reset();
       });
+
       peer1.on('close', () => {
-         setIsOpenModalCancelCall(true);
+         setModalError({
+            title: 'Звонок завершён или произоша ошибка.',
+            descr: 'По необходимости позвоните ещё раз или напишите в чат',
+         });
          reset();
       });
 
       channel.listen('VideoDialogEvent', ({ data }) => {
          if (data.type === 'callAccepted') {
             if (data.signal.sdp && !peer1?.destroyed) {
-               setVideoCallParams(prev => ({ ...prev, callAccepted: true }));
+               setVideoCallParams(prev => ({ ...prev, callAccepted: true, partnerConnectIsLoading: true }));
                const updatedSignal = {
                   ...data.signal,
                   sdp: `${data.signal.sdp}\n`,
                };
 
                peer1.signal(updatedSignal);
+               dispatch(setIsCalling('accept'));
             }
          }
 
          if (data.type === 'callCanceled') {
+            dispatch(setIsCalling(false));
             reset();
          }
       });
    };
 
    const acceptCall = async () => {
-      const stream = await getPermissions(userVideoRef, 'getUserMedia', value => {
+      setIsLoadingAccept(true);
+
+      const { stream, statuses } = await getPermissions(userVideoRef, 'getUserMedia', value => {
          setVideoCallParams(prev => ({ ...prev, statusMedia: value }));
       });
+
       await new Promise(resolve => setTimeout(resolve, 500));
 
       const peer2 = new SimplePeer({
@@ -182,9 +214,12 @@ export const useChatCallPeerConnection = options => {
          try {
             const message = JSON.parse(data);
             if (message.type === 'mediaState') {
-               updateUI(message.video, message.audio, value => {
+               updateUI(message.video, message.audio, message.screenSharing, value => {
                   setVideoCallParams(prev => ({ ...prev, statusCompanionMedia: value }));
                });
+            }
+            if (message.type === 'screen-share-start') {
+               playScreenShareSound();
             }
          } catch (error) {
             console.error('Ошибка при обработке сообщения:', error);
@@ -208,25 +243,39 @@ export const useChatCallPeerConnection = options => {
       });
 
       peer2.on('connect', () => {
-         setVideoCallParams(prev => ({ ...prev, callAccepted: true }));
+         setVideoCallParams(prev => ({ ...prev, callAccepted: true, isConnect: true }));
+         sendMediaState(peer2, false, statuses.audio, false);
       });
 
-      peer2.on('error', err => {
+      peer2.on('error', () => {
+         setModalError({
+            title: 'Произошла ошибка',
+            descr: 'При установке соединения возникла ошибка, проверьте ваше соединение и попробуйте еще раз',
+         });
          reset();
       });
 
       peer2.on('close', () => {
-         setIsOpenModalCancelCall(true);
+         setModalError({
+            title: 'Звонок завершён или произоша ошибка.',
+            descr: 'По необходимости позвоните ещё раз или напишите в чат',
+         });
          reset();
       });
 
+      await new Promise(resolve => setTimeout(resolve, 200));
+
       peer2.signal(videoCallParams.callerSignal);
-      await new Promise(resolve => setTimeout(resolve, 500));
+
+      await new Promise(resolve => setTimeout(resolve, 400));
 
       setVideoCallParams(prev => ({ ...prev, callPlaced: true, callAccepted: true, receivingCall: false, peer2 }));
+      dispatch(setIsReceivingCall(false));
+      setIsLoadingAccept(false);
    };
 
    const reset = async () => {
+      setIsLoadingCancel(true);
       if (videoCallParams.channel) {
          videoCallParams.channel.stopListening('VideoDialogEvent');
       }
@@ -250,10 +299,18 @@ export const useChatCallPeerConnection = options => {
       if (videoCallParams.stream) {
          videoCallParams.stream.getTracks().forEach(track => track.stop());
       }
+      if (videoCallParams.screenStream) {
+         videoCallParams.screenStream.getTracks().forEach(track => track.stop());
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 750));
+
+      setIsLoadingCancel(false);
 
       setVideoCallParams(videoCallParamsDefault);
       dispatch(setIsCalling(false));
       dispatch(setIsReceivingCall(false));
+      setIsLoadingCancel(false);
 
       dispatch(setVideoCallDelayTimer(true));
       await new Promise(resolve => setTimeout(resolve, 5000));

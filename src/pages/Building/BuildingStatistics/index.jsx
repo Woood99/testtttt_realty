@@ -154,7 +154,7 @@ const BuildingStatistics = ({ buildingData }) => {
                         })}
                      />
                   </StatisticsBlock>
-                  <Button variant="secondary" className="mt-6 w-full" onClick={() => setSpecialOfferModal(true)}>
+                  <Button variant="secondary" className="mt-6 w-full" disabled onClick={() => setSpecialOfferModal(true)}>
                      Рассылка спецпредложений
                   </Button>
                </>

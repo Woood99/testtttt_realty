@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getIsDesktop } from '../../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 
 export const useResizeSidebar = (defaultMini = false) => {
    const currentLocalStorageStart = +localStorage.getItem('chat-sidebar-width') || 350;

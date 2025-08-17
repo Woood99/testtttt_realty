@@ -12,7 +12,7 @@ import { refactPhotoStageAppend, refactPhotoStageOne, refactPhotoStageTwo } from
 import { getDataRequest, sendPostRequest } from '../../api/requestsApi';
 import { useParams } from 'react-router-dom';
 import { PrivateRoutesPath, RoutesPath } from '../../constants/RoutesPath';
-import { getCitiesSelector } from '../../redux/helpers/selectors';
+import { getCitiesSelector } from '@/redux';
 
 const DevelopersCreate = ({ edit = false }) => {
    const params = useParams();

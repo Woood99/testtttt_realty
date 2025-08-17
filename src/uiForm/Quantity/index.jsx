@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Button from '../Button';
 import LoadingDots from '../../ui/LoadingDots';
+import Button from '../Button';
 
 const Quantity = ({ count = 0, setCount = () => {}, onChangeIncrement = () => {}, onChangeDecrement = () => {}, disabledIncrement = false }) => {
    const [isLoading, setIsLoading] = useState(false);

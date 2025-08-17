@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getDataRequest } from '../../api/requestsApi';
 import { BuyerRoutesPath } from '../../constants/RoutesPath';
-import { getUserInfo } from '../../redux/helpers/selectors';
+import { getUserInfo } from '@/redux';
 import { useSelector } from 'react-redux';
 import { isBuyer, isSeller } from '../../helpers/utils';
 import isEmptyArrObj from '../../helpers/isEmptyArrObj';

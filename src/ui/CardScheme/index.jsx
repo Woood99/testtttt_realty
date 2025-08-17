@@ -29,6 +29,8 @@ const CardScheme = ({ data, room, onClick, active }) => {
 
    const max_building_cashback = getMaxCashback(buildingCashbacks);
 
+   const price = data.bd_price || data.price;
+
    const cashbackPrc = (cashback || 0) + (max_building_cashback.value || 0);
    const cashbackValue = ((max_bd_price || max_price) / 100) * cashbackPrc;
 

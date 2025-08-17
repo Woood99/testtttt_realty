@@ -3,7 +3,7 @@ import debounce from 'lodash.debounce';
 import { useForm, useWatch } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { sendPostRequest } from '../../api/requestsApi';
-import {  getCurrentCitySelector } from '../../redux/helpers/selectors';
+import {  getCurrentCitySelector } from '@/redux';
 import { capitalizedWord } from '../../helpers/changeString';
 import { declensionWordsName } from '../../helpers/declensionWords';
 import { declensionsWordsDataCity } from '../../data/declensionsWordsData';

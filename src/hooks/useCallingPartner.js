@@ -1,12 +1,10 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkAuthUser, getUserInfo } from '../redux/helpers/selectors';
 import { CHAT_TYPES } from '../components/Chat/constants';
-import { checkDialogId, getDialogId, getUrlNavigateToChatDialog, getUrlNavigateToChatDialogFake } from '../api/getDialogId';
-import { setSelectAccLogModalOpen } from '../redux/slices/helpSlice';
-import { setIsCalling } from '../redux/slices/videoCallSlice';
-import { sendPostRequest } from '../api/requestsApi';
-import { ROLE_ADMIN } from '../constants/roles';
+import { ROLE_ADMIN } from '@/constants';
+import { sendPostRequest } from '@/api/requestsApi';
+import { checkDialogId, getDialogId } from '@/api/getDialogId';
+import { checkAuthUser, setIsCalling, setSelectAccLogModalOpen } from '@/redux';
 
 export const useCallingPartner = () => {
    const authUser = useSelector(checkAuthUser);

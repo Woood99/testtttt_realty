@@ -1,6 +1,6 @@
 import { useCookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCurrentCitySelector, getUserInfo } from '../../redux/helpers/selectors';
+import { getCurrentCitySelector, getUserInfo } from '@/redux';
 import { useEffect } from 'react';
 import { useGetCities } from './useGetCities';
 import isEmptyArrObj from '../../helpers/isEmptyArrObj';
@@ -9,7 +9,7 @@ import { setCities, setUserInfo } from '../../redux/slices/mainInfoSlice';
 import { useSetCities } from './useSetCities';
 import { ROLE_ADMIN, ROLE_BUYER, ROLE_SELLER } from '../../constants/roles';
 import { cityExclusionsBuyer, cityExclusionsSeller } from './cityExclusions';
-import { useUserAuth } from './useUserAuth';
+import { useAuth } from '@/hooks';
 
 export const useMainProvider = () => {
    const [cookies] = useCookies();
@@ -21,7 +21,7 @@ export const useMainProvider = () => {
 
    const userInfo = useSelector(getUserInfo);
    const { initCities, setCity, setCityDefault } = useSetCities(cities, userInfo);
-   const { setAuthUser, userConnectionEcho } = useUserAuth();
+   const { setAuthUser, userConnectionEcho } = useAuth();
    const currentCity = useSelector(getCurrentCitySelector);
 
    useEffect(() => {
@@ -29,7 +29,7 @@ export const useMainProvider = () => {
          dispatch(setUserInfo({}));
          return;
       }
-      
+
       setAuthUser().then(userConnectionEcho);
    }, []);
 

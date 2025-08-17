@@ -10,7 +10,7 @@ import Header from '../../components/Header';
 import PlayerSimilarShorts from '../../ModalsMain/VideoModal/components/PlayerSimilarShorts';
 import isEmptyArrObj from '../../helpers/isEmptyArrObj';
 import { useSelector } from 'react-redux';
-import { getIsDesktop } from '../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 import { getCardBuildingsById } from '../../api/getCardsBuildings';
 import QuestionToChat from '../../components/QuestionToChat';
 import { ROLE_ADMIN, ROLE_SELLER } from '../../constants/roles';

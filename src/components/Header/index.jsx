@@ -5,7 +5,7 @@ import styles from './Header.module.scss';
 
 import HeaderActions from './HeaderActions';
 import HeaderNav from './HeaderNav';
-import { getIsDesktop } from '../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 import HeaderLayout from './HeaderLayout';
 
 const Header = ({ children, theme = 'white', maxWidth = null, visibleNav = true }) => {

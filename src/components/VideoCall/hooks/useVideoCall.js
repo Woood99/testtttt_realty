@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getUserInfo } from '../../../redux/helpers/selectors';
+import { getUserInfo } from '@/redux';
 import { useChatCallPeerConnection } from './useChatCallPeerConnection';
 import { useVideoCallActions } from './useVideoCallActions';
 import { useVideoCallService } from './useVideoCallService';
@@ -15,23 +15,26 @@ export const useVideoCall = dataOptions => {
 
    const [videoCallParams, setVideoCallParams] = useState(videoCallParamsDefault);
 
-   const [isOpenModalEndCall, setIsOpenModalEndCall] = useState(false);
-   const [isOpenModalCancelCall, setIsOpenModalCancelCall] = useState(false);
+   const [isLoadingAccept, setIsLoadingAccept] = useState(false);
+   const [isLoadingCancel, setIsLoadingCancel] = useState(false);
 
    const options = {
       videoCallParams,
       setVideoCallParams,
-      isOpenModalEndCall,
-      setIsOpenModalEndCall,
-      isOpenModalCancelCall,
-      setIsOpenModalCancelCall,
       userVideoRef,
       partnerVideoRef,
-      userInfo,
+      userInfo: { ...userInfo, organization: currentDialog?.isOrganization ? currentDialog?.organization : null },
       authuserid: userInfo?.id,
       currentDialog,
       setCurrentDialog,
       callAccepted: videoCallParams.callAccepted,
+      isLoadingAccept,
+      setIsLoadingAccept,
+      isLoadingCancel,
+      setIsLoadingCancel,
+      partnerVideoPlug:
+         !videoCallParams.statusCompanionMedia.video && !videoCallParams.statusCompanionMedia.screenSharing && videoCallParams.callAccepted,
+      userVideoPlug: !videoCallParams.statusMedia.video && !videoCallParams.statusMedia.screenSharing,
    };
 
    const chatVideoCallActions = useVideoCallActions({ ...options });

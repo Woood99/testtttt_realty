@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import cn from 'classnames';
 import { useSelector } from 'react-redux';
 
-import { getIsDesktop } from '../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 import styles from './PopupInstallPromo.module.scss';
 import Button from '../../uiForm/Button';
 

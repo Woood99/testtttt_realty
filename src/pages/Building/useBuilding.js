@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { checkAuthUser, getUserInfo } from '../../redux/helpers/selectors';
+import { checkAuthUser, getUserInfo } from '@/redux';
 import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getDataRequest } from '../../api/requestsApi';
@@ -13,6 +13,8 @@ import { CHAT_TYPES } from '../../components/Chat/constants';
 import { isBuyer } from '../../helpers/utils';
 import { useNavigateToChat } from '../../hooks/useNavigateToChat';
 import { useCallingPartner } from '../../hooks/useCallingPartner';
+import { combinedArray } from '../../helpers/arrayMethods';
+import { getVideos } from '../../api/other/getVideos';
 
 export const useBuilding = id => {
    const location = useLocation();
@@ -90,6 +92,17 @@ export const useBuilding = id => {
 
          if (resultBuilding === 'error') return;
 
+         const videoData = await getVideos(
+            combinedArray(resultBuilding.videos_gallery, resultBuilding.videos_apartRenov, resultBuilding.videos_ecologyParks)
+         );
+
+         setBuildingData(prev => ({
+            ...prev,
+            videosGalleryData: videoData.filter(item => prev.videos_gallery.includes(item.video_url)),
+            videosApartRenovData: videoData.filter(item => prev.videos_apartRenov.includes(item.video_url)),
+            videosEcologyParksData: videoData.filter(item => prev.videos_ecologyParks.includes(item.video_url)),
+         }));
+
          await getDataRequest('/api/tags', { type: 'advantages', building_id: id }).then(res => {
             const filteredTags = resultBuilding.advantages.map(item => {
                const currentAdvantage = res.data.find(i => i.id === item.id);
@@ -98,10 +111,11 @@ export const useBuilding = id => {
 
             setAdvantages(filteredTags);
          });
-         await getSpecialists(id).then(res => setSpecialistsData(res));
 
-         getFrames(id).then(res => setFrames(res));
-         getDataRequest(`/api/building/${id}/history`).then(res => setConstructItems(res.data));
+         await getSpecialists(id).then(res => setSpecialistsData(res));
+         await getFrames(id).then(res => setFrames(res));
+         await getDataRequest(`/api/building/${id}/history`).then(res => setConstructItems(res.data));
+         
          getDataRequest('/api/price-extreme/min').then(res => setMinPriceAllObjects(res.data));
          getDataRequest('/api/price-extreme/max').then(res => setMaxPriceAllObjects(res.data));
 

@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import Avatar from '../../../ui/Avatar';
 import { DeveloperPageContext } from '../../../context';
 import { CharsColItems } from '../../../ui/Chars';
-import { getIsDesktop } from '../../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 import DeveloperPageCities from './DeveloperPageCities';
 import { TabsNav, TabsTitle } from '../../../ui/Tabs';
 import { PrivateRoutesPath } from '../../../constants/RoutesPath';

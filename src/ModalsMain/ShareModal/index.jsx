@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useLocation } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 
 import Modal from '../../ui/Modal';
 
@@ -9,7 +10,6 @@ import { IconCopy, IconOk, IconTelegram, IconVk, IconWhatsApp } from '../../ui/I
 import Button from '../../uiForm/Button';
 import ModalWrapper from '../../ui/Modal/ModalWrapper';
 import { NotificationTimer } from '../../ui/Tooltip';
-import { createPortal } from 'react-dom';
 
 const ShareModal = ({ condition, set, children, title = 'Поделиться объявлением', url = '' }) => {
    const location = useLocation();

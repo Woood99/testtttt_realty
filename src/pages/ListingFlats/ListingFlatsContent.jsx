@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { RoutesPath } from '../../constants/RoutesPath';
 import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
-import { getIsDesktop } from '../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 import CardSecond from '../../ui/CardSecond';
 import RepeatContent from '../../components/RepeatContent';
 import { CardPrimaryRowSkeleton } from '../../ui/CardPrimaryRow/CardPrimaryRowSkeleton';

@@ -15,7 +15,7 @@ import { RoutesPath } from '../../constants/RoutesPath';
 import MainLayout from '../../layouts/MainLayout';
 import Header from '../../components/Header';
 import ModalWrapper from '../../ui/Modal/ModalWrapper';
-import { getIsDesktop } from '../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 import DeleteModal from '../../ModalsMain/DeleteModal';
 import { ROLE_BUYER, ROLE_SELLER } from '../../constants/roles';
 import PurchaseRequestHistory from './PurchaseRequestHistory';

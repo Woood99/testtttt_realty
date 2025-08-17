@@ -1,41 +1,43 @@
-@import '../../../styles/$vars.scss';
+@import "../../../styles/$vars.scss";
 
 .RoomInfoCardRoot {
-   position: relative;
+	position: relative;
 
-   display: grid;
-   align-items: center;
-   grid-template-columns: 85px max-content 1fr max-content;
-   grid-column-gap: 24px;
-   padding: 8px 16px;
-   border-bottom: 1px solid var(--primary100);
-   &:first-child {
-      border-top: 1px solid var(--primary100);
-   }
+	display: grid;
+	align-items: center;
+	grid-template-columns: 85px max-content max-content max-content max-content;
+	grid-column-gap: 24px;
+	padding: 8px 16px;
+	border-bottom: 1px solid var(--primary800);
+	&:first-child {
+		border-top: 1px solid var(--primary800);
+	}
 
-   @media (min-width: $desktop-min) {
-      &:hover {
-         background-color: var(--stand-bg);
-      }
-   }
-   @media (max-width: $desktop) {
-      grid-template-columns: 85px 1fr;
-      padding: 20px 16px;
-   }
+	@media (min-width: $desktop-min) {
+		&:hover {
+			background-color: var(--primary800);
+		}
+	}
+	@media (max-width: $desktop) {
+		grid-template-columns: 85px 1fr;
+		padding: 20px;
+		grid-column-gap: 16px;
+		align-items: start;
+	}
 }
 
 .RoomInfoCardLink {
-   position: absolute;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 }
 
 .RoomInfoCardTitle {
-   transition: color $transitionSpeed $transitionFunction;
+	transition: color $transitionSpeed $transitionFunction;
 }
 .RoomInfoCardAttr {
-   transition: color $transitionSpeed $transitionFunction;
-   font-weight: 500;
+	transition: color $transitionSpeed $transitionFunction;
+	font-weight: 500;
 }

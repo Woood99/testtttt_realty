@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import debounce from 'lodash.debounce';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { useForm, useWatch } from 'react-hook-form';
-import { getCitiesValuesSelector, getCurrentCitySelector, getUserInfo } from '../../redux/helpers/selectors';
+import { getCitiesValuesSelector, getCurrentCitySelector, getUserInfo } from '@/redux';
 import { isAdmin, isSeller } from '../../helpers/utils';
 import { useFiltersDataChainInitFields } from '../../hooks/useFiltersDataChainInitFields';
 import { getCountOfSelectedFilterObj } from '../../helpers/getCountOfSelectedFilter';

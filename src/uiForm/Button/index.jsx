@@ -14,7 +14,7 @@ const Button = props => {
       disabled,
       linkBlank = false,
       isLoading = false,
-      style={},
+      style = {},
    } = props;
    const classNames = `${styles.ButtonMain} ${size ? styles[`size${size}`] : ''} ${styles[variant]} ${className} ${
       active ? styles.ButtonActive : ''

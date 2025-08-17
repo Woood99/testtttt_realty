@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import Modal from '../../ui/Modal';
-import Tabs, { TabsBody, TabsNav, TabsTitle } from '../../ui/Tabs';
-import GalleryPhoto, { videoToggleControls } from '../../components/GalleryPhoto';
+import Tabs from '../../ui/Tabs';
+import GalleryPhoto from '../../components/GalleryPhoto';
 import { GetDescrHTML } from '../../components/BlockDescr/BlockDescr';
-import { GalleryRow } from '../../components/GalleryRow';
 
 const GalleryModal = ({ condition, set, data, sidebar }) => {
    const dataTabs = data.map(item => {

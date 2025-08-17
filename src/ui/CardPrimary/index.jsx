@@ -15,7 +15,6 @@ import { classVariant } from './classVariant';
 import CardPrimaryControls from './ui/CardPrimaryControls';
 import CardPrimaryTagsTop from './ui/CardPrimaryTags';
 import CardPrimaryApartments from './ui/CardPrimaryApartments';
-import findObjectWithMinValue from '../../helpers/findObjectWithMinValue';
 
 export const CardPrimaryContext = createContext();
 
@@ -40,6 +39,7 @@ const CardPrimary = props => {
       badge,
       geo,
       children,
+      maxImagesLength = 8,
    } = props;
 
    const [isOpenModalLocation, setIsOpenModalLocation] = useState(false);
@@ -49,7 +49,15 @@ const CardPrimary = props => {
          <article className={cn(styles.CardPrimaryRoot, className, classVariant(variant))} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
             <div className="flex flex-col h-full relative">
                <Link to={href || `${RoutesPath.building}${id}`} target="_blank" rel="noopener noreferrer" className={styles.CardPrimaryLink} />
-               <CardGallery images={images} title={title} href={href || `${RoutesPath.building}${id}`} badge={badge} />
+               <CardGallery
+                  images={images}
+                  title={title}
+                  href={href || `${RoutesPath.building}${id}`}
+                  imageWidth={359}
+                  imageHeight={230}
+                  badge={badge}
+                  maxImagesLength={maxImagesLength}
+               />
                <div className="flex gap-2 absolute top-3 right-3">
                   <CardPrimaryControls />
                </div>

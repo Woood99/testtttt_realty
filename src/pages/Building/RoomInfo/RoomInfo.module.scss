@@ -1,18 +1,32 @@
 @import '../../../styles/$vars.scss';
 
 .RoomInfoRootMain {
-   border-bottom: 1px solid var(--stand-bg);
+   .RoomInfoRoot {
+      position: relative;
+      &::before {
+         content: '';
+         background-color: var(--primary800);
+         width: calc(100% - 64px);
+         height: 1px;
+         position: absolute;
+         bottom: 0;
+         left: 32px;
+         @media (max-width: $desktop) {
+            width: calc(100% - 32px);
+            left: 16px;
+         }
+      }
+   }
 }
 
 .RoomInfoRoot {
-   display: grid;
+   display: flex;
    align-items: center;
-   grid-template-columns: 385px 1fr minmax(max-content,auto) max-content;
-   grid-column-gap: 24px;
+   gap: 24px;
    height: 80px;
 
    width: 100%;
-   padding: 0 24px;
+   padding: 0 32px;
    position: relative;
 
    transition: all $transitionSpeed $transitionFunction;
@@ -27,7 +41,7 @@
 
    @media (min-width: $desktop-min) {
       &:hover {
-         background-color: var(--stand-bg);
+         background-color: var(--primary800);
       }
    }
 
@@ -74,8 +88,7 @@
 }
 
 .RoomInfoActiveRoot {
-   background-color: var(--stand-bg);
-   border-radius: 12px;
+   background-color: var(--primary800);
    svg {
       transform: rotate(-180deg);
    }

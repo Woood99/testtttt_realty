@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import ControlsVideoCreate from '../../../components/ControlsVideo/ControlsVideoCreate';
-import { DragDropElements } from '../../../components/DragDrop/DragDropItems';
 import Button from '../../../uiForm/Button';
 import { getVideos } from '../../../api/other/getVideos';
 import VideoCard from '../../../ui/VideoCard';

@@ -1,5 +1,8 @@
 import { SellerRoutesPath } from '../../constants/RoutesPath';
 import PurchaseRequest from '../../pages/PurchaseRequest';
+import StreamBroadcaster from '../../pages/StreamBroadcaster';
+import StreamCreate from '../../pages/StreamCreate';
+import StreamList from '../../pages/StreamList';
 import CalendarView from '../../pagesSeller/Calendar';
 import HomeSeller from '../../pagesSeller/HomeSeller';
 import MyObjects from '../../pagesSeller/MyObjects';
@@ -54,5 +57,17 @@ export const sellerRoutes = [
    {
       path: `${SellerRoutesPath.purchase.inner}:id`,
       body: <PurchaseRequest />,
+   },
+   {
+      path: SellerRoutesPath.stream.create,
+      body: <StreamCreate />,
+   },
+   {
+      path: `${SellerRoutesPath.stream.broadcaster}:streamId`,
+      body: <StreamBroadcaster />,
+   },
+   {
+      path: SellerRoutesPath.stream.list,
+      body: <StreamList />,
    },
 ];

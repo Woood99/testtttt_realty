@@ -4,23 +4,73 @@ import { useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
 import { getDataRequest } from '../../../api/requestsApi';
-import { getUserInfo } from '../../../redux/helpers/selectors';
+import { getUserInfo } from '@/redux';
 import { ROLE_ADMIN, ROLE_SELLER } from '../../../constants/roles';
 import getSrcImage from '../../../helpers/getSrcImage';
 
 dayjs.extend(utc);
 
-async function getImagesInfo(blobs) {
+async function getMediaInfo(blobs) {
    const results = await Promise.all(
       blobs.map(async blob => {
          const url = URL.createObjectURL(blob);
 
-         try {
-            const { width, height } = await getImageDimensions(blob);
-            return { url, width, height, blob };
-         } catch (error) {
-            URL.revokeObjectURL(url); // Очищаем URL в случае ошибки
-            return { url, width: 0, height: 0, blob, error: error.message };
+         if (blob.type.startsWith('image/')) {
+            try {
+               const { width, height } = await getImageDimensions(blob);
+               return {
+                  url,
+                  width,
+                  height,
+                  blob,
+                  type: 'image',
+                  thumbnailUrl: url, // Для изображений превью - сама картинка
+               };
+            } catch (error) {
+               URL.revokeObjectURL(url);
+               return {
+                  url,
+                  width: 0,
+                  height: 0,
+                  blob,
+                  type: 'image',
+                  error: error.message,
+               };
+            }
+         } else if (blob.type.startsWith('video/')) {
+            try {
+               const { width, height, duration, thumbnailUrl } = await getVideoDimensions(blob);
+               return {
+                  url,
+                  width,
+                  height,
+                  duration,
+                  blob,
+                  type: 'video',
+                  thumbnailUrl: thumbnailUrl,
+               };
+            } catch (error) {
+               URL.revokeObjectURL(url);
+               return {
+                  url,
+                  width: 0,
+                  height: 0,
+                  duration: 0,
+                  blob,
+                  type: 'video',
+                  error: error.message,
+               };
+            }
+         } else {
+            URL.revokeObjectURL(url);
+            return {
+               url,
+               width: 0,
+               height: 0,
+               blob,
+               type: 'unknown',
+               error: 'Unsupported file type',
+            };
          }
       })
    );
@@ -38,14 +88,83 @@ function getImageDimensions(blob) {
             width: img.naturalWidth,
             height: img.naturalHeight,
          });
-         URL.revokeObjectURL(url); // Очищаем URL после загрузки
+         URL.revokeObjectURL(url);
       };
 
       img.onerror = () => {
-         reject(new Error('Не удалось загрузить изображение'));
+         reject(new Error('Failed to load image'));
       };
 
       img.src = url;
+   });
+}
+
+function getVideoDimensions(blob, options = {}) {
+   return new Promise((resolve, reject) => {
+      const {
+         format = 'image/jpeg', // 'image/jpeg', 'image/png', 'image/webp'
+         quality = 0.8, // Качество от 0 до 1 (для JPEG/WebP)
+         time = 0.1, // Время для захвата кадра
+         maxSize = 800, // Максимальный размер превью
+      } = options;
+
+      const video = document.createElement('video');
+      const url = URL.createObjectURL(blob);
+
+      video.onloadedmetadata = () => {
+         video.currentTime = time;
+      };
+
+      video.onseeked = () => {
+         const canvas = document.createElement('canvas');
+         const ctx = canvas.getContext('2d');
+
+         // Рассчитываем размеры с сохранением пропорций
+         let width = video.videoWidth;
+         let height = video.videoHeight;
+
+         if (width > height && width > maxSize) {
+            height = Math.round((height / width) * maxSize);
+            width = maxSize;
+         } else if (height > maxSize) {
+            width = Math.round((width / height) * maxSize);
+            height = maxSize;
+         }
+
+         canvas.width = width;
+         canvas.height = height;
+         ctx.drawImage(video, 0, 0, width, height);
+
+         // Асинхронное создание blob
+         canvas.toBlob(
+            thumbnailBlob => {
+               const thumbnailUrl = URL.createObjectURL(thumbnailBlob);
+
+               resolve({
+                  width: video.videoWidth, // оригинальная ширина
+                  height: video.videoHeight, // оригинальная высота
+                  duration: video.duration,
+                  thumbnailUrl: thumbnailUrl,
+                  thumbnailBlob: thumbnailBlob,
+                  thumbnailFormat: format,
+                  thumbnailWidth: width, // ширина превью
+                  thumbnailHeight: height, // высота превью
+               });
+
+               URL.revokeObjectURL(url); // Освобождаем оригинальный URL
+            },
+            format,
+            quality
+         );
+      };
+
+      video.onerror = () => {
+         reject(new Error('Не удалось загрузить видео'));
+         URL.revokeObjectURL(url);
+      };
+
+      video.src = url;
+      video.load();
    });
 }
 
@@ -154,6 +273,15 @@ export const useChatDialogs = () => {
            ]
          : [];
 
+      const videoInfo = obj.video
+         ? await getVideoDimensions(obj.video, {
+              format: 'image/webp',
+              quality: 0.7,
+              time: 0.5,
+              maxSize: 600,
+           })
+         : null;
+
       const videoObj = obj.video
          ? [
               {
@@ -165,15 +293,19 @@ export const useChatDialogs = () => {
                  mime_type: 'video/mp4',
                  created_at: currentDate,
                  updated_at: currentDate,
-                 preview: null,
-                 duration: null,
+                 preview: videoInfo.thumbnailUrl,
+                 width: videoInfo.width,
+                 height: videoInfo.height,
+                 duration: videoInfo.duration,
                  is_story: +obj.is_story,
               },
            ]
          : [];
-         
+
+      console.log(videoObj);
+
       const imagesInfo = obj.photos?.length
-         ? await getImagesInfo(
+         ? await getMediaInfo(
               JSON.parse(obj.photos).map(item => {
                  return formData.get(item.image);
               })
@@ -267,10 +399,10 @@ export const useChatDialogs = () => {
       return result;
    };
 
-   const getDialogs = async () => {
+   const getDialogs = async signal => {
       const {
          data: { result },
-      } = await getDataRequest('/api/dialogs');
+      } = await getDataRequest('/api/dialogs', {}, signal);
 
       return result.map(item => ({
          ...item,

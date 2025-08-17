@@ -1,38 +1,67 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import cn from 'classnames';
-
-import { ChatMessageContext, ChatMessagesContext } from '../../../../../context';
-import Spinner from '../../../../../ui/Spinner';
-import AdaptiveVideoPlayer from '../../../../../ModalsMain/VideoModal/AdaptiveVideoPlayer';
-import { BASE_URL } from '../../../../../constants/api';
-import Story from '../../../../Story';
 import { useSelector } from 'react-redux';
-import { getIsDesktop } from '../../../../../redux/helpers/selectors';
+
+import Story from '../../../../Story';
+import hasText from '../../ChatDraft/hasText';
+import VideoDefault from '../../../../../ModalsMain/VideoModal/VideoDefault';
+import { BASE_URL } from '@/constants';
+import { ChatMessageContext } from '@/context';
+import { getIsDesktop } from '@/redux';
+import { Spinner } from '@/ui';
 
 const ChatMessageVideo = () => {
-   const { draftOptions } = useContext(ChatMessagesContext);
-   const { data, videoData, setGalleryCurrentIndex, dataText } = useContext(ChatMessageContext);
+   const { data, videoData, setGalleryCurrentIndex, dataText, photosLength } = useContext(ChatMessageContext);
 
    const isDesktop = useSelector(getIsDesktop);
+   const refElement = useRef(null);
+
+   useEffect(() => {
+      if (!refElement.current) return;
+
+      const observer = new IntersectionObserver(
+         entries => {
+            entries.forEach(entry => {
+               const video = entry.target;
+               if (entry.isIntersecting) {
+                  if (video.paused) {
+                     video.play().catch(e => console.log('Autoplay prevented:', e));
+                     video.muted = true;
+                     video.classList.add('playingVideo222');
+                  }
+               } else {
+                  video.pause();
+                  video.classList.remove('playingVideo222');
+               }
+            });
+         },
+         { threshold: 0.5, root: document.querySelector('.chat-container') }
+      );
+
+      observer.observe(refElement.current);
+
+      return () => observer.disconnect();
+   }, []);
 
    if (!videoData) return;
 
    return (
       <div
          data-chat-tooltip
-         className={cn('overflow-hidden relative rounded-xl', videoData.is_story && '!rounded-full')}
+         className={cn(
+            'overflow-hidden relative rounded-xl',
+            videoData.is_story && '!rounded-full',
+            hasText(dataText) && '!rounded-none chat-video-player-no-rounded'
+         )}
          onClick={() => {
             if (!videoData.is_story) {
                setGalleryCurrentIndex(videoData.index);
             }
          }}>
          {videoData.is_story ? (
-            <Story videoUrl={videoData.test_url || `${BASE_URL}${videoData.url}`} size={isDesktop ? 280 : 220} />
+            <Story refElement={refElement} videoUrl={videoData.test_url || `${BASE_URL}${videoData.url}`} size={isDesktop ? 280 : 220} />
          ) : (
-            <AdaptiveVideoPlayer
-               src={videoData.test_url || `${BASE_URL}${videoData.url}`}
-               className={cn('pointer-events-none',draftOptions.hasText(dataText) && '!max-w-full vjs-vertical-video-full')}
-            />
+            <>{!photosLength && <VideoDefault refElement={refElement} src={videoData.test_url || `${BASE_URL}${videoData.url}`} />}</>
          )}
          {data.loading && (
             <div className="rounded-xl absolute top-0 left-0 w-full h-full flex-center-all z-[98] bg-[rgba(70,70,70,0.55)]">

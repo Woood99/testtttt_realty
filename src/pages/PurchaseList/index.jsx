@@ -10,7 +10,7 @@ import { PrivateRoutesPath, RoutesPath, SellerRoutesPath } from '../../constants
 import MainLayout from '../../layouts/MainLayout';
 import Header from '../../components/Header';
 import PurchaseListForm from './PurchaseListForm';
-import { getCitiesValuesSelector } from '../../redux/helpers/selectors';
+import { getCitiesValuesSelector } from '@/redux';
 import { ROLE_BUYER } from '../../constants/roles';
 import RepeatContent from '../../components/RepeatContent';
 import EmptyBlock from '../../components/EmptyBlock';
@@ -85,8 +85,8 @@ const PurchaseList = ({ role_id = ROLE_BUYER.id }) => {
                <div className="main-wrapper">
                   <div className="container-desktop">
                      <div className="white-block">
-                        <h2 className="title-2 mb-6">Заявки на покупку</h2>
-                        <PurchaseListForm />
+                        <h2 className="title-2">Заявки на покупку</h2>
+                        {/* <PurchaseListForm /> */}
                      </div>
 
                      <div className="mt-3">

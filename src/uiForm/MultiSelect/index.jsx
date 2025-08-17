@@ -8,7 +8,6 @@ import { IconArrowY } from '../../ui/Icons';
 import Modal from '../../ui/Modal';
 
 import LayoutBody from './LayoutBody';
-import getSrcImage from '../../helpers/getSrcImage';
 import Avatar from '../../ui/Avatar';
 
 const MultiSelect = ({

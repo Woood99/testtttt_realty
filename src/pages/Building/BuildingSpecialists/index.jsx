@@ -1,8 +1,6 @@
 import React from 'react';
 import Specialist from '../../../ui/Specialist';
 import { useNavigateToChat } from '../../../hooks/useNavigateToChat';
-import { getDialogId, getUrlNavigateToChatDialog } from '../../../api/getDialogId';
-import { CHAT_TYPES } from '../../../components/Chat/constants';
 
 const BuildingSpecialists = ({
    specialists,
@@ -32,14 +30,6 @@ const BuildingSpecialists = ({
                      onClickChat={async () => {
                         if (toChat) {
                            await navigateToChat({ building_id, recipients_id: [item.id] });
-                        }
-                        if (toCall) {
-                           const dialog_id = await getDialogId({
-                              type: CHAT_TYPES.CHAT,
-                              building_id,
-                              recipients_id: [item.id],
-                           });
-                           getUrlNavigateToChatDialog(dialog_id, null, true);
                         }
                      }}
                   />

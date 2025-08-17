@@ -16,7 +16,7 @@ import HeaderAdmin from '../../../components/Header/HeaderAdmin';
 import { DeveloperPageContent } from './DeveloperPageContent';
 import { useDeveloperPage } from './useDeveloperPage';
 import FixedBlock from '../../../components/FixedBlock';
-import { getIsDesktop } from '../../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 import DeveloperPageChat from './DeveloperPageChat';
 
 const DeveloperPage = () => {

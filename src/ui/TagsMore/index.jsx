@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
+import cn from 'classnames';
+import { useSelector } from 'react-redux';
+
 import Tag, { TagTop } from '../Tag';
 import { Tooltip } from '../Tooltip';
-import { useSelector } from 'react-redux';
-import { getWindowSize } from '../../redux/helpers/selectors';
-import cn from 'classnames';
+import { getWindowSize } from '@/redux';
 
 export const TagsMoreWidthDynamic = ({ data, gap = 8, className = '' }) => {
    const [visibleTags, setVisibleTags] = useState(data);

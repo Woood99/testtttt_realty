@@ -8,7 +8,7 @@ import { CharsColItems } from '../../../ui/Chars';
 import { RoutesPath } from '../../../constants/RoutesPath';
 import { useSelector } from 'react-redux';
 import { BlockDescrMore } from '../../../components/BlockDescr/BlockDescr';
-import { getIsDesktop } from '../../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 import { TabsNav, TabsTitle } from '../../../ui/Tabs';
 import Button from '../../../uiForm/Button';
 
@@ -41,7 +41,7 @@ const SpecialistPageInfo = () => {
                   </div>
                )}
             </div>
-            <div>
+            <div className="min-w-0">
                <div className="flex gap-4 justify-between items-start">
                   {isDesktop && <h2 className="title-2">{capitalizeWords(data.name, data.surname)}</h2>}
                </div>

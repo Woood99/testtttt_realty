@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { v4 as uuidv4 } from 'uuid';
 
 const initialState = {
    initApp: false,
@@ -6,6 +7,7 @@ const initialState = {
    notificationLogout: false,
    selectAccLogModalOpen: false,
    isConnectEcho: false,
+   tabId: uuidv4(),
 };
 
 const helpSlice = createSlice({

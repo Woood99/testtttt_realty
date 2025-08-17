@@ -1,40 +1,40 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { setIsReceivingCall } from '../../redux/slices/videoCallSlice';
-import { useContext, useEffect, useState } from 'react';
-import { VideoCallContext } from '../../context';
+import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 import { useVideoCall } from './hooks/useVideoCall';
-import { useVideoCallService } from './hooks/useVideoCallService';
 import ModalWrapper from '../../ui/Modal/ModalWrapper';
 import Modal from '../../ui/Modal';
-import isEmptyArrObj from '../../helpers/isEmptyArrObj';
-import { getHelpSliceSelector, getIsDesktop, getVideoCallInfo } from '../../redux/helpers/selectors';
+import { getVideoCallInfo } from '@/redux';
 import { ROLE_ADMIN } from '../../constants/roles';
 import Spinner from '../../ui/Spinner';
 import cn from 'classnames';
 import VideoCallBtn from './VideoCallBtn';
 
 import styles from './ChatVideoCall.module.scss';
-import { IconCall, IconCallEnd, IconInfoTooltip, IconMicrophone, IconMicrophoneOff, IconMonitor, IconСamcorder } from '../../ui/Icons';
+import { IconCall, IconCallEnd, IconMicrophoneOff } from '../../ui/Icons';
 import Avatar from '../../ui/Avatar';
 import { capitalizeWords } from '../../helpers/changeString';
 import UserPosition from '../../ui/UserPosition';
+import { useRingtone } from './hooks/useRingtone';
+
+import ringtoneMp3 from '../../assets/ringtone-1.mp3';
+import VideoCallControls from './VideoCallControls';
+import PartnerVideoPlug from './PartnerVideoPlug';
+import UserVideoPlug from './UserVideoPlug';
 
 const IncomingCall = () => {
    const { isReceivingCall } = useSelector(getVideoCallInfo);
 
-   const dispatch = useDispatch();
    const [currentDialog, setCurrentDialog] = useState(null);
    const [isLoading, setIsLoading] = useState(true);
-   const isDesktop = useSelector(getIsDesktop);
    const [videoCallData, setVideoCallData] = useState(null);
+
+   useRingtone(isReceivingCall, ringtoneMp3);
 
    const {
       videoCallParams,
       userInfo,
-      placeVideoCall,
       userVideoRef,
       partnerVideoRef,
-      toggleCameraArea,
       toggleScreenSharing,
       toggleCamera,
       toggleMuteAudio,
@@ -44,10 +44,13 @@ const IncomingCall = () => {
       acceptCall,
       initialize,
       callAccepted,
+      isLoadingAccept,
+      isLoadingCancel,
+      partnerVideoPlug,
+      userVideoPlug,
    } = useVideoCall({
       currentDialog,
       setCurrentDialog,
-      isReceivingCall,
    });
 
    useEffect(() => {
@@ -79,9 +82,10 @@ const IncomingCall = () => {
    }, [currentDialog?.id, videoCallData]);
 
    return (
-      <ModalWrapper condition={isReceivingCall && !isLoading}>
+      <ModalWrapper condition={(isReceivingCall && !isLoading) || callAccepted}>
          <Modal
-            condition={isReceivingCall && !isLoading}
+            condition={(isReceivingCall && !isLoading) || callAccepted}
+            closeBtnWhite={callAccepted}
             set={async () => {
                await endCall();
             }}
@@ -100,78 +104,55 @@ const IncomingCall = () => {
                         </div>
                      )}
                      <div>
-                        <div
-                           className={cn(
-                              videoCallParams.isFocusMySelf ? styles.userVideo : styles.partnerVideo,
-                              videoCallParams.callPartner && styles.ChatVideoBg
-                           )}>
-                           {!videoCallParams.statusMedia.video && (
-                              <div className={`${styles.videoEmpty} gap-2`}>
-                                 <IconInfoTooltip className="stroke-white" width={24} height={24} />
-                                 Вы не передаёте видео
+                        <div className={cn(styles.userVideo, userVideoPlug && styles.userVideoPlug)}>
+                           {userVideoPlug && <UserVideoPlug videoCallParams={videoCallParams} userInfo={userInfo} />}
+                           <video
+                              ref={userVideoRef}
+                              muted
+                              playsInline
+                              autoPlay
+                              className={cn('w-full h-full', userVideoPlug && 'absolute inset-0 opacity-0 invisible')}
+                           />
+                        </div>
+                        <div className={cn(styles.partnerVideo, partnerVideoPlug && styles.partnerVideoPlug)}>
+                           <video
+                              ref={partnerVideoRef}
+                              playsInline
+                              autoPlay
+                              className={cn('w-full h-full', partnerVideoPlug && 'absolute inset-0 opacity-0 invisible')}
+                           />
+                           {!partnerVideoPlug && !videoCallParams.statusCompanionMedia.audio && callAccepted && (
+                              <div className="absolute top-6 left-6 flex items-center gap-2 text-red text-defaultMax">
+                                 <IconMicrophoneOff width={32} height={32} className="fill-red" />
+                                 <span>У собеседника выключен микрофон</span>
                               </div>
                            )}
-                           <video ref={userVideoRef} muted playsInline autoPlay className="w-full h-full" onClick={toggleCameraArea} />
-                        </div>
-                        <div
-                           className={cn(
-                              videoCallParams.isFocusMySelf ? styles.partnerVideo : styles.userVideo,
-                              videoCallParams.callPartner && styles.ChatVideoBg
-                           )}>
-                           <video ref={partnerVideoRef} playsInline autoPlay className="w-full h-full" onClick={toggleCameraArea} />
+
+                           {partnerVideoPlug && <PartnerVideoPlug currentDialog={currentDialog} videoCallParams={videoCallParams} />}
                         </div>
                      </div>
                   </div>
-                  <div className={styles.actionBtns}>
-                     <VideoCallBtn
-                        onChange={() => toggleCamera(videoCallParams.mutedCamera)}
-                        className={`${videoCallParams.mutedCamera ? '!bg-[#a8c7fa]' : ''}`}
-                        childrenText={videoCallParams.mutedCamera ? 'Выкл. камеру' : 'Вкл. камеру'}>
-                        <IconСamcorder className={`stroke-white stroke-[2px] !fill-none ${videoCallParams.mutedCamera ? '!stroke-dark' : ''}`} />
-                     </VideoCallBtn>
-                     {isDesktop && (
-                        <VideoCallBtn
-                           onChange={() => toggleScreenSharing(videoCallParams.mutedScreenSharing)}
-                           className={`${videoCallParams.mutedScreenSharing ? styles.actionBtnActiveBlue : ''}`}
-                           childrenText={videoCallParams.mutedScreenSharing ? 'Выкл. показ экрана' : 'Вкл. показ экрана'}>
-                           <IconMonitor width={24} height={24} className="fill-white" />
-                        </VideoCallBtn>
-                     )}
-
-                     <VideoCallBtn
-                        onChange={toggleMuteAudio}
-                        className={`${videoCallParams.mutedAudio ? styles.actionBtnActiveRed : ''}`}
-                        childrenText={videoCallParams.mutedAudio ? 'Вкл. микрофон' : 'Выкл. микрофон'}>
-                        {videoCallParams.mutedAudio ? (
-                           <IconMicrophoneOff width={24} height={24} />
-                        ) : (
-                           <IconMicrophone width={24} height={24} className="stroke-white !fill-none" />
-                        )}
-                     </VideoCallBtn>
-                     <VideoCallBtn onChange={endCall} className="!bg-red" childrenText="Завершить">
-                        <IconCallEnd width={24} height={24} className="fill-white" />
-                     </VideoCallBtn>
-                  </div>
+                  <VideoCallControls options={{ videoCallParams, toggleCamera, toggleScreenSharing, toggleMuteAudio, isLoadingCancel, endCall }} />
                </div>
                {!callAccepted && currentDialog?.companion && (
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center relative">
                      <h3 className="title-2-5 !text-white mb-3 text-center">
                         <UserPosition role={currentDialog.companion.role} />
-                        {capitalizeWords(currentDialog.companion.name, currentDialog.companion.surname)}
+                        &nbsp;{capitalizeWords(currentDialog.companion.name, currentDialog.companion.surname)}
                      </h3>
                      <p className="text-defaultMax !text-white mb-6">Входящий звонок</p>
 
                      <Avatar size={160} src={currentDialog.companion.image} title={currentDialog.companion.name} />
 
-                     <p className="!text-white text-center mb-8 mt-4">
+                     <p className="!text-white text-center mb-8 mt-4 font-medium">
                         По умолчанию ваша камера будет выключена, <br />
                         Вы сможете включить её в ходе беседы
                      </p>
                      <div className="flex gap-8">
-                        <VideoCallBtn onChange={cancelCall} className="!bg-red" childrenText="Отклонить">
+                        <VideoCallBtn onChange={cancelCall} isLoading={isLoadingCancel} className="!bg-red" childrenText="Отклонить">
                            <IconCallEnd width={24} height={24} className="fill-white" />
                         </VideoCallBtn>
-                        <VideoCallBtn onChange={acceptCall} className="!bg-green" childrenText="Принять">
+                        <VideoCallBtn onChange={acceptCall} isLoading={isLoadingAccept} className="!bg-green" childrenText="Принять">
                            <IconCall width={28} height={28} className="fill-white" />
                         </VideoCallBtn>
                      </div>
@@ -179,6 +160,18 @@ const IncomingCall = () => {
                )}
             </div>
          </Modal>
+         {(isLoadingAccept || isLoadingCancel) && !callAccepted && (
+            <div className="absolute inset-0 z-[99999999] flex-center-all flex-col gap-6 bg-[rgba(0,0,0,0.8)]">
+               <Spinner className="!border-white !border-b-[transparent] border-4" style={{ '--size': '90px' }} />
+               <p className="text-big text-white">{isLoadingAccept ? 'Подключаемся...' : ''}</p>
+            </div>
+         )}
+         {callAccepted && !videoCallParams.isConnect && (
+            <div className="absolute inset-0 z-[99999999] flex-center-all flex-col gap-6 bg-[rgba(0,0,0,0.8)]">
+               <Spinner className="!border-white !border-b-[transparent] border-4" style={{ '--size': '90px' }} />
+               <p className="text-big text-white">Устанавливается соединение</p>
+            </div>
+         )}
       </ModalWrapper>
    );
 };

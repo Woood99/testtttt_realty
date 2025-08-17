@@ -1,43 +1,31 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 import styles from './GalleryThumb.module.scss';
-import { getVideos } from '../../api/other/getVideos';
 import { videoToggleControls } from '../GalleryPhoto';
 import { GalleryRow } from '../GalleryRow';
+import { getFilteredObject } from '../../helpers/objectMethods';
+import isEmptyArrObj from '../../helpers/isEmptyArrObj';
 
 const GalleryThumb = ({ sidebar, items = [], videosGallery = [], children }) => {
    const [visiblePagination, setVisiblePagination] = useState(true);
    const [isOpenModal, setIsOpenModal] = useState(false);
 
-   const [videosData, setVideosData] = useState([]);
-
-   const [newGallery, setNewGallery] = useState(
-      items?.map((item, index) => {
+   const newGallery = [
+      getFilteredObject(videosGallery.length, {
+         title: 'Видео',
+         videos: videosGallery,
+         id: 99,
+         type: 'videos',
+      }),
+      ...items.map((item, index) => {
          return {
             title: item.title,
             images: item.images,
             id: index,
             type: 'images',
          };
-      })
-   );
-
-   useEffect(() => {
-      if (videosGallery.length) {
-         getVideos(videosGallery).then(res => {
-            setVideosData(res);
-            setNewGallery(prev => [
-               {
-                  title: 'Видео',
-                  videos: res,
-                  id: 99,
-                  type: 'videos',
-               },
-               ...prev,
-            ]);
-         });
-      }
-   }, []);
+      }),
+   ].filter(item => !isEmptyArrObj(item));
 
    const [activeThumbIndex, setActiveThumbIndex] = useState(0);
 
@@ -64,7 +52,7 @@ const GalleryThumb = ({ sidebar, items = [], videosGallery = [], children }) => 
             <div className={styles.GalleryThumbRoot}>
                <GalleryRow
                   dataGallery={newGallery}
-                  videosData={videosData}
+                  videosData={videosGallery}
                   swiperRef={mainSwiperRef}
                   onSlideChange={onSlideChangeHandler}
                   visiblePagination={visiblePagination}

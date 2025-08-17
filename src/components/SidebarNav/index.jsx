@@ -4,7 +4,7 @@ import { ElementNavBtn, ElementNavBtnCount } from '../../ui/Elements';
 import { Link } from 'react-router-dom';
 import { BuyerRoutesPath, RoutesPath } from '../../constants/RoutesPath';
 import { getFilteredObject } from '../../helpers/objectMethods';
-import { getCurrentCitySelector, getUserInfo } from '../../redux/helpers/selectors';
+import { getCurrentCitySelector, getUserInfo } from '@/redux';
 import { useSelector } from 'react-redux';
 import { isBuyer } from '../../helpers/utils';
 import isEmptyArrObj, { isNumber } from '../../helpers/isEmptyArrObj';

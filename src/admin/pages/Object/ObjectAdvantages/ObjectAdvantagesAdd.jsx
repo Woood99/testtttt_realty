@@ -4,13 +4,13 @@ import { useParams } from 'react-router-dom';
 import ModalHeader from '../../../../ui/Modal/ModalHeader';
 import Button from '../../../../uiForm/Button';
 import { sendPostRequest } from '../../../../api/requestsApi';
-import { choiceApartmentsFilterOptions, roomsOptions } from '../../../../data/selectsField';
+import { choiceApartmentsFilterOptions } from '../../../../data/selectsField';
 import Modal from '../../../../ui/Modal';
 import { ControllerFieldCheckboxesSingle } from '../../../../uiForm/ControllerFields/ControllerFieldCheckbox';
 import { ControllerFieldMultiSelect } from '../../../../uiForm/ControllerFields/ControllerFieldMultiSelect';
 import ChoiceApartmentsFilter from '../../../../components/ChoiceApartmentsFilter';
 
-const ObjectAdvantagesAdd = ({ conditionModal, setModal, mainData, frames, advantages = [], tags = [] }) => {
+const ObjectAdvantagesAdd = ({ conditionModal, setModal, frames, advantages = [], tags = [] }) => {
    const {
       handleSubmit,
       control,
@@ -49,7 +49,7 @@ const ObjectAdvantagesAdd = ({ conditionModal, setModal, mainData, frames, advan
          apartments_ids: selectedApartments.map(item => item.value),
          advantage_ids: data.advantages?.map(item => item.value),
          tag_ids: data.tags?.map(item => item.value),
-         filtersInfo: filterFields
+         filtersInfo: filterFields,
       };
       if (data.type_tags) {
          delete resData.advantage_ids;
@@ -141,6 +141,7 @@ const ObjectAdvantagesAdd = ({ conditionModal, setModal, mainData, frames, advan
             setData={setSelectedApartments}
             filterFields={filterFields}
             setFilterFields={setFilterFields}
+            defaultValue={[]}
          />
       </Modal>
    );

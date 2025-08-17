@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import SellerLayout from '../../layouts/SellerLayout';
 import { useSelector } from 'react-redux';
-import { getUserInfo } from '../../redux/helpers/selectors';
+import { getUserInfo } from '@/redux';
 import isEmptyArrObj from '../../helpers/isEmptyArrObj';
 import { BlockCardsPrimaryContext } from '../../context';
 import BlockCardsPrimary from '../../components/BlockCardsPrimary';

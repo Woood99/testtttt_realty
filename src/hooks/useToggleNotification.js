@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import isString from '../helpers/isString';
+import { isString } from '@/helpers';
 
-export const useToggleNotification = (name, maxCount = 5,check = false,) => {
+export const useToggleNotification = (name, maxCount = 5, check = false) => {
    if (!isString(name)) return;
 
    const [isVisibleNotification, setIsVisibleNotification] = useState(false);

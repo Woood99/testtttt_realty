@@ -3,42 +3,47 @@ import { useEffect, useRef, useState } from 'react';
 export const useVideoHover = (shouldPlayOnHover = false) => {
    const [isPlaying, setIsPlaying] = useState(false);
    const [isReady, setIsReady] = useState(false);
+   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+   const [isFirstHover, setIsFirstHover] = useState(true);
    const videoRef = useRef(null);
 
    useEffect(() => {
-      setTimeout(() => {
-         setIsReady(true);
-      }, 300);
-   }, []);
-
-   useEffect(() => {
       const video = videoRef.current;
-      if (!video) return;
-      if (isPlaying) {
-         setTimeout(() => {
-            video.currentTime = 0;
-            video.play();
-         }, 120);
+      if (!video || !isPlaying) return;
+
+      const handleCanPlay = () => {
+         video.play().catch(e => console.error('Video play failed:', e));
+         setIsVideoLoaded(true);
+      };
+
+      if (isFirstHover) {
+         video.addEventListener('canplay', handleCanPlay);
+         video.load();
+         setIsFirstHover(false);
       } else {
-         setTimeout(() => {
-            video.pause();
-         }, 50);
+         video.currentTime = 0;
+         video.play().catch(e => console.error('Video play failed:', e));
       }
-   }, [isPlaying]);
+
+      return () => {
+         video.removeEventListener('canplay', handleCanPlay);
+      };
+   }, [isPlaying, isFirstHover]);
 
    const handleMouseEnter = () => {
-      if (!isReady) return;
-      if (!shouldPlayOnHover) return;
-      if (isPlaying) return;
+      if (!isReady || !shouldPlayOnHover) return;
       setIsPlaying(true);
    };
 
    const handleMouseLeave = () => {
-      if (!isReady) return;
-      if (!shouldPlayOnHover) return;
-      if (!isPlaying) return;
+      if (!isReady || !shouldPlayOnHover) return;
       setIsPlaying(false);
    };
 
-   return { isPlaying, handleMouseEnter, handleMouseLeave, videoRef, isReady };
+   useEffect(() => {
+      const timer = setTimeout(() => setIsReady(true), 300);
+      return () => clearTimeout(timer);
+   }, []);
+
+   return { isPlaying, handleMouseEnter, handleMouseLeave, videoRef, isFirstHover };
 };

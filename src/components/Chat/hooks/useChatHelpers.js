@@ -8,38 +8,60 @@ export const useChatHelpers = options => {
    const mainBlockBar = useRef(null);
    const [currentDialogUserInfo, setCurrentDialogUserInfo] = useState({});
 
-   const isOrganization = currentDialog.organization && userInfo?.role?.id !== ROLE_ADMIN.id;
-   const myChannelOrGroup = Boolean(
-      (currentDialog.dialog_type === CHAT_TYPES.CHANNEL || currentDialog.type_group === CHAT_TYPES.GROUP) && currentDialog.owner?.id === userInfo.id
-   );
-
    useEffect(() => {
-      if (!isEmptyArrObj(currentDialog)) {
+      if (!currentDialog) return;
+      setCurrentDialogUserInfo(getDialogUserInfo(currentDialog));
+   }, [JSON.stringify(currentDialog)]);
+
+   const checkMyChannelOrGroup = dialog => {
+      return Boolean((dialog.dialog_type === CHAT_TYPES.CHANNEL || dialog.dialog_type === CHAT_TYPES.GROUP) && dialog.owner?.id === userInfo.id);
+   };
+
+   const checkIsOrganization = dialog => {
+      return dialog.organization && userInfo?.role?.id !== ROLE_ADMIN.id;
+   };
+
+   const getDialogUserInfo = dialog => {
+      if (!dialog) return;
+      let res = {};
+      const isOrganization = checkIsOrganization(dialog);
+
+      const myChannelOrGroup = checkMyChannelOrGroup(dialog);
+
+      const type_chat = dialog.dialog_type === CHAT_TYPES.CHAT;
+      const type_channel = dialog.dialog_type === CHAT_TYPES.CHANNEL;
+      const type_group = dialog.dialog_type === CHAT_TYPES.GROUP;
+
+      const defaultOptions = { type_chat, type_channel, type_group, myChannelOrGroup };
+
+      if (!isEmptyArrObj(dialog)) {
          if (isOrganization) {
-            setCurrentDialogUserInfo({
-               ...currentDialog.organization,
+            res = {
+               ...dialog.organization,
+               ...defaultOptions,
                isOrganization: true,
                role: ROLE_ADMIN.id,
-               myChannelOrGroup,
-            });
+            };
          } else {
-            if (currentDialog.dialog_type === CHAT_TYPES.CHAT && currentDialog.companions?.length) {
-               setCurrentDialogUserInfo({
-                  ...currentDialog.companions.find(item => item.id !== userInfo.id),
+            if (dialog.dialog_type === CHAT_TYPES.CHAT && dialog.companions?.length) {
+               res = {
+                  ...defaultOptions,
+                  ...dialog.companions.find(item => item.id !== userInfo.id),
                   isOrganization: false,
-                  myChannelOrGroup,
-               });
+               };
             } else {
-               setCurrentDialogUserInfo({
-                  name: currentDialog.name || currentDialog.dialog_name,
-                  image: currentDialog.image,
+               res = {
+                  ...defaultOptions,
+                  name: dialog.name || dialog.dialog_name,
+                  image: dialog.image,
                   isOrganization: false,
-                  myChannelOrGroup,
-               });
+               };
             }
          }
       }
-   }, [JSON.stringify(currentDialog)]);
+
+      return res;
+   };
 
    const scrollMainBlock = () => {
       setTimeout(() => {
@@ -48,5 +70,7 @@ export const useChatHelpers = options => {
       }, 1);
    };
 
-   return { mainBlockBar, scrollMainBlock, currentDialogUserInfo, isOrganization };
+   const isOrganization = checkIsOrganization(currentDialog);
+
+   return { mainBlockBar, scrollMainBlock, currentDialogUserInfo, isOrganization, checkMyChannelOrGroup, checkIsOrganization, getDialogUserInfo };
 };

@@ -3,6 +3,7 @@ import { RoutesPath } from '../../constants/RoutesPath';
 import Apartment from '../../pages/Apartment';
 import Building from '../../pages/Building';
 import CashbackConditions from '../../pages/CashbackConditions';
+import ChatPage from '../../pages/ChatPage';
 import Comparison from '../../pages/Comparison';
 import DeveloperPage from '../../pages/Developers/DeveloperPage';
 import DevelopersList from '../../pages/Developers/DevelopersList';
@@ -23,6 +24,8 @@ import PurchaseList from '../../pages/PurchaseList';
 import PurchaseRequest from '../../pages/PurchaseRequest';
 import SpecialistPage from '../../pages/Specialists/SpecialistPage';
 import SpecialistsList from '../../pages/Specialists/SpecialistsList';
+import StreamList from '../../pages/StreamList';
+import StreamView from '../../pages/StreamView';
 
 export const defaultRoutes = [
    {
@@ -57,10 +60,10 @@ export const defaultRoutes = [
       path: RoutesPath.loginPhone,
       body: <LoginPhone />,
    },
-   {
-      path: RoutesPath.comparison,
-      body: <Comparison />,
-   },
+   // {
+   //    path: RoutesPath.comparison,
+   //    body: <Comparison />,
+   // },
    {
       path: RoutesPath.favorites,
       body: <Favorites />,
@@ -122,5 +125,17 @@ export const defaultRoutes = [
    {
       path: '*',
       body: <EmptyPage />,
+   },
+   {
+      path: RoutesPath.chat,
+      body: <ChatPage />,
+   },
+   {
+      path: `${RoutesPath.stream.view}:streamId`,
+      body: <StreamView />,
+   },
+   {
+      path: RoutesPath.stream.list,
+      body: <StreamList />,
    },
 ];

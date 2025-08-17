@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import MainLayout from '../../layouts/MainLayout';
 import Header from '../../components/Header';
@@ -11,7 +12,7 @@ import { getSpecialists } from '../../api/Building/getSpecialists';
 import { capitalizeWords } from '../../helpers/changeString';
 import ObjectConstructProgress from '../../admin/pages/Object/ObjectConstructProgress';
 import { getDataRequest } from '../../api/requestsApi';
-import { getUserInfo } from '../../redux/helpers/selectors';
+import { getUserInfo } from '@/redux';
 
 const ObjectEditUser = () => {
    const params = useParams();

@@ -6,7 +6,6 @@ import MainLayout from '../../layouts/MainLayout';
 import HeaderAdmin from '../../components/Header/HeaderAdmin';
 import Header from '../../components/Header';
 import { ListingFlatsContext } from '../../context';
-import { sortOptionsFlats } from '../Building/BuildingFilter/BuildingFilterModal';
 import Select from '../../uiForm/Select';
 import { setSort, tagsToggle } from '../../redux/slices/listingFlatsSlice';
 import { TagsMoreWidthDynamic } from '../../ui/TagsMore';
@@ -16,10 +15,11 @@ import ComplexCardInfo from '../../ui/ComplexCardInfo';
 import { declensionWordsOffer } from '../../helpers/declensionWords';
 import { CardRowPurchaseBasic } from '../../ui/CardsRow';
 import { RoutesPath } from '../../constants/RoutesPath';
-import { getIsDesktop, getUserInfo } from '../../redux/helpers/selectors';
+import { getIsDesktop, getUserInfo } from '@/redux';
 import { IconSort } from '../../ui/Icons';
 import { useListingFlats } from './useListingFlats';
 import { isAdmin } from '../../helpers/utils';
+import { sortOptionsFlats } from '@/data/selectsField';
 
 const ListingFlats = () => {
    const isDesktop = useSelector(getIsDesktop);
@@ -115,7 +115,7 @@ const ListingFlats = () => {
                            </div>
                            {Boolean(tags.length) && (
                               <>
-                                 <h3 className="title-3 mt-4 mb-3">Часто ищут</h3>
+                                 <h3 className="title-3 mt-4 mb-3">Поиск по тегам</h3>
                                  <TagsMoreWidthDynamic
                                     className="flex gap-1.5"
                                     data={tags.map((item, index) => {

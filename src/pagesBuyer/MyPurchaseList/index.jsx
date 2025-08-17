@@ -22,7 +22,7 @@ import Sidebar from '../../components/Sidebar';
 import { SidebarNavElements } from '../../components/SidebarNav';
 import { Tooltip } from '../../ui/Tooltip';
 import { IconComplain, IconEdit, IconEllipsis, IconTrash } from '../../ui/Icons';
-import { getIsDesktop } from '../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 import RepeatContent from '../../components/RepeatContent';
 import { useQueryParams } from '../../hooks/useQueryParams';
 

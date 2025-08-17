@@ -7,3 +7,4 @@ export { default as ChatMessageCommentsPanel } from './ChatMessageCommentsPanel'
 export { default as ChatMessagePersonalDiscount } from './ChatMessagePersonalDiscount';
 export { default as ChatMessageTimeAndReads } from './ChatMessageTimeAndReads';
 export { default as ChatMessageText } from './ChatMessageText';
+export { default as ChatMessagePreview } from './ChatMessagePreview';

@@ -1,15 +1,20 @@
 import { createSelector } from 'reselect';
-import isEmptyArrObj from '../../helpers/isEmptyArrObj';
-import { ROLE_ADMIN } from '../../constants/roles';
+import { ROLE_ADMIN, ROLE_BUYER } from '@/constants';
+import { isEmptyArrObj } from '@/helpers';
 
 export const getMainInfo = state => state.mainInfo;
 export const getHelpSliceSelector = state => state.helpSlice;
 export const getVideoCallInfo = state => state.videoCall;
+export const getToastPrimary = state => state.toastPrimary;
 
 export const getUserInfo = state => state.mainInfo?.userInfo;
 export const getUserIsAdmin = createSelector(
    state => state.mainInfo?.userInfo,
    userInfo => userInfo?.role?.id === ROLE_ADMIN.id
+);
+export const getUserIsBuyer = createSelector(
+   state => state.mainInfo?.userInfo,
+   userInfo => isEmptyArrObj(userInfo) || userInfo.role.id === ROLE_BUYER.id
 );
 export const checkAuthUser = createSelector([getUserInfo], user => !isEmptyArrObj(user));
 export const authLoadingSelector = state => state.mainInfo?.authLoading;

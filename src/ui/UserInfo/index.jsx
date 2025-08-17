@@ -17,6 +17,7 @@ const UserInfo = ({
    children,
    className = '',
    classNameContent = '',
+   classNameWrapper = '',
    sizeAvatar = 40,
    centered,
    classListName = '',
@@ -30,7 +31,7 @@ const UserInfo = ({
          <Avatar src={avatar} title={name} textAvatar={textAvatar} size={sizeAvatar} online={online} />
          <div className={`flex flex-col overflow-hidden ${classNameContent}`}>
             <div
-               className={`h-full flex flex-col overflow-hidden ${!pos ? 'justify-center' : ''} ${centered ? 'justify-center' : ''}`}
+               className={cn('h-full flex flex-col overflow-hidden', !pos && 'justify-center', centered && 'justify-center', classNameWrapper)}
                style={{ minHeight: sizeAvatar }}>
                {Boolean(beforeChildren) && beforeChildren}
                {nameHref ? (

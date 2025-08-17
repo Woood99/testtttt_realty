@@ -8,7 +8,7 @@ import { getDataRequest } from '../../api/requestsApi';
 import { getSpecialists } from '../../api/Building/getSpecialists';
 
 import { getApartmentsFromType } from '../../api/other/getApartmentsFromType';
-import { checkAuthUser } from '../../redux/helpers/selectors';
+import { checkAuthUser } from '@/redux';
 import { isArray } from '../../helpers/isEmptyArrObj';
 import { setSelectAccLogModalOpen } from '../../redux/slices/helpSlice';
 import { isActualDate } from '../../helpers/isActualDate';

@@ -9,7 +9,7 @@ import Checkbox from '../../../uiForm/Checkbox';
 import { TabsNav, TabsTitle } from '../../../ui/Tabs';
 import HorizontalScrollMouse from '../../../ui/HorizontalScrollMouse';
 import { useSelector } from 'react-redux';
-import { getIsDesktop, getWindowSize } from '../../../redux/helpers/selectors';
+import { getIsDesktop, getWindowSize } from '@/redux';
 import { Tooltip } from '../../../ui/Tooltip';
 import { toggleFullscreen } from '../../../unifComponents/ymap/YmapFullscreen';
 

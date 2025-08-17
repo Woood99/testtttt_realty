@@ -18,6 +18,10 @@
 
    padding: var(--modal-space) 0;
 
+   @media (max-width: $desktop) {
+      --modal-height: 100dvh;
+   }
+
    &._left {
       justify-content: start;
 

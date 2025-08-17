@@ -35,10 +35,10 @@ export const RoutesPath = {
    },
 
    stream: {
-      broadcaster: '/admin/stream/broadcaster',
-      view: '/admin/stream/view/',
-      list: '/admin/stream/list',
+      view: '/stream/view/',
+      list: '/stream/list',
    },
+   chat: '/chat',
 };
 
 export const SellerRoutesPath = {
@@ -57,6 +57,12 @@ export const SellerRoutesPath = {
    },
    wallet: '/seller/wallet',
    calendar_view: '/seller/calendar-view',
+   stream: {
+      create: '/seller/stream/create',
+      broadcaster: '/seller/stream/broadcaster/',
+      view: '/seller/stream/view/',
+      list: '/seller/stream/list',
+   },
 };
 
 export const BuyerRoutesPath = {
@@ -74,7 +80,6 @@ export const AuthRoutesPath = {
    profile: {
       edit: '/profile/edit',
    },
-   chat: '/chat',
 };
 
 export const PrivateRoutesPath = {

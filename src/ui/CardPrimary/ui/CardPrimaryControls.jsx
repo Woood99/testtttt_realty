@@ -7,7 +7,7 @@ import { Tooltip } from '../../Tooltip';
 import { BtnAction, BtnActionFavorite } from '../../ActionBtns';
 import { IconLocation } from '../../Icons';
 import { isAdmin } from '../../../helpers/utils';
-import { getUserInfo } from '../../../redux/helpers/selectors';
+import { getUserInfo } from '@/redux';
 
 const CardPrimaryControls = () => {
    const { customControls, title, id, geoVisible = true, setIsOpenModalLocation } = useContext(CardPrimaryContext);

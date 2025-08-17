@@ -25,6 +25,7 @@ export default {
          lightGray: 'var(--light-gray)',
          graySecond: 'var(--gray-second)',
          hoverPrimary: 'var(--hover-primary)',
+         thumbPhoto: 'var(--thumb-photo)',
       },
       fontSize: {
          verySmall: ['var(--very-small-fz)', 'var(--line-height)'],

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import cn from 'classnames';
 import { SuggestionsCardActionsContext, SuggestionsContext } from '../../../context';
 import { IconChat } from '../../../ui/Icons';
-import { checkAuthUser } from '../../../redux/helpers/selectors';
+import { checkAuthUser } from '@/redux';
 import { setSelectAccLogModalOpen } from '../../../redux/slices/helpSlice';
 import Button from '../../../uiForm/Button';
 import { suggestionsTypes } from '../suggestions-types';

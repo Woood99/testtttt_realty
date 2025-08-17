@@ -1,6 +1,9 @@
 import { IconInfoTooltip } from '../ui/Icons';
 import { Tooltip } from '../ui/Tooltip';
 
+import presentImg from '../assets/img/present.png';
+import discountImg from '../assets/img/discount.png';
+
 export const nearestYearsOptions = [
    { value: '2024', label: '2024' },
    { value: '2025', label: '2025' },
@@ -22,6 +25,15 @@ export const roomsOptions = [
    { value: 4, label: '4+' },
 ];
 
+export const calcPropsOptionsValues = {
+   cash: 'cash',
+   installment_plan: 'installment_plan',
+   mortgage_approval_bank: 'mortgage_approval_bank',
+   mortgage_no_approval_bank: 'mortgage_no_approval_bank',
+   no_down_payment: 'no_down_payment',
+   certificate: 'certificate',
+};
+
 export const calcPropsOptions = [
    { id: 1, value: 'cash', label: 'Наличные' },
    { id: 6, value: 'installment_plan', label: 'Рассрочка' },
@@ -41,7 +53,9 @@ export const calcPropsOptions = [
                classNameTarget="h-4 mt-1"
                classNameContent="mmd1:!p-6"
                placement="bottom">
-               <div className="font-medium">Материнский капитал, жилищный сертификат, <br /> региональный и тд.</div>
+               <div className="font-medium">
+                  Материнский капитал, жилищный сертификат, <br /> региональный и тд.
+               </div>
             </Tooltip>
          );
       },
@@ -71,7 +85,25 @@ export const is_gift_data = {
    value: 'is_gift',
    label: 'Есть подарок',
    descr: 'Подарки от застройщика на выбор при покупке квартиры',
+   icon: presentImg,
+   iconSize: 26,
 };
+export const is_cashback_data = {
+   value: 'is_cashback',
+   label: 'Есть кешбэк',
+   descr: 'Начислим наличными за покупку на банковскую карту.',
+   icon: presentImg,
+   iconSize: 26,
+};
+
+export const is_discount_data = {
+   value: 'is_discount',
+   label: 'Со скидкой',
+   descr: 'Скидка от застройщика при покупке квартиры',
+   icon: discountImg,
+   iconSize: 32,
+};
+
 export const is_video_data = {
    value: 'is_video',
    label: 'Есть видеообзор',
@@ -105,3 +137,14 @@ export const choiceApartmentsFilterOptions = {
    areaFrom: '',
    areaTo: '',
 };
+
+export const sortOptionsFlats = [
+   {
+      label: 'Сначала дешёвые',
+      value: 'priceAsc',
+   },
+   {
+      label: 'Сначала дорогие',
+      value: 'priceDesc',
+   },
+];

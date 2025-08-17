@@ -1,42 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { getVideos } from '../../api/other/getVideos';
+import React, { useState } from 'react';
 import { GalleryRowTabs } from '../GalleryRow';
+import { getFilteredObject } from '../../helpers/objectMethods';
+import isEmptyArrObj from '../../helpers/isEmptyArrObj';
 
-const BlockEcologyParks = ({ data, sidebar, videosData = [] }) => {
+const BlockEcologyParks = ({ data, sidebar, videos = [] }) => {
    const [isOpenModal, setIsOpenModal] = useState(false);
 
-   const [currentData, setCurrentData] = useState(
-      data.map((item, index) => {
+   const currentData = [
+      getFilteredObject(videos.length, {
+         title: 'Видео',
+         videos: videos,
+         type: 'videos',
+         id: 99,
+      }),
+      ...data.map((item, index) => {
          return {
             ...item,
             id: index,
             type: 'images',
          };
-      })
-   );
-
-   useEffect(() => {
-      if (videosData.length) {
-         getVideos(videosData).then(res => {
-            setCurrentData(prev => {
-               return [
-                  ...prev,
-                  {
-                     title: 'Видео',
-                     videos: res,
-                     type: 'videos',
-                     id: 99,
-                  },
-               ];
-            });
-         });
-      }
-   }, []);
+      }),
+   ].filter(item => !isEmptyArrObj(item));
 
    return (
       <div className="white-block">
          <h2 className="title-2 mb-4">Экология и парки</h2>
-         <GalleryRowTabs data={currentData} videosData={videosData} sidebar={sidebar} isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} />
+         <GalleryRowTabs data={currentData} videosData={videos} sidebar={sidebar} isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} />
       </div>
    );
 };

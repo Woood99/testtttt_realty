@@ -18,7 +18,7 @@ const BuildingTabsPlanning = memo(() => {
    };
 
    return (
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col">
          {apartContext.layoutsIsLoading ? (
             <Spinner className="mx-auto mt-8" />
          ) : (

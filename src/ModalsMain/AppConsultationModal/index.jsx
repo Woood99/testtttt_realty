@@ -13,7 +13,7 @@ import dayjs from 'dayjs';
 import BlockMyApp from '../../components/BlockMyApp';
 import { timesOptions } from '../../data/selectsField';
 import { sendPostRequest } from '../../api/requestsApi';
-import { getUserInfo } from '../../redux/helpers/selectors';
+import { getUserInfo } from '@/redux';
 
 const AppConsultationModal = ({
    condition,

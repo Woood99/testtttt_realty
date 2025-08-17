@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { getDataRequest } from '../../../api/requestsApi';
 import { getMapBuildings } from '../../../api/getMapBuildings';
 import getCardsBuildings from '../../../api/getCardsBuildings';
-import { getCitiesSelector, getUserInfo } from '../../../redux/helpers/selectors';
+import { getCitiesSelector, getUserInfo } from '@/redux';
 import { combinedArray } from '../../../helpers/arrayMethods';
 import { isAdmin } from '../../../helpers/utils';
 import { useNavigateToChat } from '../../../hooks/useNavigateToChat';

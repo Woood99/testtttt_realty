@@ -14,6 +14,7 @@ export const buildingApartFilterDefaultValue = {
    tags: [],
    advantages: [],
    is_gift: false,
+   is_discount: false,
    is_video: false,
    filtersMain: {
       price: updateAdditionalFilters([apartmentsFilterPrice]).price,

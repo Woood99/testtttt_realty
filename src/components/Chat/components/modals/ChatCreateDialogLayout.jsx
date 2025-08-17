@@ -7,13 +7,13 @@ import WebSkeleton from '../../../../ui/Skeleton/WebSkeleton';
 import Avatar from '../../../../ui/Avatar';
 import EmptyBlock from '../../../EmptyBlock';
 import { sendPostRequest } from '../../../../api/requestsApi';
-import { getCurrentCitySelector } from '../../../../redux/helpers/selectors';
+import { getCurrentCitySelector } from '@/redux';
 import Modal from '../../../../ui/Modal';
 import { capitalizeWords } from '../../../../helpers/changeString';
 import Input from '../../../../uiForm/Input';
 import RepeatContent from '../../../RepeatContent';
 import Button from '../../../../uiForm/Button';
-import { IconArrowY, IconLocation } from '../../../../ui/Icons';
+import { IconArrowY, IconChat, IconLocation } from '../../../../ui/Icons';
 import CityModal from '../../../../ModalsMain/CityModal';
 import { useInfiniteScroll } from '../../../../hooks/useInfiniteScroll';
 import Spinner from '../../../../ui/Spinner';
@@ -21,6 +21,7 @@ import { getSpecialistsOrganization } from '../../../../api/Building/getSpeciali
 import { useSearchParams } from 'react-router-dom';
 import { ChatContext } from '../../../../context';
 import { ROLE_ADMIN, ROLE_SELLER } from '../../../../constants/roles';
+import { SearchButtonChildren } from '../../../../uiForm/InputSearch';
 
 const ChatCreateDialogLayoutContext = createContext();
 
@@ -88,7 +89,7 @@ const ChatCreateDialogLayout = ({ options, condition, set }) => {
             condition={condition}
             set={set}
             modalContentRef={modalContentRef}>
-            <div className="flex gap-2 px-6">
+            <div className="flex gap-2 px-6 md1:px-4">
                <Button
                   variant="secondary"
                   size="Small"
@@ -160,10 +161,10 @@ const DevelopersLayout = ({ data, className }) => {
       <div className={cn(className)}>
          {data.map(item => {
             return (
-               <div>
+               <div key={item.id} className="not-last-child-border-bottom-lightgray py-3">
                   <CardDeveloper
+                     isActive={dropdownId === item.id}
                      data={item}
-                     key={item.id}
                      onDropdownClick={async () => {
                         if (dropdownId === item.id) {
                            setDropdownId(false);
@@ -177,9 +178,7 @@ const DevelopersLayout = ({ data, className }) => {
                         }
                      }}
                   />
-                  {dropdownId === item.id && (
-                     <SpecialistsLayout data={specialists} loading={isLoading} className="ml-4 mb-3 pb-3 border-bottom-lightgray" />
-                  )}
+                  {dropdownId === item.id && <SpecialistsLayout data={specialists} loading={isLoading} className={cn('ml-4')} />}
                </div>
             );
          })}
@@ -208,10 +207,10 @@ const SpecialistsLayout = ({ data, className, loading }) => {
          <h4 className="title-4 px-6 mt-3 mb-3">Менеджеры застройщика:</h4>
          {data.map(item => {
             return (
-               <div>
+               <div key={item.id} className="not-last-child-border-bottom-lightgray py-3">
                   <CardSpecialist
+                     isActive={dropdownId === item.id}
                      data={item}
-                     key={item.id}
                      onDropdownClick={async () => {
                         if (dropdownId === item.id) {
                            setDropdownId(false);
@@ -227,60 +226,10 @@ const SpecialistsLayout = ({ data, className, loading }) => {
                         }
                      }}
                   />
-                  {dropdownId === item.id && (
-                     <ChannelsLayout loading={isLoading} data={channels} className="ml-4 mb-3 pb-3 border-bottom-lightgray" />
-                  )}
+                  {dropdownId === item.id && <ChannelsLayout loading={isLoading} data={channels} className={cn('ml-4')} />}
                </div>
             );
          })}
-      </div>
-   );
-};
-
-const CardDeveloper = ({ data, onDropdownClick }) => {
-   const { options } = useContext(ChatCreateDialogLayoutContext);
-
-   return (
-      <div
-         onClick={() => {
-            options.onSubmitDeveloper(data);
-         }}
-         className="relative py-2 px-6 flex gap-3 items-center hover:bg-pageColor cursor-pointer">
-         <Avatar size={40} src={data.photo || data.image} title={data.name} />
-         <h3 className="title-4 text-left">{data.name}</h3>
-         <button
-            type="button"
-            className="ml-auto flex-center-all h-10 w-10"
-            onClick={async e => {
-               e.stopPropagation();
-               onDropdownClick?.();
-            }}>
-            <IconArrowY className="fill-dark" width={24} height={24} />
-         </button>
-      </div>
-   );
-};
-
-const CardSpecialist = ({ data, onDropdownClick }) => {
-   const { options } = useContext(ChatCreateDialogLayoutContext);
-
-   return (
-      <div
-         onClick={() => {
-            options.onSubmitSpecialist(data);
-         }}
-         className="relative py-2 px-6 flex gap-3 items-center hover:bg-pageColor cursor-pointer">
-         <Avatar size={40} src={data.photo || data.image} title={data.name} />
-         <h3 className="title-4 text-left">{capitalizeWords(data.name, data.surname)}</h3>
-         <button
-            type="button"
-            className="ml-auto flex-center-all h-10 w-10"
-            onClick={async e => {
-               e.stopPropagation();
-               onDropdownClick?.();
-            }}>
-            <IconArrowY className="fill-dark" width={24} height={24} />
-         </button>
       </div>
    );
 };
@@ -299,11 +248,11 @@ const ChannelsLayout = ({ data, className, loading }) => {
 
    return (
       <div className={cn(className)}>
-         <h4 className="title-4 px-6 mt-3 mb-3">Каналы менеджера:</h4>
+         <h4 className="title-4 px-6 mt-5 mb-3">Каналы менеджера:</h4>
          {data.map(item => {
             return (
-               <div>
-                  <CardChannel data={item} key={item.id} />
+               <div key={item.id}>
+                  <CardChannel data={item} />
                </div>
             );
          })}
@@ -311,24 +260,71 @@ const ChannelsLayout = ({ data, className, loading }) => {
    );
 };
 
+const CardDeveloper = ({ data, onDropdownClick, className, isActive }) => {
+   const { options } = useContext(ChatCreateDialogLayoutContext);
+
+   return (
+      <div
+         onClick={async e => {
+            e.stopPropagation();
+            onDropdownClick?.();
+         }}
+         className={cn('relative px-6 flex gap-3 items-center cursor-pointer md1:px-4 select-none', className)}>
+         <Avatar size={52} src={data.photo || data.image} title={data.name} />
+         <div>
+            <h3 className="title-3-5 text-left cut cut-1 min-w-0">{data.name}</h3>
+            <button
+               className="blue-link relative z-30 flex gap-2 text-small mt-1"
+               onClick={() => {
+                  options.onSubmitDeveloper(data);
+               }}>
+               Перейти в чат
+            </button>
+         </div>
+         <button type="button" className="ml-auto flex-center-all h-10 w-10">
+            <IconArrowY className={cn('fill-dark transition-all -rotate-90', isActive && 'rotate-0')} width={28} height={28} />
+         </button>
+      </div>
+   );
+};
+
+const CardSpecialist = ({ data, onDropdownClick, className, isActive }) => {
+   const { options } = useContext(ChatCreateDialogLayoutContext);
+
+   return (
+      <div
+         onClick={async e => {
+            e.stopPropagation();
+            onDropdownClick?.();
+         }}
+         className={cn('relative px-6 flex gap-3 items-center cursor-pointer md1:px-4 select-none', className)}>
+         <Avatar size={52} src={data.photo || data.image} title={data.name} />
+         <div>
+            <h3 className="title-3-5 text-left group-hover:!text-blue cut cut-1 min-w-0">{capitalizeWords(data.name, data.surname)}</h3>
+            <button
+               className="blue-link relative z-30 flex gap-2 text-small mt-1"
+               onClick={() => {
+                  options.onSubmitSpecialist(data);
+               }}>
+               Перейти в чат
+            </button>
+         </div>
+         <button type="button" className="ml-auto flex-center-all h-10 w-10">
+            <IconArrowY className={cn('fill-dark transition-all -rotate-90', isActive && 'rotate-0')} width={28} height={28} />
+         </button>
+      </div>
+   );
+};
+
 const CardChannel = ({ data }) => {
-   const { setCurrentDialog, getDialog, connectToChat, onCloseModal } = useContext(ChatCreateDialogLayoutContext);
+   const { onCloseModal } = useContext(ChatCreateDialogLayoutContext);
    const [_, setSearchParams] = useSearchParams();
 
    return (
       <div
          onClick={async () => {
             onCloseModal();
-            if (data.is_member) {
-               setSearchParams({ dialog: data.id });
-               return;
-            }
-            const { data: res } = await sendPostRequest(`/api/dialogs/${data.id}`, { limit: 1, page: 1 });
-            const owner = res.owners?.find(owner => owner.role === ROLE_SELLER.id) || res.owners?.find(owner => owner.role === ROLE_ADMIN.id);
-
-            setCurrentDialog({ ...res, is_fake: true, is_member: data.is_member, id: data.id, owner });
-            await getDialog(data.id);
-            connectToChat(data.id);
+            setSearchParams({ dialog: data.id });
          }}
          className="relative py-2 px-6 flex gap-3 items-center hover:bg-pageColor cursor-pointer">
          <Avatar size={40} src={data.photo} title={data.name} />

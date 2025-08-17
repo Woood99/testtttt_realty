@@ -3,7 +3,7 @@ import ModalWrapper from '../../ui/Modal/ModalWrapper';
 import BuildingMap from '../../pages/Building/BuildingMap';
 import Modal from '../../ui/Modal';
 import { useSelector } from 'react-redux';
-import { getIsDesktop } from '../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 
 const LocationModal = ({ condition, set, zoom = 15, geo = [] }) => {
   const isDesktop = useSelector(getIsDesktop);

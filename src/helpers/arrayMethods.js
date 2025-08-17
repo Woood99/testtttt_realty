@@ -31,14 +31,13 @@ export const getSumOfArray = (...arrays) => {
 export const removeDuplicatesArray = array => {
    const seen = new Set();
    return array.filter(obj => {
-      // Преобразуем объект в строку для сравнения
       const key = JSON.stringify(obj);
-      // Если объект уже встречался, пропускаем его
       if (seen.has(key)) {
          return false;
       }
-      // Иначе добавляем его в Set и включаем в результат
       seen.add(key);
       return true;
    });
 };
+
+export const mapOrNull = (array, property = 'value') => (array && Array.isArray(array) && array.length ? array.map(item => item?.[property]) : null);

@@ -25,7 +25,8 @@ const ChatMessageCommentsButton = () => {
       <button
          type="button"
          className={styles.ChatMessageCommentsButton}
-         onClick={() => {
+         onClick={(e) => {
+            e.stopPropagation();
             messageCommentPanelOpen(data.dialog_id, data.id);
          }}>
          {Boolean(uniqueUsers.length) && (

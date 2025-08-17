@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { getIsDesktop } from '../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 import WebSkeleton from '../../ui/Skeleton/WebSkeleton';
 import BodyAndSidebar from '../../components/BodyAndSidebar';
 

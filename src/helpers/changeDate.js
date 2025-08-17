@@ -1,44 +1,57 @@
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
+import "dayjs/locale/ru";
+
+dayjs.locale("ru");
+
+// Переопределяем сокращённые месяцы
+dayjs.locale(
+	{
+		...dayjs.Ls.ru,
+		monthsShort: ["янв.", "фев.", "мар.", "апр.", "мая", "июн.", "июл.", "авг.", "сент.", "окт.", "нояб.", "дек."]
+	},
+	null,
+	true
+);
 
 export const isToday = date => {
-   const today = dayjs();
-   const dateToCheck = dayjs(date);
+	const today = dayjs();
+	const dateToCheck = dayjs(date);
 
-   return dateToCheck.isSame(today, 'day');
+	return dateToCheck.isSame(today, "day");
 };
 
 export const isYesterday = date => {
-   const yesterday = dayjs().subtract(1, 'day');
-   return dayjs(date).isSame(yesterday, 'day');
+	const yesterday = dayjs().subtract(1, "day");
+	return dayjs(date).isSame(yesterday, "day");
 };
 
 export const getLastSeenOnline = date => {
-   const parsedDate = dayjs(date);
+	const parsedDate = dayjs(date);
 
-   if (isToday(date)) {
-      return `Сегодня в ${parsedDate.format('HH:mm')}`;
-   }
+	if (isToday(date)) {
+		return `Сегодня в ${parsedDate.format("HH:mm")}`;
+	}
 
-   if (isYesterday(date)) {
-      return `Вчера в ${parsedDate.format('HH:mm')}`;
-   }
-   if (parsedDate.isSame(dayjs(), 'year')) {
-      return parsedDate.format('D MMMM в HH:mm');
-   }
+	if (isYesterday(date)) {
+		return `Вчера в ${parsedDate.format("HH:mm")}`;
+	}
+	if (parsedDate.isSame(dayjs(), "year")) {
+		return parsedDate.format("D MMMM в HH:mm");
+	}
 
-   return parsedDate.format('D MMMM YYYY [в] HH:mm');
+	return parsedDate.format("D MMMM YYYY [в] HH:mm");
 };
 
 export const getLastOnline = date => {
-   const parsedDate = dayjs(date);
+	const parsedDate = dayjs(date);
 
-   if (isToday(date)) {
-      return parsedDate.format('HH:mm');
-   }
-   
-   if (parsedDate.isSame(dayjs(), 'year')) {
-      return parsedDate.format('D MMMM ');
-   }
+	if (isToday(date)) {
+		return parsedDate.format("HH:mm");
+	}
 
-   return parsedDate.format('D MMMM YYYY г.');
+	if (parsedDate.isSame(dayjs(), "year")) {
+		return parsedDate.format("D MMM ");
+	}
+
+	return parsedDate.format("D MMMM YYYY г.");
 };

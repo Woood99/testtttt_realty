@@ -3,7 +3,7 @@ import Avatar from '../../ui/Avatar';
 import { IconMegaphone, IconUsers } from '../../ui/Icons';
 import getSrcImage from '../../helpers/getSrcImage';
 import { ThumbPhotoDefault } from '../../ui/ThumbPhoto';
-import { AuthRoutesPath } from '../../constants/RoutesPath';
+import { AuthRoutesPath, RoutesPath } from '../../constants/RoutesPath';
 import { ROLE_ADMIN } from '../../constants/roles';
 import { CHAT_TYPES } from '../Chat/constants';
 import { GetDescrHTML } from '../BlockDescr/BlockDescr';
@@ -21,12 +21,12 @@ const ToastChat = ({ data }) => {
    const video = message.files.find(item => item.type === 'video');
    const photos = message.photos;
 
-   if (location.pathname === AuthRoutesPath.chat) {
+   if (location.pathname === RoutesPath.chat) {
       return null;
    }
 
    return (
-      <Link to={`${AuthRoutesPath.chat}?dialog=${data.dialog_id}`} className="w-full flex gap-3 overflow-hidden">
+      <Link to={`${RoutesPath.chat}?dialog=${data.dialog_id}`} className="w-full flex gap-3 overflow-hidden">
          <Avatar size={54} src={info.image} title={info.name} />
          <div className="mt-2 w-[90%] overflow-hidden">
             <p className="title-4 cut cut-1 flex mb-1">
@@ -59,7 +59,6 @@ const ToastChat = ({ data }) => {
                   {Boolean(audio) && <span className="text-dark cut-one">Голосовое сообщение</span>}
                   {Boolean(photos.length) && !message.text && <span className="text-dark cut-one">Фотография</span>}
                   {Boolean(video && !message.text && !photos.length) && <span className="text-dark cut-one">Видео</span>}
-                  {console.log(message.text)}
                   {Boolean(message.text) && (
                      <div className="text-dark cut cut-1">
                         <GetDescrHTML data={message.text} />

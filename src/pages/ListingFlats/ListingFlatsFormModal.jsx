@@ -15,7 +15,7 @@ import Modal from '../../ui/Modal';
 import FieldRow from '../../uiForm/FieldRow';
 import Rooms from '../../uiForm/FiltersComponent/Rooms';
 import PriceFromTo from '../../uiForm/FiltersComponent/PriceFromTo';
-import { is_gift_data } from '../../data/selectsField';
+import { is_gift_data, sortOptionsFlats } from '../../data/selectsField';
 import CheckboxToggle from '../../uiForm/CheckboxToggle';
 import { useDispatch, useSelector } from 'react-redux';
 import MultiSelect from '../../uiForm/MultiSelect';
@@ -27,8 +27,7 @@ import { SpinnerForBtn } from '../../ui/Spinner';
 import { declensionWordsOffer } from '../../helpers/declensionWords';
 import Tag from '../../ui/Tag';
 import { IconSort } from '../../ui/Icons';
-import { sortOptionsFlats } from '../Building/BuildingFilter/BuildingFilterModal';
-import { getIsDesktop } from '../../redux/helpers/selectors';
+import { getIsDesktop } from '@/redux';
 
 const ListingFlatsFormModal = ({ filterCount, condition, set }) => {
    const dispatch = useDispatch();
