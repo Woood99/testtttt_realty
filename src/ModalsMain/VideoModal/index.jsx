@@ -199,7 +199,12 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 					player.ready(() => {
 						const volume = parseFloat(localStorage.getItem("video_volume") || "0.5");
 						player.volume(volume);
-						player.play().catch(e => console.debug("Play prevented:", e));
+						console.log("play start");
+
+						player
+							.play()
+							.then(() => console.log("Play!"))
+							.catch(e => console.log("Play error", e));
 					});
 				} else {
 					player.pause();
@@ -258,6 +263,10 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 				<Swiper
 					modules={[Navigation, Virtual]}
 					ref={swiperRef}
+					virtual={{
+						enabled: true,
+						addSlidesAfter: 3
+					}}
 					slidesPerView={1}
 					spaceBetween={16}
 					grabCursor
@@ -293,7 +302,7 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 							key={index}
 							virtualIndex={index}
 							className={cn("shorts-player-slide", initShortIds.includes(card.id) && "_init")}>
-							{initShortIds.includes(card.id) && <ShortPlayer data={card} />}
+							<ShortPlayer data={card} />
 						</SwiperSlide>
 					))}
 				</Swiper>

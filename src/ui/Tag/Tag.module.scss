@@ -1,137 +1,157 @@
-@import '../../styles/$vars.scss';
+@import "../../styles/$vars.scss";
 
 .Tag {
-   height: 40px;
-   padding: 0 16px;
-   gap: 8px;
-   font-weight: 500;
-   display: flex;
-   align-items: center;
-   border-radius: 8px;
-   color: var(--dark);
-   background-color: var(--primary100);
-   max-width: 100%;
-   line-height: 1;
+	height: 40px;
+	padding: 0 16px;
+	gap: 8px;
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	border-radius: 8px;
+	color: var(--dark);
+	background-color: var(--primary100);
+	max-width: 100%;
+	line-height: 1;
 
-   pointer-events: all;
-   font-weight: 500;
+	pointer-events: all;
+	font-weight: 500;
 
-   white-space: nowrap;
+	white-space: nowrap;
 
-   transition: all $transitionSpeed $transitionFunction;
-   > div {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-   }
-   &.TagHoverEnable {
-      @media (min-width: $desktop-min) {
-         &:hover {
-            background-color: var(--primary200);
-         }
-      }
-   }
+	transition: all $transitionSpeed $transitionFunction;
+	> div {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	&.TagHoverEnable {
+		@media (min-width: $desktop-min) {
+			&:hover {
+				background-color: var(--primary200);
+			}
+		}
+	}
 }
 
 .TagError {
-   border-color: var(--red);
-   box-shadow: inset 0 0 0 1px var(--red);
-   background-color: #fdf1eb;
+	border-color: var(--red);
+	box-shadow: inset 0 0 0 1px var(--red);
+	background-color: #fdf1eb;
 }
 
 .TagSmall {
-   padding: 0 12px;
-   height: 24px;
-   border-radius: 12px;
-   font-size: 12px;
+	padding: 0 12px;
+	height: 24px;
+	border-radius: 12px;
+	font-size: 12px;
 }
 
 .TagMediumSize {
-   padding: 0 12px;
-   height: 34px;
-   border-radius: 12px;
+	padding: 0 12px;
+	height: 34px;
+	border-radius: 12px;
 }
 
 .TagGreen {
-   background-color: #e5f8ec;
-   color: #009532;
+	background-color: #e5f8ec;
+	color: #009532;
 }
 
 .TagGreenSecond {
-   background-color: rgba(36, 202, 142, 0.2);
-   color: #24ca8e;
+	background-color: rgba(36, 202, 142, 0.2);
+	color: #24ca8e;
 }
 
 .TagDarkGreen {
-   background-color: #cae9a1;
+	background-color: #cae9a1;
 }
 
 .TagAqua {
-   background-color: #cbebeb;
-   color: #00b8b8;
+	background-color: #cbebeb;
+	color: #00b8b8;
 }
 
 .TagPurple {
-   background-color: #dbcef1;
-   color: #955edd;
+	background-color: #dbcef1;
+	color: #955edd;
 }
 
 .TagYellow {
-   background-color: #feedc1;
-   color: #b57600;
+	background-color: #feedc1;
+	color: #b57600;
 }
 .TagRed {
-   background-color: rgba(241, 110, 110, 0.373);
-   color: #f13b3b;
+	background-color: rgba(241, 110, 110, 0.373);
+	color: #f13b3b;
 }
 
 .TagBlue {
-   background-color: #edf4ff;
-   color: #1175da;
+	background-color: #edf4ff;
+	color: #1175da;
 }
 
 .TagSelect {
-   font-size: var(--default-fz);
-   background-color: var(--white);
-   border: 1px solid var(--gray-second);
-   padding: 0 16px;
-   border-radius: 8px;
-   height: 40px;
-   font-weight: 500;
-   color: var(--dark);
-   @media (min-width: $desktop-min) {
-      &:hover {
-         background-color: var(--primary800);
-      }
-   }
+	font-size: var(--default-fz);
+	background-color: var(--white);
+	border: 1px solid var(--gray-second);
+	padding: 0 16px;
+	border-radius: 8px;
+	height: 40px;
+	font-weight: 500;
+	color: var(--dark);
+	@media (min-width: $desktop-min) {
+		&:hover {
+			background-color: var(--primary800);
+		}
+	}
 }
 
 .TagChoice {
-   font-size: var(--default-fz);
-   background-color: var(--white);
-   color: var(--dark);
-   font-weight: 500;
+	font-size: var(--default-fz);
+	background-color: var(--white);
+	color: var(--dark);
+	font-weight: 500;
 
-   border: 1px solid #a8b4bd;
-   padding: 0 10px;
-   border-radius: 8px;
-   height: 32px;
+	border: 1px solid #a8b4bd;
+	padding: 0 10px;
+	border-radius: 8px;
+	height: 32px;
 }
 
 .TagChoiceActive {
-   border: 2px solid var(--blue);
+	border: 2px solid var(--blue);
 }
 
 .TagDisabled {
-   opacity: 0.5;
-   pointer-events: none;
+	opacity: 0.5;
+	pointer-events: none;
 }
 
 .TagActive {
-   border-color: var(--blue);
-   box-shadow: inset 0 0 0 1px var(--blue);
+	border-color: var(--blue);
+	box-shadow: inset 0 0 0 1px var(--blue);
 }
 
 .TagWhite {
-   background-color: #fff;
+	background-color: #fff;
+}
+
+.TagDiscountSecondary {
+	display: flex;
+	align-items: center;
+	height: 25px;
+	min-height: 25px;
+	padding: 0 16px;
+	background: url(https://live.sportmaster.ru/static/client-specific/sportmaster/images/discount_button_bg.png) rgba(0, 0, 0, 0.6);
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	height: fit-content;
+	cursor: pointer;
+	box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 10px;
+	border-radius: 20px;
+	color: var(--white);
+	font-size: 12px;
+	background-repeat: no-repeat;
+	background-size: cover;
 }

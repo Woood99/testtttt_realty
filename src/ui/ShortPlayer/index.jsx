@@ -1,3 +1,4 @@
+import cn from "classnames";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import videojs from "video.js";
@@ -19,7 +20,7 @@ import { Button } from "@/uiForm";
 import { InteractiveElement, ShareModal } from "@/ModalsMain";
 import LocationModal from "@/ModalsMain/LocationModal";
 
-import { Maybe, Modal, ModalHeader, ModalWrapper, Tag, TagPresents, TagsDiscounts } from "..";
+import { Maybe, Modal, ModalHeader, ModalWrapper, Tag, TagDiscountSecondary, TagPresents, TagsDiscounts } from "..";
 
 import { ApartmentsCardsVertical } from "../../ModalsMain/VideoModal/components/ApartmentsCards";
 import PlayerAuthor from "../../ModalsMain/VideoModal/components/PlayerAuthor";
@@ -37,24 +38,24 @@ const PlaybackIndicator = ({ isPlaying }) => (
 );
 
 const ControlButtons = memo(({ onChat, onShare, onToggleApartments, volumePanelRef, setIsOpenModalLocation }) => (
-	<div className='flex flex-col items-center gap-8'>
-		<div className='video-js video-js-short-volume short-player-volume relative mb-4' ref={volumePanelRef}>
-			<span className='order-1 text-default absolute -bottom-4 left-1/2 transform -translate-x-1/2'>Звук</span>
+	<div className='flex flex-col items-center gap-4'>
+		<div className='video-js video-js-short-volume short-player-volume relative mb-4 text-[12px]' ref={volumePanelRef}>
+			<span className='order-1 text-[12px] absolute -bottom-3 left-1/2 transform -translate-x-1/2'>Звук</span>
 		</div>
-		<button className='flex items-center justify-center flex-col gap-2 text-white' onClick={() => setIsOpenModalLocation(true)}>
-			<IconLocation className='stroke-white w-[24px] h-[24px]' width={24} height={24} />
+		<button className='flex items-center justify-center flex-col gap-2 text-white text-[12px]' onClick={() => setIsOpenModalLocation(true)}>
+			<IconLocation className='stroke-white w-[20px] h-[20px]' width={20} height={20} />
 			<span>На карте</span>
 		</button>
-		<button className='flex items-center justify-center flex-col gap-2 text-white' onClick={onToggleApartments}>
-			<IconHome className='stroke-white w-[24px] h-[24px]' width={24} height={24} />
+		<button className='flex items-center justify-center flex-col gap-2 text-white text-[12px]' onClick={onToggleApartments}>
+			<IconHome className='stroke-white w-[20px] h-[20px]' width={20} height={20} />
 			<span>Кв-ры ЖК</span>
 		</button>
-		<button className='flex items-center justify-center flex-col gap-2 text-white' onClick={onChat}>
-			<IconChat className='stroke-white w-[24px] h-[24px]' width={24} height={24} />
+		<button className='flex items-center justify-center flex-col gap-2 text-white text-[12px]' onClick={onChat}>
+			<IconChat className='stroke-white w-[20px] h-[20px]' width={20} height={20} />
 			<span>Чат</span>
 		</button>
-		<button className='flex items-center justify-center flex-col gap-2 text-white' onClick={onShare}>
-			<IconShareArrow className='stroke-white stroke-[1.5px] fill-[transparent] w-[24px] h-[24px]' width={24} height={24} />
+		<button className='flex items-center justify-center flex-col gap-2 text-white text-[12px]' onClick={onShare}>
+			<IconShareArrow className='stroke-white stroke-[1.5px] fill-[transparent] w-[20px] h-[20px]' width={20} height={20} />
 			<span>Поделится</span>
 		</button>
 	</div>
@@ -180,9 +181,9 @@ export const ShortPlayer = ({ data, classNamePlayer = "" }) => {
 	const tagsContent = useMemo(
 		() =>
 			(data.tags || []).slice(0, 3).map((item, index) => (
-				<Tag size='small' color='default' key={index}>
+				<div className='text-white cut cut-1 break-all font-medium' key={index}>
 					{item.name}
-				</Tag>
+				</div>
 			)),
 		[data.tags]
 	);
@@ -334,8 +335,7 @@ export const ShortPlayer = ({ data, classNamePlayer = "" }) => {
 				<div className='video-js-background' />
 				<video id={id} className={`video-js ${classNamePlayer}`} playsInline />
 			</div>
-
-			<div className='absolute bottom-[135px] right-1 z-[99]'>
+			<div className={cn("absolute bottom-12 right-1 z-[99]", data.cards.length && "!bottom-[105px]")}>
 				<ControlButtons
 					onChat={handleChatNavigation}
 					onShare={handleShare}
@@ -355,16 +355,18 @@ export const ShortPlayer = ({ data, classNamePlayer = "" }) => {
 			<Maybe condition={objectData.buildingDiscounts?.length || objectData.present}>
 				<div className='absolute top-4 right-4 z-[99] flex flex-col gap-2 items-end'>
 					<Maybe condition={objectData.buildingDiscounts?.length}>
-						<TagsDiscounts
+						{/* <TagsDiscounts
 							discounts={objectData.buildingDiscounts}
 							is_building
 							by_price={objectDataMinValue?.bd_price}
 							by_area={objectDataMinValue?.min_area}
-						/>
+						/> */}
+						<TagDiscountSecondary>🔥 Скидка</TagDiscountSecondary>
 					</Maybe>
 
 					<Maybe condition={objectData.present}>
 						<TagPresents
+							className='h-[26px]'
 							dataMainGifts={isArray(objectData.main_gifts) ? objectData.main_gifts.filter(item => item) : []}
 							dataSecondGifts={isArray(objectData.second_gifts) ? objectData.second_gifts.filter(item => item) : []}
 							title='Есть подарок'
@@ -375,7 +377,7 @@ export const ShortPlayer = ({ data, classNamePlayer = "" }) => {
 
 			<div className='absolute left-4 bottom-[20px] z-40 w-full' data-short-player-content>
 				{showInteractiveButton && <Button {...interactiveButtonProps} />}
-				{data.tags?.length > 0 && <div className='mb-4 flex gap-2 flex-wrap max-w-[80%]'>{tagsContent}</div>}
+				{data.tags?.length > 0 && <div className='mb-4 flex gap-1.5 flex-wrap max-w-[80%]'>{tagsContent}</div>}
 				<PlayerTitle
 					title={data.name}
 					className='!static !w-[80%]'

@@ -31,11 +31,11 @@ export { ThumbPhoto, ThumbPhotoFull, ThumbPhotoDefault } from "./ThumbPhoto";
 export { ElementOldPrice, ElementTitleSubtitle, ElementTitleSubtitleSecond, ElementNavBtn, ElementNavBtnCount } from "./Elements";
 export { Tooltip, NotificationTimer } from "./Tooltip";
 export { ExternalLink } from "./ExternalLink";
-export { TagCashback, TagPresent, TagPresents, TagTop, TagsDiscounts, TagDiscount } from "./Tag";
+export { TagCashback, TagPresent, TagPresents, TagTop, TagsDiscounts, TagDiscount, TagDiscountSecondary } from "./Tag";
 export { TagsMoreWidthDynamic, TagsMoreHeight } from "./TagsMore";
 export { TabsNav, TabsTitle, TabsBody } from "./Tabs";
 export { Chars, CharsFlat, CharsColItems, CharsCol } from "./Chars";
-export { AvatarBg,getColorForLetter } from "./Avatar";
+export { AvatarBg, getColorForLetter } from "./Avatar";
 export { SpinnerOverlay, SpinnerForBtn } from "./Spinner";
 export {
 	CardRow,
