@@ -31,6 +31,25 @@ import { playerLocalRu } from "./components/playerLocalRu";
 import timeCodes from "./components/timeCodes";
 import timeTooltip from "./components/timeTooltip";
 
+const checkAutoplaySupport = async () => {
+	try {
+		const video = document.createElement("video");
+		video.src =
+			"data:video/mp4;base64,AAAAFGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAABtRtZGF0AAAAMgAAAAYAIAgIAQAAAAAAABQIAgEIAgEIBgEABgEABgQABgQABgQABgQABgQABgQABgQAAAAAAACQRkRJUj8AAAAAABwIAgEIAgEIBgEABgEABgQABgQABgQABgQABgQABgQABgQAAAAAAAAAAAAA//hETURPPwAAAAAABAAIAQEIAQEIBQEABQEABQQABQQABQQABQQABQQABQQABQQAAAAAAAARGUkNSAgAAAAAABwIAgEIAgEIBgEABgEABgQABgQABgQABgQABgQABgQABgQAAAAAAAAAAAAA//hESURLFAAAAAAABAAIAQEIAQEIBQEABQEABQQABQQABQQABQQABQQABQQABQQAAAAAAAARGVJOQgAAAAAAAQIAgEIAgEIBgEABgEABgQABgQABgQABgQABgQABgQABgQAAAAAAAAAAAAA//hETENMUgAAAAAAAQIAgEIAgEIBgEABgEABgQABgQABgQABgQABgQABgQABgQAAAAAAAAAAAAA";
+		video.muted = false;
+		const playPromise = video.play();
+
+		if (playPromise !== undefined) {
+			await playPromise;
+			video.pause();
+			return true;
+		}
+		return false;
+	} catch (error) {
+		return false;
+	}
+};
+
 const splitIntoChunks = (array, chunkSize) => {
 	const chunks = [];
 	for (let i = 0; i < array.length; i += chunkSize) {
@@ -177,7 +196,7 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 	const handleNext = useCallback(() => handleNavigation("next"), [handleNavigation]);
 
 	const handleSlideChange = useCallback(
-		swiper => {
+		async swiper => {
 			const activeIndex = swiper.activeIndex;
 			setCurrentIndex(activeIndex);
 
@@ -186,6 +205,7 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 			const nextId = data[activeIndex + 1]?.id;
 
 			setInitShortIds([activeId, prevId, nextId].filter(Boolean));
+			const canAutoplay = await checkAutoplaySupport();
 
 			swiper.slides.forEach(slide => {
 				const video = slide.querySelector("video");
@@ -196,19 +216,16 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 				const isActiveSlide = +slide.getAttribute("data-swiper-slide-index") === swiper.activeIndex;
 
 				if (isActiveSlide) {
-					player.ready(async () => {
+					player.ready(() => {
 						const volume = parseFloat(localStorage.getItem("video_volume") || "0.5");
 						player.volume(volume);
-
-						try {
-							await player.play();
-						} catch (error) {
-							console.log("Autoplay with sound failed:", error);
-
-							// Если не получилось - заглушаем и пробуем снова
+						if (isIOS && !canAutoplay) {
 							player.muted(true);
-							player.play().catch(e => console.error("Muted autoplay also failed:", e));
 						}
+
+						player.play().catch(error => {
+							console.log(error);
+						});
 					});
 				} else {
 					player.pause();

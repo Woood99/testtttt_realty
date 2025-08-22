@@ -333,7 +333,7 @@ export const ShortPlayer = ({ data, classNamePlayer = "" }) => {
 
 			<div data-vjs-player>
 				<div className='video-js-background' />
-				<video id={id} className={`video-js ${classNamePlayer}`} playsInline webkit-playsinline='true' muted={isIOS} />
+				<video id={id} className={`video-js ${classNamePlayer}`} playsInline webkit-playsinline='true' muted={isIOS ? "muted" : undefined} />
 			</div>
 			<div className={cn("absolute bottom-12 right-1 z-[99]", data.cards.length && "!bottom-[105px]")}>
 				<ControlButtons
