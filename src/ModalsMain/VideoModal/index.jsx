@@ -200,7 +200,7 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 						const volume = parseFloat(localStorage.getItem("video_volume") || "0.5");
 						player.volume(volume);
 
-						if (isIOS) {
+						if (isIOS()) {
 							player.muted(true);
 						}
 
