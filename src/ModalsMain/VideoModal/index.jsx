@@ -199,18 +199,15 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 					player.ready(() => {
 						const volume = parseFloat(localStorage.getItem("video_volume") || "0.5");
 						player.volume(volume);
-						console.log("play start");
-						console.debug("play start");
 
 						player
 							.play()
 							.then(() => {
 								console.log("Play!");
-								console.debug("Play!");
 							})
 							.catch(e => {
-								console.log("Play error", e);
-								console.debug("Play error", e);
+								player.volume(volume);
+								player.muted();
 							});
 					});
 				} else {
@@ -272,7 +269,7 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 					ref={swiperRef}
 					virtual={{
 						enabled: true,
-						addSlidesAfter: 3
+						addSlidesAfter: 0
 					}}
 					slidesPerView={1}
 					spaceBetween={16}
