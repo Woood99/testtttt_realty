@@ -204,14 +204,11 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 							.play()
 							.then(() => {})
 							.catch(e => {
+								player.muted(true);
+								player.volume(0);
 								setTimeout(() => {
-									player.muted(true);
-									setTimeout(() => {
-										console.log("asfsfas");
-
-										player.play().catch(e => console.error("Still cannot play:", e));
-									}, 100);
-								}, 100);
+									player.play().catch(e => console.error("Still cannot play:", e));
+								}, 250);
 							});
 					});
 				} else {
@@ -283,7 +280,7 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 						onlyInViewport: true
 					}}
 					direction='vertical'
-					speed={isDesktop ? 500 : 300}
+					speed={isDesktop ? 500 : 220}
 					className='h-full mmd1:pl-[385px] mmd1:-ml-[385px]'
 					onSlideChange={handleSlideChange}
 					onClick={onHandlerClick}
