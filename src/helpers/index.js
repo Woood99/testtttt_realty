@@ -30,6 +30,7 @@ export { timeToSeconds } from "./timeTo";
 export { isValidTime } from "./isValidTime";
 export { getApartmentTitle } from "./getApartmentTitle";
 export { priceByDiscountApartment } from "./priceByDiscountApartment";
+export { isIOS } from "./deviceUtils";
 
 export { default as isEmptyArrObj } from "./isEmptyArrObj";
 export { default as clearData } from "./clearData";

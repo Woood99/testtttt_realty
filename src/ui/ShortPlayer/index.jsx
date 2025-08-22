@@ -10,7 +10,7 @@ import { getCardBuildingsById } from "@/api";
 
 import { useNavigateToChat } from "@/hooks";
 
-import { isArray, isEmptyArrObj, timeToSeconds } from "@/helpers";
+import { isArray, isEmptyArrObj, isIOS, timeToSeconds } from "@/helpers";
 import findObjectWithMinValue from "@/helpers/findObjectWithMinValue";
 
 import { getIsDesktop, getUserInfo } from "@/redux";
@@ -333,7 +333,7 @@ export const ShortPlayer = ({ data, classNamePlayer = "" }) => {
 
 			<div data-vjs-player>
 				<div className='video-js-background' />
-				<video id={id} className={`video-js ${classNamePlayer}`} playsInline />
+				<video id={id} className={`video-js ${classNamePlayer}`} playsInline webkit-playsinline='true' muted={isIOS} />
 			</div>
 			<div className={cn("absolute bottom-12 right-1 z-[99]", data.cards.length && "!bottom-[105px]")}>
 				<ControlButtons

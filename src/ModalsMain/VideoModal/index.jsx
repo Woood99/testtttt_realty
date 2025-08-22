@@ -11,7 +11,7 @@ import { BASE_URL, ROLE_BUYER, RoutesPath } from "@/constants";
 
 import { getDataRequest, sendPostRequest } from "@/api";
 
-import { getSrcImage, isEmptyArrObj, timeToSeconds } from "@/helpers";
+import { getSrcImage, isEmptyArrObj, isIOS, timeToSeconds } from "@/helpers";
 
 import { checkAuthUser, getIsDesktop, getUserInfo } from "@/redux";
 
@@ -200,16 +200,18 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 						const volume = parseFloat(localStorage.getItem("video_volume") || "0.5");
 						player.volume(volume);
 
-						player
-							.play()
-							.then(() => {})
-							.catch(e => {
-								player.muted(true);
-								player.volume(0);
-								setTimeout(() => {
-									player.play().catch(e => console.error("Still cannot play:", e));
-								}, 250);
-							});
+						if (isIOS) {
+							player.muted(true);
+						}
+
+						player.play().catch(error => {
+							console.log(error);
+						});
+						player.on("useractivate", () => {
+							if (isIOS && player.muted()) {
+								player.muted(false);
+							}
+						});
 					});
 				} else {
 					player.pause();

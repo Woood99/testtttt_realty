@@ -1,3 +1,3 @@
 export const isIOS = () => {
-   return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+	return /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
 };
