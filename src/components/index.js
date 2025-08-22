@@ -22,6 +22,10 @@ export { default as EmptyBlock } from "./EmptyBlock";
 export { default as PaginationPage } from "./Pagination";
 export { default as ChoiceApartmentsFilter } from "./ChoiceApartmentsFilter";
 export { default as LightboxContainer } from "./LightboxContainer";
+export { default as Story } from "./Story";
+export { default as ProgressTimeline } from "./ProgressTimeline";
+export { default as VoicePlayer } from "./VoicePlayer";
+export { default as CreateStory } from "./CreateStory";
 
 export { suggestionsTypes, suggestionsStatuses, suggestionsDateRange } from "./Suggestions/suggestions-types";
 export { SidebarMove } from "./Sidebar";

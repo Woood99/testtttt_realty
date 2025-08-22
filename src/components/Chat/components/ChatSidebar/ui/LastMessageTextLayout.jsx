@@ -1,8 +1,9 @@
 import { useSelector } from "react-redux";
 
+import { isEmptyArrObj, truncateString } from "@/helpers";
+
 import { getUserInfo } from "@/redux";
 
-import isEmptyArrObj from "../../../../../helpers/isEmptyArrObj";
 import { getHtmlText } from "../../ChatDraft/getHtmlText";
 import { ChatMessagePreview } from "../../ChatMessages/ui";
 
@@ -14,8 +15,10 @@ const LastMessageTextLayout = ({ data }) => {
 
 	return (
 		<div className='cut cut-2 break-all w-full'>
-			<span className='text-blue font-medium mr-1 leading-none'>{userInfo.id === last_message.user.id ? "Вы" : last_message.user.name}:</span>
-			<ChatMessagePreview message={last_message} className='inline-block' />
+			<span className='text-blue font-medium mr-1 leading-none'>
+				{(data.type_chat || data.type_group) && <>{userInfo.id === last_message.user.id ? "Вы" : truncateString(data.userName, 12)}:</>}
+			</span>
+			<ChatMessagePreview message={last_message} className='text-small' />
 			{Boolean(last_message.text) && <span className='text-small'>{getHtmlText(last_message.text)}</span>}
 		</div>
 	);

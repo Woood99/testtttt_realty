@@ -32,7 +32,6 @@ const CardPrimaryRowControls = () => {
             </CardPrimaryAdminControls>
          ) : (
             <>
-               {/* <BtnActionComparison id={id} type="complex" variant="tooltip" placement="left" /> */}
                <BtnActionFavorite id={id} type="complex" variant="tooltip" placement="left" />
                <Tooltip
                   placement="left"

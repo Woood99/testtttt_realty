@@ -7,11 +7,10 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import { SellerRoutesPath } from "@/constants";
 
 import { getBuilding, getCardBuildingsByIds, getFrames, sendPostRequest } from "@/api";
 
-import { convertToDate, getSrcImage, isEmptyArrObj, isValidTime, refactPhotoStageAppend, refactPhotoStageOne, refactPhotoStageTwo } from "@/helpers";
+import { convertToDate, isEmptyArrObj, isValidTime, refactPhotoStageAppend, refactPhotoStageOne, refactPhotoStageTwo } from "@/helpers";
 
 import { getUserInfo } from "@/redux";
 

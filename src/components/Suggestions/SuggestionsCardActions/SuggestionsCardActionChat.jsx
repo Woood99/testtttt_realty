@@ -39,7 +39,7 @@ const SuggestionsCardActionChat = ({ className }) => {
 
    return (
       <Button className={cn('!px-4 !gap-2 text-dark', className)} variant="secondary" size="34" title="Перейти в чат" onClick={goToChat}>
-         <IconChat className="fill-primary400" width={16} height={16} />
+         <IconChat className="stroke-dark" width={16} height={16} />
          Перейти в чат
       </Button>
    );

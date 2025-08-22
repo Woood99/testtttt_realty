@@ -104,9 +104,9 @@ export const getFormData = (data, dataForm, attributes) => {
    formData.append('data', JSON.stringify(resData));
    console.log(resData);
 
-   // for (let pair of formData.entries()) {
-   //    console.log(pair[0] + ': ' + pair[1]);
-   // }
+   for (let pair of formData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
+   }
 
    return formData;
 };

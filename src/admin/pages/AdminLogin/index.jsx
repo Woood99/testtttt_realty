@@ -48,7 +48,7 @@ const AdminLogin = () => {
             const token = res.data.result;
             setCookie('loggedIn', true, { maxAge: COOKIE_MAX_AGE, path: '/' });
             setCookie('access_token', token, { maxAge: COOKIE_MAX_AGE, path: '/' });
-            setAuthUser().then(async user => {
+            setAuthUser(true).then(async user => {
                await new Promise(resolve => setTimeout(resolve, 100));
                userConnectionEcho(user, res.data.result);
 

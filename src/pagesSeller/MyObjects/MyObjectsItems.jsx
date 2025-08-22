@@ -40,7 +40,7 @@ const MyObjectsItems = () => {
                                     <IconEye className="fill-blue" width={14} height={14} /> {card.building_visited || 0}
                                  </div>
                                  <div title={`${card.likes || 0} добавили в избранное`} className="z-10 flex items-center gap-2">
-                                    <IconFavoriteStroke className="fill-red" width={14} height={14} /> {card.added_to_favorites || 0}
+                                    <IconFavoriteStroke className="stroke-red" width={14} height={14} /> {card.added_to_favorites || 0}
                                  </div>
                                  <div title={`${card.application || 0} записалось на просмотр`} className="z-10 flex items-center gap-2">
                                     <IconEye className="fill-dark" width={14} height={14} /> {card.application || 0}

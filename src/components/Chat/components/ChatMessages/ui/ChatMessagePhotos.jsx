@@ -11,7 +11,7 @@ import { getFilteredObject } from '../../../../../helpers/objectMethods';
 import { getIsDesktop } from '@/redux';
 
 const ChatMessagePhotos = () => {
-   const { setGalleryCurrentIndex, photos, videoData, dataText, photosLength } = useContext(ChatMessageContext);
+   const { setGalleryCurrentIndex, photos, videoData, photosLength } = useContext(ChatMessageContext);
    const isDesktop = useSelector(getIsDesktop);
 
    if (!photos.length && !videoData) return;

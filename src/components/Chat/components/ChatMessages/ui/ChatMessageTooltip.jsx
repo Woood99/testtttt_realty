@@ -6,10 +6,10 @@ import { handleCopyText } from "@/helpers";
 
 import { ChatContext, ChatMessageContext, ChatMessagesContext } from "@/context";
 
-import { getIsDesktop } from "@/redux";
+import { getIsDesktop, getUserInfo } from "@/redux";
 
 import { SimpleScrollbar, Tooltip } from "@/ui";
-import { IconArrow, IconEdit, IconEllipsis, IconTrash } from "@/ui/Icons";
+import { IconArrow, IconCopy, IconEdit, IconEllipsis, IconPin, IconPinOff, IconTrash } from "@/ui/Icons";
 
 import { ChatMessageReads } from "../..";
 import styles from "../../../Chat.module.scss";
@@ -17,31 +17,20 @@ import { CHAT_TYPES } from "../../../constants";
 import { useChatReaction } from "../../../hooks";
 import { getHtmlText } from "../../ChatDraft/getHtmlText";
 import { MenuLayout, SmileItem } from "../../ChatSmile";
+import { htmlToSlate, setEditorValue } from "../../SlateEditor";
 
 import { SMILES, SMILES_ONE, SMILES_REACTIONS } from "@/data/smiles";
 
 const ChatMessageTooltip = () => {
-	const { cachedDialog, setCachedDialog } = useContext(ChatContext);
 	const isDesktop = useSelector(getIsDesktop);
+	const { cachedDialog, setCachedDialog, currentDialog, currentDialogUserInfo, getDialog, setFilesUpload, chatPinMessages } =
+		useContext(ChatContext);
 
-	const { draftOptions, showPopperPosition, setShowPopperPosition } = useContext(ChatMessagesContext);
-	const {
-		data,
-		showPopper,
-		setShowPopper,
-		myMessage,
-		userInfo,
-		getDialog,
-		currentDialog,
-		currentDialogUserInfo,
-		chatPinMessages,
-		deleteMessage,
-		setFilesUpload,
-		audioData,
-		videoData,
-		editMessage,
-		variant
-	} = useContext(ChatMessageContext);
+	const { draftOptions, showPopperPosition, setShowPopperPosition, showPopper, editMessage, deleteMessage, setShowPopper, variant } =
+		useContext(ChatMessagesContext);
+
+	const { data, myMessage, audioData, videoData } = useContext(ChatMessageContext);
+	const userInfo = useSelector(getUserInfo);
 
 	const { chatReactionCreate, chatReactionDelete, chatReactionCreateFake, chatReactionDeleteFake } = useChatReaction();
 	const { pinMessageCreate, pinMessageDelete, pinMessageCreateFake, pinMessageDeleteFake, pinMessageGetAll } = chatPinMessages;
@@ -151,8 +140,17 @@ const ChatMessageTooltip = () => {
 										}
 										pinMessageGetAll(currentDialog.id);
 									}}>
-									<IconArrow width={15} height={15} />
-									{Boolean(data.is_pin || variant === "pin") ? "Открепить" : " Закрепить"}
+									{Boolean(data.is_pin || variant === "pin") ? (
+										<>
+											<IconPinOff width={14} height={14} />
+											Открепить
+										</>
+									) : (
+										<>
+											<IconPin width={14} height={14} />
+											Закрепить
+										</>
+									)}
 								</button>
 							</>
 						)}
@@ -163,7 +161,7 @@ const ChatMessageTooltip = () => {
 									handleCopyText(getHtmlText(data.text));
 									setShowPopper(false);
 								}}>
-								<IconArrow width={15} height={15} />
+								<IconCopy width={15} height={15} />
 								Копировать текст
 							</button>
 						)}
@@ -181,15 +179,16 @@ const ChatMessageTooltip = () => {
 										files: data.files,
 										photos: data.photos
 									});
+									setEditorValue(draftOptions.editor, htmlToSlate(data.text || ""));
 								}}>
-								<IconEdit width={16} height={16} className='stroke-blue stroke-[1.5px]' />
+								<IconEdit width={16} height={16} />
 								Редактировать
 							</button>
 						)}
 
 						{myMessage && (
 							<button
-								className={styles.ChatMessageButton}
+								className={cn(styles.ChatMessageButton, "text-red")}
 								onClick={() => {
 									setShowPopper(false);
 									deleteMessage?.({
@@ -199,7 +198,7 @@ const ChatMessageTooltip = () => {
 										message_id: data.message_id
 									});
 								}}>
-								<IconTrash width={15} height={15} className='fill-red' />
+								<IconTrash width={16} height={16} className='stroke-red' />
 								Удалить
 							</button>
 						)}

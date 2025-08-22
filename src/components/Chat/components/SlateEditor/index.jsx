@@ -1,17 +1,30 @@
 import cn from "classnames";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Editor, Node, Path, Range, Element as SlateElement, Text, Transforms, createEditor } from "slate";
 import { withHistory } from "slate-history";
-import { Editable, Slate, useSlate, withReact } from "slate-react";
+import { Editable, ReactEditor, Slate, useSlate, withReact } from "slate-react";
 
-import { Modal, ModalWrapper } from "@/ui";
+import { Maybe, Modal, ModalWrapper, Tooltip } from "@/ui";
+import {
+	IconAdd,
+	IconClearFormatting,
+	IconFontBold,
+	IconItalic,
+	IconLink,
+	IconQuote,
+	IconSpoiler,
+	IconStrikethrough,
+	IconUnderline
+} from "@/ui/Icons";
 
 import { Button, FieldErrorSpan, Input } from "@/uiForm";
 
-const LIST_TYPES = ["numbered-list", "bulleted-list"];
-const WRAPPER_TYPES = new Set(["block-quote"]);
+import styles from "../../Chat.module.scss";
+import { normalizeUrl } from "@/helpers";
 
-const initialValue = [
+const SlateEditorContext = createContext(null);
+
+const DEFAULT_INITIAL_VALUE = [
 	{
 		type: "paragraph",
 		align: "left",
@@ -19,19 +32,53 @@ const initialValue = [
 	}
 ];
 
+export const insertTextSafe = (editor, text) => {
+	if (!text) return;
+	if (editor.children.length === 0) {
+		Transforms.insertNodes(editor, {
+			type: "paragraph",
+			children: [{ text: "" }]
+		});
+	}
+
+	if (!editor.selection) {
+		Transforms.select(editor, Editor.end(editor, []));
+	}
+	Transforms.insertText(editor, text);
+};
+
+export const isEditorEmpty = editor => {
+	if (!editor.children || editor.children.length === 0) return true;
+
+	const firstNode = editor.children[0];
+
+	return Editor.isEmpty(editor, firstNode);
+};
+
+export const useSlateEditor = options => {
+	const renderElement = useCallback(props => <Element {...props} />, []);
+	const renderLeaf = useCallback(props => <Leaf {...props} />, []);
+	const editor = useMemo(() => withCleanup(withInlines(withHistory(withReact(createEditor())))), []);
+	const [isVisibleMenu, setIsVisibleMenu] = useState(false);
+
+	const onSubmitHandler = () => {
+		options.send(isEditorEmpty(editor) ? "" : slateToHtml(editor.children));
+	};
+
+	return { ...options, editor, renderElement, renderLeaf, onSubmitHandler, isVisibleMenu, setIsVisibleMenu };
+};
+
 const withCleanup = editor => {
 	const { normalizeNode, deleteBackward, deleteForward, deleteFragment } = editor;
 
 	const removeEmptyWrappersOnce = () => {
-		// проходимся по всем обёрткам и распаковываем пустые
 		for (const [node, path] of Editor.nodes(editor, {
 			at: [],
-			match: n => SlateElement.isElement(n) && WRAPPER_TYPES.has(n.type)
+			match: n => SlateElement.isElement(n) && n.type === "block-quote"
 		})) {
-			// считаем пустым, если в сумме нет текста
 			if (Editor.isEmpty(editor, node) || Node.string(node).trim().length === 0) {
 				Transforms.unwrapNodes(editor, { at: path });
-				return; // по одному изменению за проход, чтобы не ловить рассинхрон путей
+				return;
 			}
 		}
 	};
@@ -59,95 +106,223 @@ const withCleanup = editor => {
 	return editor;
 };
 
-const SlateEditor = () => {
-	const renderElement = useCallback(props => <Element {...props} />, []);
-	const renderLeaf = useCallback(props => <Leaf {...props} />, []);
-	const editor = useMemo(() => withCleanup(withInlines(withHistory(withReact(createEditor())))), []);
+export const SlateMenu = () => {
+	const { isVisibleMenu, linkOpenModal } = useContext(SlateEditorContext);
 
+	return (
+		<Tooltip
+			mobileDefault
+			color='white'
+			placement='top-start'
+			value={isVisibleMenu || linkOpenModal}
+			offset={[0, 8 + 8]}
+			classNameTarget='absolute h-[54px] top-0 -left-4'
+			classNameContent='p-1.5'
+			classNameRoot='!z-[200]'>
+			<div className='flex gap-1' data-popper-draft>
+				<SlateButton format='bold' label='Жирный' type='mark' />
+				<SlateButton format='italic' label='Курсив' type='mark' />
+				<SlateButton format='underline' label='Подчёркнутый' type='mark' />
+				<SlateButton format='strikethrough' label='Зачёркнутый' type='mark' />
+				<SlateButton format='block-quote' label='Цитата' type='block' />
+
+				<SpoilerButton />
+				<LinkButton />
+				<ClearFormattingButton />
+			</div>
+		</Tooltip>
+	);
+};
+
+const SpoilerButton = () => {
+	const editor = useSlate();
+	const active = isSpoilerActive(editor);
+
+	return (
+		<button
+			title='Скрытый'
+			className={cn("px-1.5 py-1 rounded flex-center-all", active && "!bg-blue")}
+			onMouseDown={e => {
+				e.preventDefault();
+				insertSpoiler(editor);
+			}}>
+			<IconSpoiler className={cn(active && "!fill-white")} />
+		</button>
+	);
+};
+
+export const setEditorValue = (editor, value) => {
+	if (!editor) return;
+
+	const newValue = Array.isArray(value) && value.length ? value : DEFAULT_INITIAL_VALUE;
+
+	Editor.withoutNormalizing(editor, () => {
+		editor.children = JSON.parse(JSON.stringify(newValue));
+		if (editor.children.length > 0 && editor.children[0].children && editor.children[0].children[0]) {
+			editor.selection = {
+				anchor: { path: [0, 0], offset: 0 },
+				focus: { path: [0, 0], offset: 0 }
+			};
+		} else {
+			editor.selection = null;
+		}
+	});
+
+	Editor.normalize(editor, { force: true });
+
+	try {
+		ReactEditor.focus(editor);
+	} catch (e) {}
+};
+
+export const SlateEditor = ({ options }) => {
+	const { renderElement, renderLeaf, editor, setIsVisibleMenu } = options;
 	const [enterCount, setEnterCount] = useState(0);
+	const [linkOpenModal, setLinkOpenModal] = useState(false);
 
 	const handleKeyDown = event => {
-		if (event.key === "Enter") {
+		if (event.key === "Enter" && !event.shiftKey) {
+			event.preventDefault();
+
+			options.onSubmitHandler();
+			clearEditor(editor);
+			return;
+		}
+
+		if (event.key === "Enter" && event.shiftKey) {
+			const { selection } = editor;
+			if (!selection) return;
+
+			const [blockquoteEntry] = Editor.nodes(editor, {
+				match: n => SlateElement.isElement(n) && n.type === "block-quote"
+			});
+
+			if (blockquoteEntry) {
+				const [blockquoteNode, path] = blockquoteEntry;
+
+				if (Editor.isEmpty(editor, blockquoteNode)) {
+					event.preventDefault();
+
+					Transforms.insertNodes(editor, { type: "paragraph", children: [{ text: "" }] }, { at: Path.next(path) });
+
+					Transforms.select(editor, Editor.start(editor, Path.next(path)));
+					return;
+				}
+			}
+
 			setEnterCount(prev => {
 				const newCount = prev + 1;
 
 				if (newCount >= 3) {
-					// сбрасываем все marks
 					const marks = Editor.marks(editor);
 					if (marks) {
-						Object.keys(marks).forEach(mark => {
-							Editor.removeMark(editor, mark);
+						Object.keys(marks).forEach(mark => Editor.removeMark(editor, mark));
+					}
+
+					if (blockquoteEntry) {
+						const [, path] = blockquoteEntry;
+
+						Transforms.insertNodes(editor, { type: "paragraph", children: [{ text: "" }] }, { at: Path.next(path) });
+
+						Transforms.select(editor, Editor.start(editor, Path.next(path)));
+					} else {
+						Transforms.setNodes(
+							editor,
+							{ type: "paragraph" },
+							{
+								match: n => SlateElement.isElement(n) && n.type !== "paragraph",
+								split: true
+							}
+						);
+
+						Transforms.unwrapNodes(editor, {
+							match: n => SlateElement.isElement(n) && (n.type === "block-spoiler" || n.type === "link"),
+							split: true
 						});
 					}
 
-					// сбрасываем блоки в параграф
-					Transforms.setNodes(
-						editor,
-						{ type: "paragraph" },
-						{
-							match: n => SlateElement.isElement(n) && n.type !== "paragraph",
-							split: true
-						}
-					);
-
-					// unwrap всех спец-элементов
-					Transforms.unwrapNodes(editor, {
-						match: n =>
-							SlateElement.isElement(n) &&
-							(LIST_TYPES.includes(n.type) || n.type === "block-quote" || n.type === "block-spoiler" || n.type === "link"),
-						split: true
-					});
-
-					return 0; // сбросили счётчик
+					return 0;
 				}
 
 				return newCount;
 			});
 		} else {
-			// сброс при любой другой клавише
 			if (enterCount !== 0) setEnterCount(0);
 		}
 	};
 
 	return (
-		<div className='flex-grow'>
-			<Slate editor={editor} initialValue={initialValue}>
-				<div className='flex gap-1 flex-wrap'>
-					<SlateButton format='bold' text='Жирный' type='mark' />
-					<SlateButton format='italic' text='Курсив' type='mark' />
-					<SlateButton format='underline' text='Подчёркнутый' type='mark' />
-					<SlateButton format='strikethrough' text='Зачёркнутый' type='mark' />
-					<SlateButton format='block-quote' text='Цитата' type='block' />
-					<button
-						className='bg-primary400 p-1 rounded-lg'
-						onMouseDown={e => {
-							e.preventDefault();
-							insertSpoiler(editor);
-						}}>
-						Скрытый
-					</button>
-					<LinkButton />
-					<ClearFormattingButton />
-					<button
-						onClick={() => {
-							const html = slateToHtml(editor.children);
-							console.log(html);
-						}}>
-						test
-					</button>
-				</div>
-				<Editable
-					renderElement={renderElement}
-					renderLeaf={renderLeaf}
-					placeholder='Напишите сообщение...'
-					spellCheck
-					autoFocus
-					className='slate-editor'
-					onKeyDown={handleKeyDown}
-				/>
-			</Slate>
-		</div>
+		<SlateEditorContext.Provider value={{ ...options, linkOpenModal, setLinkOpenModal }}>
+			<div className={styles.ChatTextarea}>
+				<Slate
+					editor={editor}
+					initialValue={options.initialValue || DEFAULT_INITIAL_VALUE}
+					onChange={value => {
+						options.onChange(value);
+
+						const { selection } = editor;
+						const hasFocus = ReactEditor.isFocused(editor);
+						const hasSelection = !!selection && !Range.isCollapsed(selection);
+
+						setIsVisibleMenu(hasFocus && hasSelection);
+					}}>
+					<SlateMenu />
+					<Editable
+						renderElement={renderElement}
+						renderLeaf={renderLeaf}
+						placeholder='Сообщение...'
+						spellCheck
+						autoFocus
+						className='slate-editor'
+						onKeyDown={handleKeyDown}
+						onFocus={() => {
+							options.handleFocus?.();
+							const { selection } = editor;
+
+							if (selection && !Range.isCollapsed(selection) && ReactEditor.isFocused(editor)) {
+								setIsVisibleMenu(true);
+							}
+						}}
+						onBlur={() => {
+							setIsVisibleMenu(false);
+						}}
+						onSelect={() => {
+							const { selection } = editor;
+							const hasFocus = ReactEditor.isFocused(editor);
+							const hasSelection = !!selection && !Range.isCollapsed(selection);
+
+							setIsVisibleMenu(hasFocus && hasSelection);
+						}}
+					/>
+				</Slate>
+			</div>
+		</SlateEditorContext.Provider>
 	);
+};
+
+export const clearEditor = (editor, initialValue = DEFAULT_INITIAL_VALUE) => {
+	if (!editor) return;
+
+	const value = Array.isArray(initialValue) ? initialValue : DEFAULT_INITIAL_VALUE;
+
+	Editor.withoutNormalizing(editor, () => {
+		editor.children = JSON.parse(JSON.stringify(value));
+
+		if (editor.children.length > 0 && editor.children[0].children && editor.children[0].children[0]) {
+			editor.selection = {
+				anchor: { path: [0, 0], offset: 0 },
+				focus: { path: [0, 0], offset: 0 }
+			};
+		} else {
+			editor.selection = null;
+		}
+	});
+
+	Editor.normalize(editor, { force: true });
+
+	try {
+		ReactEditor.focus(editor);
+	} catch (e) {}
 };
 
 const insertSpoiler = editor => {
@@ -172,34 +347,12 @@ const withInlines = editor => {
 };
 
 const LinkButton = () => {
+	const { linkOpenModal, setLinkOpenModal } = useContext(SlateEditorContext);
 	const editor = useSlate();
-	const [open, setOpen] = useState(false);
 	const [url, setUrl] = useState("");
 
 	const active = isLinkActive(editor);
 	const [error, setError] = useState("");
-
-	const normalizeUrl = value => {
-		let u = value.trim();
-
-		// если нет протокола — добавляем https://
-		if (u && !/^https?:\/\//i.test(u)) {
-			u = "https://" + u;
-		}
-
-		try {
-			const parsed = new URL(u);
-
-			// домен должен содержать хотя бы одну точку и нормальный TLD
-			const hostname = parsed.hostname;
-			if (!/\./.test(hostname)) return null;
-			if (!/[a-zA-Z]{2,}$/.test(hostname.split(".").pop())) return null;
-
-			return parsed.href;
-		} catch {
-			return null;
-		}
-	};
 
 	const validateUrl = value => {
 		if (!value) return "Введите ссылку";
@@ -222,7 +375,7 @@ const LinkButton = () => {
 			insertLink(editor, normalized);
 		}
 
-		setOpen(false);
+		setLinkOpenModal(false);
 		setUrl("");
 		setError("");
 	};
@@ -230,7 +383,8 @@ const LinkButton = () => {
 	return (
 		<>
 			<button
-				className={cn("bg-primary400 p-1 rounded-lg", active && "!bg-blue")}
+				title='Добавить ссылку'
+				className={cn("px-1.5 py-1 rounded flex-center-all", active && "!bg-blue")}
 				onMouseDown={e => {
 					e.preventDefault();
 
@@ -245,14 +399,21 @@ const LinkButton = () => {
 							setError(validateUrl(node.url || ""));
 						}
 					}
-					setOpen(true);
+					setLinkOpenModal(true);
 				}}>
-				Ссылка
+				<IconLink className={cn(active && "!fill-white")} />
 			</button>
 
-			<ModalWrapper condition={open}>
-				<Modal condition={open} set={setOpen}>
-					<div className='p-4 flex flex-col gap-2'>
+			<ModalWrapper condition={linkOpenModal}>
+				<Modal
+					condition={linkOpenModal}
+					set={setLinkOpenModal}
+					options={{
+						overlayClassNames: "_center-max-content",
+						modalClassNames: "!w-[550px]",
+						modalContentClassNames: "!px-8 !pb-6"
+					}}>
+					<div className='flex flex-col gap-2'>
 						<Input
 							name='url'
 							type='text'
@@ -265,11 +426,11 @@ const LinkButton = () => {
 							{error && <FieldErrorSpan>{error}</FieldErrorSpan>}
 						</Input>
 						<div className='flex gap-2 justify-end'>
-							<Button onClick={() => setOpen(false)} variant='secondary' className=''>
+							<Button onClick={() => setLinkOpenModal(false)} variant='secondary' size='Small' className=''>
 								Отмена
 							</Button>
-							<Button onClick={handleConfirm} className=''>
-								OK
+							<Button onClick={handleConfirm} size='Small' className=''>
+								Сохранить
 							</Button>
 						</div>
 					</div>
@@ -286,7 +447,6 @@ const ClearFormattingButton = () => {
 		e.preventDefault();
 		if (!editor.selection) return;
 
-		// 1. Убираем все marks (жирный, курсив, подчёркнутый и т.п.)
 		const marks = Editor.marks(editor);
 		if (marks) {
 			Object.keys(marks).forEach(mark => {
@@ -294,7 +454,6 @@ const ClearFormattingButton = () => {
 			});
 		}
 
-		// 2. Сбрасываем блоки в параграф
 		Transforms.setNodes(
 			editor,
 			{ type: "paragraph" },
@@ -304,18 +463,15 @@ const ClearFormattingButton = () => {
 			}
 		);
 
-		// 3. Убираем все обёртки (цитата, список, спойлер и т.д.)
 		Transforms.unwrapNodes(editor, {
-			match: n =>
-				SlateElement.isElement(n) &&
-				(LIST_TYPES.includes(n.type) || n.type === "block-quote" || n.type === "block-spoiler" || n.type === "link"),
+			match: n => SlateElement.isElement(n) && (n.type === "block-quote" || n.type === "block-spoiler" || n.type === "link"),
 			split: true
 		});
 	};
 
 	return (
-		<button className='bg-red text-dark p-1 rounded-lg' onMouseDown={handleClear}>
-			Очистить
+		<button className='px-1.5 py-1 rounded flex-center-all' title='Очистить форматирование' onMouseDown={handleClear}>
+			<IconClearFormatting />
 		</button>
 	);
 };
@@ -324,7 +480,7 @@ const toggleBlock = (editor, format) => {
 	const isActive = isBlockActive(editor, format);
 
 	Transforms.unwrapNodes(editor, {
-		match: n => !Editor.isEditor(n) && SlateElement.isElement(n) && (isListType(n.type) || n.type === format),
+		match: n => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format,
 		split: true
 	});
 
@@ -388,43 +544,68 @@ const Element = ({ attributes, children, element }) => {
 
 		case "block-spoiler":
 			return (
-				<span className='draft-spoiler inline-block' data-draft-spoiler {...attributes}>
+				<span className='draft-spoiler inline-block align-middle' data-draft-spoiler {...attributes}>
 					{children}
 				</span>
 			);
 
 		case "paragraph":
 		default:
-			return <p {...attributes}>{children}</p>;
+			return <div {...attributes}>{children}</div>;
 	}
 };
 
 const Leaf = ({ attributes, children, leaf }) => {
 	if (leaf.bold) {
-		children = <span className='font-medium'>{children}</span>;
+		children = (
+			<span data-draft-bold className='font-medium'>
+				{children}
+			</span>
+		);
 	}
 	if (leaf.italic) {
-		children = <span className='italic'>{children}</span>;
+		children = (
+			<span data-draft-italic className='italic'>
+				{children}
+			</span>
+		);
 	}
 	if (leaf.underline) {
-		children = <span className='underline'>{children}</span>;
+		children = (
+			<span data-draft-underline className='underline'>
+				{children}
+			</span>
+		);
 	}
 	if (leaf.strikethrough) {
-		children = <span className='line-through'>{children}</span>;
+		children = (
+			<span data-draft-strikethrough className='line-through'>
+				{children}
+			</span>
+		);
 	}
 	return <span {...attributes}>{children}</span>;
 };
 
-const SlateButton = ({ format, text, type }) => {
+const SlateButton = ({ format, label, type }) => {
 	const editor = useSlate();
 	const isMark = type === "mark";
 	const isBlock = type === "block";
 
-	const isActive = isMark ? isMarkActive(editor, format) : isBlock ? isBlockActive(editor, format, "type") : false;
+	const isActive = isMark ? isMarkActive(editor, format) : isBlock ? isBlockActive(editor, format) : false;
+
+	const iconMap = {
+		bold: <IconFontBold className={cn(isActive && "stroke-white")} />,
+		italic: <IconItalic className={cn(isActive && "stroke-white")} />,
+		underline: <IconUnderline className={cn(isActive && "stroke-white")} />,
+		strikethrough: <IconStrikethrough className={cn(isActive && "stroke-white")} />,
+		"block-quote": <IconQuote className={cn(isActive && "stroke-white")} />
+	};
 
 	return (
 		<button
-			className={cn("bg-primary400 p-1 rounded-lg", isActive && "!bg-blue")}
+			title={label}
+			className={cn("px-1.5 py-1 rounded flex-center-all", isActive && "!bg-blue")}
 			onMouseDown={event => {
 				event.preventDefault();
 				if (isMark) {
@@ -434,13 +615,9 @@ const SlateButton = ({ format, text, type }) => {
 					toggleBlock(editor, format);
 				}
 			}}>
-			{text}
+			{iconMap[format]}
 		</button>
 	);
-};
-
-const isListType = format => {
-	return LIST_TYPES.includes(format);
 };
 
 const insertLink = (editor, url) => {
@@ -476,7 +653,14 @@ const isLinkActive = editor => {
 	return !!link;
 };
 
-export const getActiveLink = editor => {
+const isSpoilerActive = editor => {
+	const [spoiler] = Editor.nodes(editor, {
+		match: n => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "block-spoiler"
+	});
+	return !!spoiler;
+};
+
+const getActiveLink = editor => {
 	const [linkEntry] = Editor.nodes(editor, {
 		match: n => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "link"
 	});
@@ -487,9 +671,10 @@ const serialize = node => {
 	if (Text.isText(node)) {
 		let string = node.text;
 
-		if (node.bold) string = `<strong>${string}</strong>`;
-		if (node.italic) string = `<em>${string}</em>`;
-		if (node.underline) string = `<u>${string}</u>`;
+		if (node.bold) string = `<span data-draft-bold class='font-medium'>${string}</span>`;
+		if (node.italic) string = `<span data-draft-italic class='italic'>${string}</span>`;
+		if (node.underline) string = `<span data-draft-underline class='underline'>${string}</span>`;
+		if (node.strikethrough) string = `<span data-draft-strikethrough class='line-through'>${string}</span>`;
 
 		return string;
 	}
@@ -498,11 +683,11 @@ const serialize = node => {
 
 	switch (node.type) {
 		case "block-quote":
-			return `<blockquote>${children}</blockquote>`;
+			return `<blockquote class='custom-blockquote'>${children}</blockquote>`;
 		case "block-spoiler":
-			return `<span data-spoiler="true">${children}</span>`;
+			return `<span class='draft-spoiler inline-block align-middle' data-draft-spoiler="true">${children}</span>`;
 		case "link":
-			return `<a href="${node.url}" target="_blank" rel="noopener noreferrer">${children}</a>`;
+			return `<a href="${node.url}" class='text-blue' target="_blank" rel="noopener noreferrer">${children}</a>`;
 		default:
 			return `<p>${children}</p>`;
 	}
@@ -524,20 +709,25 @@ export const htmlToSlate = html => {
 		}
 
 		const children = Array.from(el.childNodes).map(deserialize).flat().filter(Boolean);
-
 		switch (el.nodeName) {
-			case "STRONG":
-				return children.map(child => ({ ...child, bold: true }));
-			case "EM":
-				return children.map(child => ({ ...child, italic: true }));
-			case "U":
-				return children.map(child => ({ ...child, underline: true }));
 			case "A":
 				return { type: "link", url: el.getAttribute("href"), children };
 			case "BLOCKQUOTE":
 				return { type: "block-quote", children };
 			case "SPAN":
-				if (el.getAttribute("data-spoiler") === "true") {
+				if (el.hasAttribute("data-draft-bold")) {
+					return children.map(child => ({ ...child, bold: true }));
+				}
+				if (el.hasAttribute("data-draft-italic")) {
+					return children.map(child => ({ ...child, italic: true }));
+				}
+				if (el.hasAttribute("data-draft-underline")) {
+					return children.map(child => ({ ...child, underline: true }));
+				}
+				if (el.hasAttribute("data-draft-strikethrough")) {
+					return children.map(child => ({ ...child, strikethrough: true }));
+				}
+				if (el.hasAttribute("data-draft-spoiler")) {
 					return { type: "block-spoiler", children };
 				}
 				return { type: "paragraph", children };
@@ -552,5 +742,3 @@ export const htmlToSlate = html => {
 
 	return deserialize(doc.body);
 };
-
-export default SlateEditor;

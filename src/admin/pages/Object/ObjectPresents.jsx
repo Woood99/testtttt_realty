@@ -53,13 +53,13 @@ const ObjectPresents = ({ data, frames, fetchData, groupsData = [], specialists 
                                  type="button"
                                  className={`${stylesDragDropItems.DragDropImageIcon} top-4 right-14 group-hover:opacity-100 group-hover:visible`}
                                  onClick={() => setIsOpenModalEdit(item)}>
-                                 <IconEdit width={15} height={15} className="stroke-blue stroke-[1.5px]" />
+                                 <IconEdit width={15} height={15} className="stroke-blue" />
                               </button>
                               <button
                                  type="button"
                                  className={`${stylesDragDropItems.DragDropImageIcon} top-4 right-4 group-hover:opacity-100 group-hover:visible`}
                                  onClick={() => deleteGroup(item.id)}>
-                                 <IconTrash width={15} height={15} className="fill-red" />
+                                 <IconTrash width={15} height={15} className="stroke-red" />
                               </button>
                            </article>
                         </SwiperSlide>
@@ -119,13 +119,13 @@ const ObjectPresents = ({ data, frames, fetchData, groupsData = [], specialists 
                                  type="button"
                                  className={`${stylesDragDropItems.DragDropImageIcon} top-4 right-14 group-hover:opacity-100 group-hover:visible`}
                                  onClick={() => setIsOpenModalEdit(item)}>
-                                 <IconEdit width={15} height={15} className="stroke-blue stroke-[1.5px]" />
+                                 <IconEdit width={15} height={15} className="stroke-blue" />
                               </button>
                               <button
                                  type="button"
                                  className={`${stylesDragDropItems.DragDropImageIcon} top-4 right-4 group-hover:opacity-100 group-hover:visible`}
                                  onClick={() => deleteGroup(item.id)}>
-                                 <IconTrash width={15} height={15} className="fill-red" />
+                                 <IconTrash width={15} height={15} className="stroke-red" />
                               </button>
                            </article>
                         </SwiperSlide>

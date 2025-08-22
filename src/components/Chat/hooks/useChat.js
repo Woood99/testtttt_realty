@@ -1,6 +1,6 @@
 import debounce from "lodash.debounce";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
 import { CHAT_TAGS } from "@/constants";
@@ -12,7 +12,7 @@ import { useHistoryState } from "@/hooks";
 
 import { convertFieldsJSON, isEmptyArrObj, refactPhotoStageAppend, refactPhotoStageOne, refactPhotoStageTwo } from "@/helpers";
 
-import { authLoadingSelector, checkAuthUser, getHelpSliceSelector, getUserInfo } from "@/redux";
+import { authLoadingSelector, checkAuthUser, getHelpSliceSelector, getUserInfo, getVideoCallInfo, setIsReceivingCall } from "@/redux";
 
 import hasText from "../components/ChatDraft/hasText";
 import { CHAT_TYPES } from "../constants";
@@ -28,6 +28,8 @@ import { useTheme } from "./useTheme";
 
 export const useChat = options => {
 	const { defaultDialogId, tag, fake_dialog } = options;
+	const dispatch = useDispatch();
+	const { isReceivingCall } = useSelector(getVideoCallInfo);
 
 	const [currentDialog, setCurrentDialog] = useState({});
 	const [currentDialogSettings, setCurrentDialogSettings] = useState({});
@@ -217,6 +219,9 @@ export const useChat = options => {
 		if (authLoading) return;
 		if (isEmptyArrObj(userInfo) || !defaultDialogId) {
 			if (fake_dialog) return;
+			if (currentChannel.current) {
+				window.Echo.leave(currentChannel.current.name);
+			}
 			chatAllReset();
 			return;
 		}
@@ -264,13 +269,16 @@ export const useChat = options => {
 			try {
 				let data = event.data;
 
-				// Если это строка → парсим
 				if (typeof data === "string") {
 					data = JSON.parse(data);
 				}
-				if (data.type === "open-dialog" && data.dialog_id) {
-					console.log(data.dialog_id);
-					// 👉 например navigate(`/chat/${data.dialog_id}`)
+				if (!data?.dialog_id) return;
+
+				if (data.type === "message") {
+					setSearchParams({ dialog: data.dialog_id });
+				}
+				if (data.type === "incomingCall" && !isReceivingCall) {
+					dispatch(setIsReceivingCall(data.call));
 				}
 			} catch (e) {
 				console.error("Ошибка при обработке сообщения:", e, event.data);
@@ -278,13 +286,14 @@ export const useChat = options => {
 		};
 
 		document.addEventListener("message", handleMessage);
-		window.addEventListener("message", handleMessage); // для iOS
+		window.addEventListener("message", handleMessage);
 
 		return () => {
 			document.removeEventListener("message", handleMessage);
 			window.removeEventListener("message", handleMessage);
 		};
-	}, []);
+	}, [isReceivingCall]);
+
 	const connectToChat = id => {
 		if (currentChannel.current) {
 			window.Echo.leave(currentChannel.current.name);
@@ -296,7 +305,7 @@ export const useChat = options => {
 		});
 	};
 
-	const sendMessage = async (audioBlob = null, videoBlob = null) => {
+	const sendMessage = async (audioBlob = null, videoBlob = null, messageText) => {
 		if (!isEdit) {
 			const obj = {
 				dialog_id: currentDialog.id,
@@ -341,25 +350,27 @@ export const useChat = options => {
 			setMessageText("");
 			setFilesUpload([]);
 
-			const dialogAddMessageFetch = async formData => {
-				const updatedMessages = await dialogsActions.dialogAddMessage(chatMessages.messages, formData);
+			if (obj.text.length < 2000) {
+				const dialogAddMessageFetch = async formData => {
+					const updatedMessages = await dialogsActions.dialogAddMessage(chatMessages.messages, formData);
 
-				chatMessages.setMessages(updatedMessages);
-			};
-			await dialogAddMessageFetch(formData);
+					chatMessages.setMessages(updatedMessages);
+				};
+				await dialogAddMessageFetch(formData);
 
-			setTimeout(() => {
-				chatHelpers.scrollMainBlock();
-			}, 100);
+				setTimeout(() => {
+					chatHelpers.scrollMainBlock();
+				}, 100);
 
-			await sendPostRequest("/api/messages/new-message", formData, {
-				"Content-Type": "multipart/form-data",
-				"Accept-Encodin": "gzip, deflate, br, zstd",
-				Accept: "application/json"
-			});
+				await sendPostRequest("/api/messages/new-message", formData, {
+					"Content-Type": "multipart/form-data",
+					"Accept-Encodin": "gzip, deflate, br, zstd",
+					Accept: "application/json"
+				});
+			}
 		} else {
 			const obj = {
-				text: hasText(isEdit.text) ? isEdit.text : "",
+				text: hasText(messageText) ? messageText : "",
 				id: isEdit.id,
 				dialog_id: isEdit.dialog_id
 			};
@@ -370,11 +381,13 @@ export const useChat = options => {
 			formData.append("id", obj.id);
 			formData.append("dialog_id", obj.dialog_id);
 
-			await sendPostRequest("/api/messages/update-message", formData, {
-				"Content-Type": "multipart/form-data",
-				"Accept-Encodin": "gzip, deflate, br, zstd",
-				Accept: "application/json"
-			});
+			if (obj.text.length < 2000) {
+				await sendPostRequest("/api/messages/update-message", formData, {
+					"Content-Type": "multipart/form-data",
+					"Accept-Encodin": "gzip, deflate, br, zstd",
+					Accept: "application/json"
+				});
+			}
 			setIsEdit(false);
 		}
 	};

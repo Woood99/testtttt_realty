@@ -15,14 +15,14 @@ const HomeFilters = () => {
 	const userInfo = useSelector(getUserInfo);
 	const userIsAdmin = isAdmin(userInfo);
 
-	if (!isDesktop) return;
-
 	const { titleText, options, stickers } = useListing(userIsAdmin, true);
 
 	useEffect(() => {
 		if (!stickers.length) return;
 		setStickers(stickers);
 	}, [JSON.stringify(stickers)]);
+
+	if (!isDesktop) return;
 
 	return (
 		<div>

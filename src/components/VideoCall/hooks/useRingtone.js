@@ -1,82 +1,69 @@
-import { useEffect, useRef } from 'react';
+import { BroadcastChannel as PolyBroadcastChannel } from "broadcast-channel";
+import { useEffect, useRef } from "react";
 
-export const useRingtone = (isCalling, ringtone = '/ringtone.mp3') => {
-   const audioRef = useRef(null);
-   const channelRef = useRef(null);
-   const tabIdRef = useRef(Date.now().toString()); // Уникальный ID вкладки
+const BroadcastChannel = typeof window !== "undefined" && "BroadcastChannel" in window ? window.BroadcastChannel : PolyBroadcastChannel;
 
-   useEffect(() => {
-      channelRef.current = new BroadcastChannel('rington_channel');
+export const useRingtone = (isCalling, ringtone = "/ringtone.mp3") => {
+	const audioRef = useRef(null);
+	const channelRef = useRef(null);
+	const tabIdRef = useRef(Date.now().toString());
 
-      // Обработчик сообщений от других вкладок
-      const handleMessage = event => {
-         if (event.data.type === 'claim_leadership') {
-            // Если другая вкладка объявила себя лидером, а мы играем — останавливаемся
-            if (audioRef.current && !audioRef.current.paused && event.data.tabId !== tabIdRef.current) {
-               audioRef.current.pause();
-               audioRef.current.currentTime = 0;
-            }
-         }
-      };
+	useEffect(() => {
+		try {
+			channelRef.current = new BroadcastChannel("rington_channel");
+		} catch (e) {
+			console.warn("BroadcastChannel не доступен:", e);
+			return;
+		}
 
-      channelRef.current.addEventListener('message', handleMessage);
+		const handleMessage = event => {
+			if (event.data.type === "claim_leadership" && event.data.tabId !== tabIdRef.current) {
+				audioRef.current?.pause();
+				if (audioRef.current) audioRef.current.currentTime = 0;
+			}
+		};
 
-      // Создаем аудио-элемент
-      if (!audioRef.current) {
-         audioRef.current = new Audio(ringtone);
-         audioRef.current.loop = true;
-      }
+		channelRef.current.addEventListener("message", handleMessage);
 
-      const audio = audioRef.current;
+		if (!audioRef.current) {
+			audioRef.current = new Audio(ringtone);
+			audioRef.current.loop = true;
+		}
+		const audio = audioRef.current;
 
-      if (isCalling) {
-         // 1. Заявляем права на воспроизведение
-         channelRef.current.postMessage({
-            type: 'claim_leadership',
-            tabId: tabIdRef.current,
-         });
+		if (isCalling) {
+			channelRef.current.postMessage({
+				type: "claim_leadership",
+				tabId: tabIdRef.current
+			});
+			audio.volume = 0.25;
+			audio
+				.play()
+				.catch(console.error)
+				.finally(() => {
+					audio.volume = 0.25;
+				});
+		} else {
+			audio.pause();
+			audio.currentTime = 0;
+		}
 
-         // 2. Пытаемся играть (даже если вкладка неактивна)
-         audio.volume = 0.25;
-         audio
-            .play()
-            .catch(error => {
-               console.error('Ошибка воспроизведения:', error);
-            })
-            .finally(() => {
-               audio.volume = 0.25;
-            });
-      } else {
-         audio.pause();
-         audio.currentTime = 0;
-      }
+		return () => {
+			audio.pause();
+			audio.currentTime = 0;
+			channelRef.current?.removeEventListener("message", handleMessage);
+			channelRef.current?.close();
+		};
+	}, [isCalling, ringtone]);
 
-      return () => {
-         if (audio) {
-            audio.pause();
-            audio.currentTime = 0;
-         }
-         if (channelRef.current) {
-            channelRef.current.removeEventListener('message', handleMessage);
-            channelRef.current.close();
-         }
-      };
-   }, [isCalling, ringtone]);
+	useEffect(() => {
+		const handleBeforeUnload = () => {
+			if (isCalling && !audioRef.current?.paused) {
+				channelRef.current?.postMessage({ type: "leader_left" });
+			}
+		};
 
-   // Дополнительно: Отслеживаем закрытие вкладки, чтобы передать лидерство
-   useEffect(() => {
-      const handleBeforeUnload = () => {
-         if (isCalling && !audioRef.current?.paused) {
-            // Перед закрытием сообщаем другим вкладкам, что они могут перехватить лидерство
-            channelRef.current?.postMessage({
-               type: 'leader_left',
-            });
-         }
-      };
-
-      window.addEventListener('beforeunload', handleBeforeUnload);
-      return () => {
-         window.removeEventListener('beforeunload', handleBeforeUnload);
-      };
-   }, [isCalling]);
+		window.addEventListener("beforeunload", handleBeforeUnload);
+		return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+	}, [isCalling]);
 };

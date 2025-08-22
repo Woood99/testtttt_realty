@@ -1,160 +1,172 @@
-@import '../../styles/$vars.scss';
+@import "../../styles/$vars.scss";
 
 .ButtonMain {
-   height: 56px;
-   border-radius: 12px;
+	height: 56px;
+	border-radius: 12px;
 
-   line-height: 1;
+	line-height: 1;
 
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   white-space: nowrap;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	white-space: nowrap;
 
-   transition: all $transitionSpeed $transitionFunction;
+	transition: all $transitionSpeed $transitionFunction;
 
-   font-weight: 500;
+	font-weight: 500;
 
-   &:disabled {
-      pointer-events: none;
-      cursor: default;
-   }
-   @media (max-width: $desktop) {
-      height: 50px;
-   }
+	&:disabled {
+		pointer-events: none;
+		cursor: default;
+	}
+	@media (max-width: $desktop) {
+		height: 50px;
+	}
 }
 
 .ButtonLoading {
-   width: 24px;
-   height: 24px;
-   border: 3px solid var(--white);
-   border-bottom-color: transparent;
-   border-radius: 50%;
-   display: inline-block;
-   animation: rotation 1s linear infinite;
+	width: 24px;
+	height: 24px;
+	border: 3px solid var(--white);
+	border-bottom-color: transparent;
+	border-radius: 50%;
+	display: inline-block;
+	animation: rotation 1s linear infinite;
+}
+.ButtonLoadingBlue {
+	border: 3px solid var(--blue);
+	border-bottom-color: transparent;
 }
 
 @keyframes rotation {
-   0% {
-      transform: rotate(0deg);
-   }
-   100% {
-      transform: rotate(360deg);
-   }
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }
 
 .primary {
-   background-color: var(--blue);
-   color: var(--white);
+	background-color: var(--blue);
+	color: var(--white);
 
-   padding: 0 32px;
+	padding: 0 32px;
 
-   &:disabled {
-      opacity: 0.5;
-      box-shadow: none;
-   }
-   @media (min-width: $desktop-min) {
-      &:hover {
-         background-color: var(--blue-dark);
-      }
-   }
+	&:disabled {
+		opacity: 0.5;
+		box-shadow: none;
+	}
+	@media (min-width: $desktop-min) {
+		&:hover {
+			background-color: var(--blue-dark);
+		}
+	}
 }
 
 .secondary {
-   color: var(--dark);
-   background-color: var(--primary700);
-   border: 1px solid transparent;
+	color: var(--dark);
+	background-color: var(--primary700);
+	border: 1px solid transparent;
 
-   padding: 0 32px;
+	padding: 0 32px;
 
-   &:disabled {
-      opacity: 0.5;
-      pointer-events: none;
-   }
+	&:disabled {
+		opacity: 0.5;
+		pointer-events: none;
+	}
 
-   @media (min-width: $desktop-min) {
-      &:hover {
-         background-color: var(--primary800);
-      }
-   }
-   &.ButtonActive {
-      color: var(--white);
-      background-color: var(--blue);
-      border: 1px solid var(--blue);
-   }
+	@media (min-width: $desktop-min) {
+		&:hover {
+			background-color: var(--primary800);
+		}
+	}
+	&.ButtonActive {
+		color: var(--white);
+		background-color: var(--blue);
+		border: 1px solid var(--blue);
+	}
 }
 
 .dark {
-   background: #222222;
-   box-shadow: inset 0 0 0 1px #363738;
-   color: #fff;
-   border-radius: 24px;
+	background: #222222;
+	box-shadow: inset 0 0 0 1px #363738;
+	color: #fff;
+	border-radius: 24px;
 }
 
 .gray {
-   background: #242424;
-   box-shadow: inset 0 0 0 1px #242424;
-   color: #828282;
-   border-radius: 24px;
+	background: #242424;
+	box-shadow: inset 0 0 0 1px #242424;
+	color: #828282;
+	border-radius: 24px;
 }
 
 .third {
-   background-color: var(--white);
-   border: 1px solid var(--gray-second);
-   &.ButtonActive {
-      border-color: var(--blue);
-      box-shadow: inset 0 0 0 1px var(--blue);
-   }
+	background-color: var(--white);
+	border: 1px solid var(--gray-second);
+	&.ButtonActive {
+		border-color: var(--blue);
+		box-shadow: inset 0 0 0 1px var(--blue);
+	}
+}
+
+.fourth {
+	background-color: transparent;
+	border: none;
+	&:hover {
+		background-color: var(--primary800);
+	}
 }
 
 .red {
-   background-color: var(--red);
-   color: var(--white);
-   padding: 0 32px;
-   &:disabled {
-      opacity: 0.5;
-      pointer-events: none;
-   }
-   @media (min-width: $desktop-min) {
-      &:hover {
-         background-color: var(--red-dark);
-      }
-   }
+	background-color: var(--red);
+	color: var(--white);
+	padding: 0 32px;
+	&:disabled {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+	@media (min-width: $desktop-min) {
+		&:hover {
+			background-color: var(--red-dark);
+		}
+	}
 }
 
 .sizeBig {
-   font-size: 16px;
-   height: 60px;
+	font-size: 16px;
+	height: 60px;
 }
 
 .sizeSmall {
-   height: 40px;
-   padding: 0 24px;
-   border-radius: 8px;
+	height: 40px;
+	padding: 0 24px;
+	border-radius: 8px;
 }
 
 .size34 {
-   height: 34px;
-   padding: 0 16px;
-   border-radius: 8px;
-   font-size: var(--small-fz);
+	height: 34px;
+	padding: 0 16px;
+	border-radius: 8px;
+	font-size: var(--small-fz);
 }
 .size32 {
-   height: 32px;
-   padding: 0 16px;
-   border-radius: 8px;
+	height: 32px;
+	padding: 0 16px;
+	border-radius: 8px;
 }
 
 .size28 {
-   height: 28px;
-   padding: 0 16px;
-   font-size: 12px;
-   border-radius: 8px;
+	height: 28px;
+	padding: 0 16px;
+	font-size: 12px;
+	border-radius: 8px;
 }
 
 .size26 {
-   height: 26px;
-   padding: 0 16px;
-   font-size: var(--very-small-fz);
-   border-radius: 8px;
+	height: 26px;
+	padding: 0 16px;
+	font-size: var(--very-small-fz);
+	border-radius: 8px;
 }

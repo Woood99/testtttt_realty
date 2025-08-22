@@ -4,19 +4,20 @@ import { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+import { ROLE_ADMIN, RoutesPath } from "@/constants";
+
+import { declensionParticipant, getShortNameSurname, isEmptyArrObj } from "@/helpers";
+
+import { ChatContext } from "@/context";
+
 import { getIsDesktop, getVideoCallInfo } from "@/redux";
 import { setIsCalling } from "@/redux";
 
-import { RoutesPath } from "../../../../constants/RoutesPath";
-import { ROLE_ADMIN } from "../../../../constants/roles";
-import { ChatContext } from "../../../../context";
-import { getShortNameSurname } from "../../../../helpers/changeString";
-import { declensionParticipant } from "../../../../helpers/declensionWords";
-import isEmptyArrObj from "../../../../helpers/isEmptyArrObj";
-import { IconArrow, IconCall, IconEllipsis, IconСamcorder } from "../../../../ui/Icons";
-import WebSkeleton from "../../../../ui/Skeleton/WebSkeleton";
-import UserInfo from "../../../../ui/UserInfo";
-import Button from "../../../../uiForm/Button";
+import { Maybe, UserInfo, WebSkeleton } from "@/ui";
+import { IconArrow, IconCall, IconEllipsis, IconСamcorder } from "@/ui/Icons";
+
+import { Button } from "@/uiForm";
+
 import { CHAT_TYPES } from "../../constants";
 
 const ChatMainUserTop = () => {
@@ -98,53 +99,51 @@ const ChatMainUserTop = () => {
 						: null
 				}
 			/>
-			<div className='ml-auto flex items-center gap-4'>
-				{isVisibleVideoCall && (
-					<>
-						<Button
-							isLoading={videoCallDelayTimer}
-							size='Small'
-							variant='secondary'
-							className='gap-3 md1:!px-3'
-							onClick={() => {
-								if (!currentDialogUserInfo) return;
+			<div className='ml-auto flex items-center gap-1'>
+				<Maybe condition={isVisibleVideoCall}>
+					<Button
+						isLoading={videoCallDelayTimer}
+						size='Small'
+						variant='fourth'
+						className='px-3'
+						onClick={() => {
+							if (!currentDialogUserInfo) return;
 
-								dispatch(
-									setIsCalling({
-										dialog_id: currentDialog.id,
-										partnerInfo: {
-											...currentDialogUserInfo,
-											id: currentDialogUserInfo.role === ROLE_ADMIN.id ? 1 : currentDialogUserInfo.id
-										}
-									})
-								);
-							}}>
-							<IconСamcorder className='stroke-blue stroke-[2px]' />
-						</Button>
-						<Button
-							isLoading={videoCallDelayTimer}
-							size='Small'
-							variant='secondary'
-							className='gap-3 md1:!px-3'
-							onClick={() => {
-								if (!currentDialogUserInfo) return;
+							dispatch(
+								setIsCalling({
+									dialog_id: currentDialog.id,
+									partnerInfo: {
+										...currentDialogUserInfo,
+										id: currentDialogUserInfo.role === ROLE_ADMIN.id ? 1 : currentDialogUserInfo.id
+									}
+								})
+							);
+						}}>
+						<IconСamcorder width={22} height={22} className='stroke-blue stroke-[2px]' />
+					</Button>
+					<Button
+						isLoading={videoCallDelayTimer}
+						size='Small'
+						variant='fourth'
+						className='px-3'
+						onClick={() => {
+							if (!currentDialogUserInfo) return;
 
-								dispatch(
-									setIsCalling({
-										dialog_id: currentDialog.id,
-										partnerInfo: {
-											...currentDialogUserInfo,
-											id: currentDialogUserInfo.role === ROLE_ADMIN.id ? 1 : currentDialogUserInfo.id
-										}
-									})
-								);
-							}}>
-							<IconCall className='fill-blue' />
-						</Button>
-					</>
-				)}
+							dispatch(
+								setIsCalling({
+									dialog_id: currentDialog.id,
+									partnerInfo: {
+										...currentDialogUserInfo,
+										id: currentDialogUserInfo.role === ROLE_ADMIN.id ? 1 : currentDialogUserInfo.id
+									}
+								})
+							);
+						}}>
+						<IconCall width={22} height={22} className='stroke-blue' />
+					</Button>
+				</Maybe>
 
-				<button className='flex-center-all'>
+				<button className='flex-center-all ml-3'>
 					<ChatTooltipDialog
 						options={{
 							data: currentDialog,

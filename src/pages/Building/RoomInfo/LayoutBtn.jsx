@@ -16,12 +16,12 @@ const LayoutBtn = memo(({ onClick, data, planning = true, active }) => {
          <div className="CardLinkElement z-50" onClick={onClick} />
          <div className="flex items-center gap-4 justify-between md1:flex-col md1:items-start">
             <div className="flex items-center gap-4 md1:flex-col md1:items-start md1:gap-2">
-               <div className="md1:flex items-center gap-3 title-3 whitespace-nowrap">
+               <div className="md1:flex items-center gap-3 title-3 whitespace-nowrap !font-bold">
                   <span>{data.room === 0 ? 'Студии' : `${data.room}-${isDesktop ? 'комнатные' : 'комн.'}`}</span>
                   {!isDesktop && <span>от {data.minArea} м²</span>}
                </div>
                {isDesktop && <div>от {data.minArea} м²</div>}
-               <div className="title-3">от {numberReplace(data.minBdPrice || data.minPrice)} ₽</div>
+               <div className="title-3 !font-bold">от {numberReplace(data.minBdPrice || data.minPrice)} ₽</div>
             </div>
          </div>
 

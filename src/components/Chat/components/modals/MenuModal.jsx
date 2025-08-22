@@ -9,8 +9,10 @@ import { ChatContext } from "@/context";
 
 import { getUserInfo } from "@/redux";
 
+import { CreateStory } from "@/components";
+
 import { Avatar, ElementNavBtn, Maybe, Modal, ModalWrapper } from "@/ui";
-import { IconArrow, IconExit, IconLock2, IconMegaphone, IconUsers } from "@/ui/Icons";
+import { IconArrow, IconBlocked, IconExit, IconLock2, IconMegaphone, IconNotebook, IconUsers, IconVideo, IconVideoRecord } from "@/ui/Icons";
 
 import styles from "../../Chat.module.scss";
 import ChatNotAuth from "../ChatNotAuth";
@@ -22,11 +24,10 @@ const MenuModal = () => {
 
 	const userInfo = useSelector(getUserInfo);
 	const userIsBuyer = isBuyer(userInfo);
-	const userIsAdmin = isAdmin(userInfo);
 	const userIsSeller = isSeller(userInfo);
-	const userSellerOrAdmin = userIsAdmin || userIsSeller;
 	const { logout } = useAuth();
 	const [isOpenEditProfile, setIsOpenEditProfile] = useHistoryState(false);
+	const [isOpenCreateStory, setIsOpenCreateStory] = useHistoryState(false);
 
 	return (
 		<>
@@ -57,7 +58,7 @@ const MenuModal = () => {
 						</Maybe>
 						<div className='flex flex-col border-top-lightgray'>
 							<div className='mt-2'>
-								<Maybe condition={userSellerOrAdmin}>
+								<Maybe condition={userIsSeller}>
 									<button
 										onClick={() => {
 											setSidebarModalOpen(false);
@@ -65,7 +66,7 @@ const MenuModal = () => {
 										}}
 										className={styles.ChatMenuButton}>
 										<ElementNavBtn>
-											<IconUsers />
+											<IconNotebook />
 											<span>Создать групповой чат</span>
 										</ElementNavBtn>
 									</button>
@@ -76,22 +77,32 @@ const MenuModal = () => {
 										}}
 										className={styles.ChatMenuButton}>
 										<ElementNavBtn>
-											<IconMegaphone className='fill-blue' />
+											<IconMegaphone />
 											<span>Создать канал</span>
+										</ElementNavBtn>
+									</button>
+									<button
+										onClick={() => {
+											setIsOpenCreateStory(true);
+										}}
+										className={styles.ChatMenuButton}>
+										<ElementNavBtn>
+											<IconVideoRecord />
+											<span>Создать сторис</span>
 										</ElementNavBtn>
 									</button>
 								</Maybe>
 								<Maybe condition={userIsBuyer}>
 									<button onClick={() => setBlockedUserList(true)} className={styles.ChatMenuButton}>
 										<ElementNavBtn>
-											<IconLock2 className='fill-blue' />
+											<IconBlocked />
 											<span>Заблокированные пользователи</span>
 										</ElementNavBtn>
 									</button>
 								</Maybe>
 								<button
 									onClick={async () => {
-										await logout();
+										await logout(userInfo.id);
 										window.location.reload();
 									}}
 									className={styles.ChatMenuButton}>
@@ -106,6 +117,7 @@ const MenuModal = () => {
 				</Modal>
 			</ModalWrapper>
 			<ProfileEditModal condition={isOpenEditProfile} set={setIsOpenEditProfile} />
+			<CreateStory condition={isOpenCreateStory} set={setIsOpenCreateStory} />
 		</>
 	);
 };

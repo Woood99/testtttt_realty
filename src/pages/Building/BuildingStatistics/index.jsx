@@ -193,7 +193,7 @@ const BuildingStatistics = ({ buildingData }) => {
                            <span className='group-hover:text-blue'>Просмотров объектов ЖК</span>
                         </StatisticsItem>
                         <StatisticsItem onClick={() => setDetailedStatisticsModalOpen('likes')}>
-                           <IconFavoriteStroke className="fill-red" width={15} height={15} />
+                           <IconFavoriteStroke className="stroke-red" width={15} height={15} />
                            <span>{metricsDataTotal.building_likes + metricsDataTotal.apartment_likes} </span>
                            <span className='group-hover:text-blue'>Добавили в избранное</span>
                         </StatisticsItem>

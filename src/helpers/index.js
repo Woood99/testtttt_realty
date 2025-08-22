@@ -19,7 +19,8 @@ export {
 	capitalizeWords,
 	removeWordFromText,
 	stringToNumber,
-	changePhoneFormat
+	changePhoneFormat,
+	truncateString
 } from "./changeString";
 export { checkUserIdByRole } from "./checkUserIdByRole";
 export { cleanObject } from "./cleanObject";
@@ -27,6 +28,8 @@ export { addZero } from "./toggleZero";
 export { refactPhotoStageOne, refactPhotoStageTwo, refactPhotoStageAppend } from "./photosRefact";
 export { timeToSeconds } from "./timeTo";
 export { isValidTime } from "./isValidTime";
+export { getApartmentTitle } from "./getApartmentTitle";
+export { priceByDiscountApartment } from "./priceByDiscountApartment";
 
 export { default as isEmptyArrObj } from "./isEmptyArrObj";
 export { default as clearData } from "./clearData";
@@ -40,5 +43,7 @@ export { default as clearMask } from "./clearMask";
 export { default as countdownTimer } from "./countdownTimer";
 export { default as formatPhoneNumber } from "./formatPhoneNumber";
 export { default as handleCopyText } from "./handleCopyText";
+export { default as normalizeUrl } from "./normalizeUrl";
+export { default as isLink } from "./isLink";
 
 export * from "./declensionWords";

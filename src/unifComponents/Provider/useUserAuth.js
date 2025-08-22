@@ -15,84 +15,6 @@ import { setIsConnectEcho } from "../../redux/slices/helpSlice";
 import { setLikes, setUserInfo } from "../../redux/slices/mainInfoSlice";
 import { setIsReceivingCall } from "../../redux/slices/videoCallSlice";
 
-`
-{
-    "id": 33,
-    "role": {
-        "id": 2,
-        "name": "SELLER",
-        "labels": [
-            "Продавец",
-            "Менеджер"
-        ]
-    },
-    "name": "Сергей",
-    "email": "sergey.stryuchkov02@gmail.com",
-    "email_verified_at": null,
-    "created_at": "2025-02-23T14:14:37.000000Z",
-    "updated_at": "2025-08-14T10:34:27.000000Z",
-    "api_id": null,
-    "surname": "Стрючков",
-    "father_name": "",
-    "birthday": "",
-    "phone": "+79880213629",
-    "image": null,
-    "organization_id": 335,
-    "description": "описание описание",
-    "cities": [
-        1
-    ],
-    "building_types": [
-        1
-    ],
-    "experience": 1,
-    "yt_video": "",
-    "sber_id": null,
-    "alfa_id": null,
-    "associated_objects": [
-        288,
-        299,
-        300,
-        302,
-        303,
-        325,
-        326,
-        328,
-        329,
-        813
-    ],
-    "last_seen": null,
-    "is_phone_verified": 0,
-    "phone_pin": null,
-    "phone_verification_tries": 0,
-    "photos": [],
-    "organization": {
-        "id": 335,
-        "name": "ГК Самолет. Москва",
-        "api_id": null,
-        "foundation_year": null,
-        "building_houses": null,
-        "ready_houses": null,
-        "building_complexes": null,
-        "ready_complexes": null,
-        "description": null,
-        "youtube_link": null,
-        "image": null,
-        "cities": [
-            1
-        ],
-        "photos": null,
-        "created_at": "2024-10-25T06:38:43.000000Z",
-        "updated_at": "2024-10-25T06:38:43.000000Z"
-    },
-    "counts": {
-        "dialogs": 0,
-        "notifications": 0,
-        "objects": 9
-    }
-}
-    `;
-
 export const useUserAuth = () => {
 	const dispatch = useDispatch();
 	const [cookies, , removeCookie] = useCookies();
@@ -100,8 +22,15 @@ export const useUserAuth = () => {
 
 	const isDesktop = useSelector(getIsDesktop);
 
-	const setAuthUser = async () => {
+	const setAuthUser = async (postMessage = false) => {
 		const userInfo = await getAuthUser();
+		if (!userInfo) {
+			dispatch(setUserInfo({}));
+			return {};
+		}
+		if (postMessage) {
+			postMessageLogin(userInfo.id);
+		}
 
 		dispatch(setUserInfo(userInfo));
 
@@ -190,9 +119,10 @@ export const useUserAuth = () => {
 		}
 	};
 
-	const logout = async () => {
+	const logout = async (postMessageUserId = null) => {
 		try {
 			await sendPostRequest(`/api/logout`);
+			if (postMessageUserId) postMessageLogout(postMessageUserId);
 			removeCookie("loggedIn", { path: "/" });
 			removeCookie("access_token", { path: "/" });
 			removeCookie("login_as_admin", { path: "/" });
@@ -200,6 +130,32 @@ export const useUserAuth = () => {
 			dispatch(setLikes([]));
 		} catch (error) {
 			console.log(error);
+		}
+	};
+
+	const postMessageLogin = userId => {
+		if (!userId) return;
+		if (window.ReactNativeWebView && window.ReactNativeWebView.postMessage) {
+			window.ReactNativeWebView.postMessage(
+				JSON.stringify({
+					type: "auth",
+					status: "logged_in",
+					userId
+				})
+			);
+		}
+	};
+
+	const postMessageLogout = userId => {
+		if (!userId) return;
+		if (window.ReactNativeWebView && window.ReactNativeWebView.postMessage) {
+			window.ReactNativeWebView.postMessage(
+				JSON.stringify({
+					type: "auth",
+					status: "logged_out",
+					userId
+				})
+			);
 		}
 	};
 

@@ -302,7 +302,6 @@ export const useChatDialogs = () => {
            ]
          : [];
 
-      console.log(videoObj);
 
       const imagesInfo = obj.photos?.length
          ? await getMediaInfo(

@@ -15,6 +15,7 @@ export const buildingApartFilterDefaultValue = {
    advantages: [],
    is_gift: false,
    is_discount: false,
+   is_cashback: false,
    is_video: false,
    filtersMain: {
       price: updateAdditionalFilters([apartmentsFilterPrice]).price,
@@ -63,6 +64,8 @@ const buildingApartSlice = createSlice({
          state.advantages = [];
          state.is_gift = false;
          state.is_video = false;
+         state.is_discount = false;
+         state.is_cashback = false;
       },
 
       setSort(state, action) {

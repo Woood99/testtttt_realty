@@ -63,11 +63,11 @@ const ApartmentSidebar = () => {
 							<div className='grid grid-cols-2 gap-3 mb-4'>
 								<Link to={`${PrivateRoutesPath.apartment.edit}${id}`} className='w-full h-full block'>
 									<BtnActionBg title='Редактировать'>
-										<IconEdit className='!stroke-[currentColor] !stroke-[1.5px] !fill-none' width={18} height={18} />
+										<IconEdit className='!stroke-[currentColor]' width={18} height={18} />
 									</BtnActionBg>
 								</Link>
 								<BtnActionBg title='Удалить' onClick={() => setConfirmDeleteModal(id)}>
-									<IconTrash className='fill-red' width={16} height={16} />
+									<IconTrash className='stroke-red' width={16} height={16} />
 								</BtnActionBg>
 							</div>
 						) : (

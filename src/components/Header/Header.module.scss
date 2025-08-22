@@ -1,323 +1,333 @@
-@import '../../styles/$vars.scss';
+@import "../../styles/$vars.scss";
 
 .header {
-   position: relative;
-   z-index: 101;
+	position: relative;
+	z-index: 101;
 
-   @media (max-width: $desktop) {
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background-color: var(--white);
-   }
+	@media (max-width: $desktop) {
+		box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		background-color: var(--white);
+	}
 }
 
 .headerDark {
-   .headerActions {
-      background-color: #373636;
-   }
-   .headerAction {
-      color: var(--white);
-      svg {
-         fill: var(--white);
-      }
-      @media (min-width: $desktop-min) {
-         &:hover {
-            svg {
-               fill: var(--dark);
-            }
-         }
-      }
-   }
-   .headerNav {
-      background-color: #373636;
-   }
-   .headerNavName {
-      color: var(--white);
-   }
+	.headerActions {
+		background-color: #373636;
+	}
+	.headerAction {
+		color: var(--white);
+		svg {
+			fill: var(--white);
+		}
+		@media (min-width: $desktop-min) {
+			&:hover {
+				svg {
+					fill: var(--dark);
+				}
+			}
+		}
+	}
+	.headerNav {
+		background-color: #373636;
+	}
+	.headerNavName {
+		color: var(--white);
+	}
 }
 
 .headerActions {
-   height: 50px;
-   background-color: var(--white);
+	height: 50px;
+	background-color: var(--white);
 }
 .headerActionsContainer {
-   display: flex;
-   height: 100%;
+	display: flex;
+	height: 100%;
 }
 
 .headerAction {
-   transition: background-color $transitionSpeed $transitionFunction, color $transitionSpeed $transitionFunction;
-   height: 100%;
-   display: flex;
-   align-items: center;
-   padding: 0 16px;
-   gap: 10px;
-   color: var(--primary400);
-   font-weight: 500;
-   white-space: nowrap;
+	transition:
+		background-color $transitionSpeed $transitionFunction,
+		color $transitionSpeed $transitionFunction;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	padding: 0 16px;
+	gap: 10px;
+	color: var(--primary400);
+	font-weight: 500;
+	white-space: nowrap;
 
-   svg {
-      fill: var(--primary400);
-      transition: all $transitionSpeed $transitionFunction;
-   }
+	svg {
+		stroke: var(--primary400);
+		transition: all $transitionSpeed $transitionFunction;
+	}
 
-   @media (min-width: $desktop-min) {
-   border-radius: 12px;
+	@media (min-width: $desktop-min) {
+		border-radius: 12px;
 
-      &:hover {
-         background-color: var(--primary800) !important;
-         color: var(--dark) !important;
-      }
-   }
-   @media (max-width: $desktop) {
-      padding: 0 12px;
-   }
+		&:hover {
+			background-color: var(--primary800) !important;
+			color: var(--dark) !important;
+         svg{
+            stroke: var(--dark);
+         }
+		}
+	}
+	@media (max-width: $desktop) {
+		padding: 0 12px;
+	}
 }
 
 .headerCity {
-   @media (min-width: $desktop-min) {
-      margin-left: 16px;
-   }
-   @media (max-width: $desktop) {
-      .headerAction {
-         padding: 0 !important;
-      }
-   }
+	@media (min-width: $desktop-min) {
+		margin-left: 16px;
+	}
+	@media (max-width: $desktop) {
+		.headerAction {
+			padding: 0 !important;
+		}
+	}
 }
 
 .headerActionsList {
-   display: flex;
-   align-items: center;
-   margin-left: auto;
-   @media (max-width: $desktop) {
-      margin-right: -16px;
-   }
+	display: flex;
+	align-items: center;
+	margin-left: auto;
+	@media (max-width: $desktop) {
+		margin-right: -16px;
+	}
 }
 
 .logo {
-   align-self: center;
-   --width: 60px;
-   width: var(--width);
-   flex: 0 0 var(--width);
-   img {
-      width: 100%;
-   }
-   @media (max-width: $mobile-max) {
-      --width: 42px;
-   }
+	align-self: center;
+	--width: 60px;
+	width: var(--width);
+	flex: 0 0 var(--width);
+	img {
+		width: 100%;
+	}
+	@media (max-width: $mobile-max) {
+		--width: 42px;
+	}
 }
 
 .headerNav {
-   height: 55px;
-   background-color: var(--white);
-   position: relative;
-   z-index: 1000;
+	height: 55px;
+	background-color: var(--white);
+	position: relative;
+	z-index: 1000;
 }
 
 .headerNavContainer {
-   height: 100%;
-   display: flex;
-   align-items: center;
-   position: relative;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	position: relative;
 }
 
 .headerNavList {
-   margin-left: -16px;
-   display: flex;
-   align-items: center;
-   height: 100%;
+	margin-left: -16px;
+	display: flex;
+	align-items: center;
+	height: 100%;
 }
 
 .headerNavItem {
-   height: 100%;
-   display: flex;
-   align-items: center;
-   padding: 0 24px;
-   @media (min-width: $desktop-min) {
-      &:hover {
-         .headerNavName {
-            color: var(--blue);
-            &::before {
-               width: 125%;
-            }
-         }
-      }
-   }
+	height: 100%;
+	display: flex;
+	align-items: center;
+	padding: 0 24px;
+	@media (min-width: $desktop-min) {
+		&:hover {
+			.headerNavName {
+				color: var(--blue);
+				&::before {
+					width: 125%;
+				}
+			}
+		}
+	}
 }
 
 .headerNavName {
-   font-weight: 500;
-   cursor: pointer;
+	font-weight: 500;
+	cursor: pointer;
 
-   transition: color $transitionSpeed $transitionFunction;
-   height: 100%;
+	transition: color $transitionSpeed $transitionFunction;
+	height: 100%;
 
-   position: relative;
-   display: flex;
-   align-items: center;
+	position: relative;
+	display: flex;
+	align-items: center;
 
-   &::before {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 2px;
-      background-color: var(--blue);
-      transition: width $transitionSpeed $transitionFunction;
-   }
+	&::before {
+		content: "";
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 0;
+		height: 2px;
+		background-color: var(--blue);
+		transition: width $transitionSpeed $transitionFunction;
+	}
 }
 
 .headerDropdown {
-   padding: 12px 0 0;
-   height: 100%;
-   top: 100%;
-   left: 0;
-   transform: translateY(20px);
-   width: 100%;
-   min-height: 260px;
-   opacity: 0;
-   visibility: hidden;
+	padding: 12px 0 0;
+	height: 100%;
+	top: 100%;
+	left: 0;
+	transform: translateY(20px);
+	width: 100%;
+	min-height: 260px;
+	opacity: 0;
+	visibility: hidden;
 
-   transition: opacity $transitionSpeed $transitionFunction, visibility $transitionSpeed $transitionFunction,
-      transform $transitionSpeed $transitionFunction;
+	transition:
+		opacity $transitionSpeed $transitionFunction,
+		visibility $transitionSpeed $transitionFunction,
+		transform $transitionSpeed $transitionFunction;
 
-   position: absolute;
-   z-index: 99;
+	position: absolute;
+	z-index: 99;
 
-   display: flex;
+	display: flex;
 
-   display: grid; grid-template-columns: auto 1fr;
+	display: grid;
+	grid-template-columns: auto 1fr;
 }
 
 .headerDropdownActive {
-   opacity: 1;
-   transform: translateY(0);
-   visibility: visible;
+	opacity: 1;
+	transform: translateY(0);
+	visibility: visible;
 }
 
 .headerDropdownContent {
-   padding: 24px;
-   background-color: var(--white);
-   border-radius: 24px;
-   display: flex;
-   flex-direction: column;
-   gap: 16px;
+	padding: 24px;
+	background-color: var(--white);
+	border-radius: 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
 
-   min-height: 375px;
+	min-height: 375px;
 }
 
 .headerDropdownRow {
-   display: grid;
-   grid-template-columns: repeat(3, 1fr);
-   grid-gap: 16px;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-gap: 16px;
 }
 
 .headerDropdownBanner {
-   margin-left: 12px;
-   min-height: 375px;
+	margin-left: 12px;
+	min-height: 375px;
 
-   background-color: var(--white);
+	background-color: var(--white);
 
-   background-color: transparent;
+	background-color: transparent;
 }
 
 .notifCount {
-   background-color: var(--blue);
-   color: var(--white);
-   border-radius: 50%;
-   width: 16px;
-   height: 16px;
-   font-size: 9px;
-   line-height: 1;
-   display: flex;
-   align-items: center;
-   justify-content: center;
+	background-color: var(--blue);
+	color: var(--white);
+	border-radius: 50%;
+	width: 16px;
+	height: 16px;
+	font-size: 9px;
+	line-height: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-   top: 7px;
-   right: 7px;
-   position: absolute;
+	top: 7px;
+	right: 7px;
+	position: absolute;
 }
 
 .MenuBtn {
-   margin-left: -16px;
-   margin-right: 8px;
-   padding: 0 8px;
-   width: calc(22px + calc(8px * 2));
-   height: 100%;
+	margin-left: -16px;
+	margin-right: 8px;
+	padding: 0 8px;
+	width: calc(22px + calc(8px * 2));
+	height: 100%;
 
-   display: flex;
-   align-items: center;
-   justify-content: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .MenuBtnActive {
-   background-color: var(--primary700);
+	background-color: var(--primary700);
 }
 
 .burger {
-   --burger-width: 20px;
-   --burger-height: 14px;
-   --burger-line-height: 2px;
-   position: relative;
-   border: none;
-   padding: 0;
-   width: var(--burger-width);
-   flex: 0 0 var(--burger-width);
-   height: var(--burger-height);
-   color: var(--dark);
-   background-color: transparent;
-   cursor: pointer;
+	--burger-width: 20px;
+	--burger-height: 14px;
+	--burger-line-height: 2px;
+	position: relative;
+	border: none;
+	padding: 0;
+	width: var(--burger-width);
+	flex: 0 0 var(--burger-width);
+	height: var(--burger-height);
+	color: var(--dark);
+	background-color: transparent;
+	cursor: pointer;
 
-   align-self: center;
+	align-self: center;
 
-   &::after,
-   &::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      width: 100%;
-      height: var(--burger-line-height);
-      background-color: currentColor;
-      transition: transform 0.3s ease-in-out, top 0.3s ease-in-out;
-      border-radius: 24px;
-   }
+	&::after,
+	&::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		width: 100%;
+		height: var(--burger-line-height);
+		background-color: currentColor;
+		transition:
+			transform 0.3s ease-in-out,
+			top 0.3s ease-in-out;
+		border-radius: 24px;
+	}
 
-   &::before {
-      top: 0;
-   }
+	&::before {
+		top: 0;
+	}
 
-   &::after {
-      top: calc(100% - var(--burger-line-height));
-   }
+	&::after {
+		top: calc(100% - var(--burger-line-height));
+	}
 }
 
 .burgerLine {
-   position: absolute;
-   left: 0;
-   top: 50%;
-   width: 100%;
-   height: var(--burger-line-height);
-   background-color: currentColor;
-   transform: translateY(-50%);
-   transition: transform 0.3s ease-in-out;
-   border-radius: 24px;
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 100%;
+	height: var(--burger-line-height);
+	background-color: currentColor;
+	transform: translateY(-50%);
+	transition: transform 0.3s ease-in-out;
+	border-radius: 24px;
 }
 
 .Menu {
-   display: flex;
-   flex-direction: column;
-   position: fixed;
-   z-index: 999;
-   top: 50px;
-   left: 0;
-   width: 100%;
-   height: calc(var(--vh) - 50px);
-   background-color: var(--white);
-   padding: 0 16px 16px;
-   overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	position: fixed;
+	z-index: 999;
+	top: 50px;
+	left: 0;
+	width: 100%;
+	height: calc(var(--vh) - 50px);
+	background-color: var(--white);
+	padding: 0 16px 16px;
+	overflow-y: auto;
 }

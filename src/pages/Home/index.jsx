@@ -25,6 +25,8 @@ import Stocks from "./Stocks";
 import Videos from "./Videos";
 import { useHomeData } from "./useHomeData";
 
+// import INRUT_APP from "../../assets/inrut-app.apk";
+
 export const HomeContext = createContext();
 
 const Home = () => {
@@ -39,7 +41,7 @@ const Home = () => {
 			navigate(SellerRoutesPath.home);
 		}
 	}, [userRole]);
-	
+
 	return (
 		<MainLayout helmet={<HelmetHome />}>
 			<Header />
@@ -49,6 +51,9 @@ const Home = () => {
 				<div className='main-wrapper'>
 					<HomeContext.Provider value={{ ...homeData, stickers, setStickers }}>
 						<div className='container-desktop'>
+							{/* <a href={INRUT_APP} download='inrut-app.apk'>
+								Download link
+							</a> */}
 							<div className={styles.HomeFilterContainer}>
 								<NavBlock />
 								<HomeFilters />

@@ -14,7 +14,7 @@ const ChatContacts = () => {
 				condition={contactsModalOpen}
 				set={setContactsModalOpen}
 				options={{ overlayClassNames: "_left", modalClassNames: "mmd1:!w-[475px]", modalContentClassNames: "md1:flex md1:flex-col" }}>
-				<h3 className='title-2-5 mb-8'>Меню</h3>
+				<h3 className='title-2-5 mb-8'>Контакты</h3>
 				<div className='flex gap-6'>
 					<button
 						type='button'
@@ -22,7 +22,7 @@ const ChatContacts = () => {
 						onClick={() => {
 							setCreateDialogWithDevelopModal(true);
 						}}>
-						<IconHouseBuilding className='fill-blue' />
+						<IconHouseBuilding width={32} height={32} className='stroke-primary400' />
 						Застройщики
 					</button>
 					<button
@@ -31,7 +31,7 @@ const ChatContacts = () => {
 						onClick={() => {
 							setCreateDialogWithSpecialistModal(true);
 						}}>
-						<IconUsers2 className='fill-blue' />
+						<IconUsers2 width={32} height={32} className='stroke-primary400' />
 						Менеджеры
 					</button>
 				</div>

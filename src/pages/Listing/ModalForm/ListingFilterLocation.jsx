@@ -41,7 +41,7 @@ export const ListingFilterLocation = () => {
                      dispatch(setMapLocationCoordinates([]));
                      mapLocationListingClear();
                   }}>
-                  <IconTrash width={15} height={15} className="fill-red" />
+                  <IconTrash width={15} height={15} className="stroke-red" />
                </button>
             )}
          </div>

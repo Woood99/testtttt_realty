@@ -86,7 +86,7 @@ const VideoCard = ({
                      type="button"
                      className={`${stylesDragDropItems.DragDropImageIcon} ${styles.VideoCardControl} !z-20 top-3 right-14`}
                      onClick={() => edit(data)}>
-                     <IconEdit width={15} height={15} className="stroke-blue stroke-[1.5px]" />
+                     <IconEdit width={15} height={15} className="stroke-blue" />
                   </button>
                )}
 
@@ -94,7 +94,7 @@ const VideoCard = ({
                   type="button"
                   className={`${stylesDragDropItems.DragDropImageIcon} ${styles.VideoCardControl} !z-20 top-3 right-3`}
                   onClick={() => setIsDeleteVideoModal(true)}>
-                  <IconTrash width={15} height={15} className="fill-red" />
+                  <IconTrash width={15} height={15} className="stroke-red" />
                </button>
             </>
          )}

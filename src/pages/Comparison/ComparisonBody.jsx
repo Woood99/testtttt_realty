@@ -38,7 +38,7 @@ const Card = ({ totalCount, index, dataCard, type, deleteCard }) => {
             type="button"
             className={`${stylesDragDropItems.DragDropImageIcon} top-8 right-2 !opacity-100 !visible ${styles.ComparisonCardDeleteBtn}`}
             onClick={() => deleteCard(type, dataCard.id)}>
-            <IconTrash width={15} height={15} className="fill-red" />
+            <IconTrash width={15} height={15} className="stroke-red" />
          </button>
          <Link
             to={type === 'complex' ? `${RoutesPath.building}${dataCard.id}` : `${RoutesPath.apartment}${dataCard.id}`}
@@ -304,7 +304,7 @@ const ComparisonBody = ({ dataNames, data, type, deleteAll, deleteCard, isLoadin
                               <span className="text-dark font-medium">Поделиться списком</span>
                            </BtnActionText> */}
                            <BtnActionText className="!px-0" onClick={() => deleteAll(type)}>
-                              <IconTrash width={16} height={16} className="!fill-red" />
+                              <IconTrash width={16} height={16} className="!stroke-red" />
                               <span className="text-dark font-medium">Удалить весь список</span>
                            </BtnActionText>
                         </div>

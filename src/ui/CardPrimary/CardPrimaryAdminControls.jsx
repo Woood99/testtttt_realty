@@ -31,7 +31,7 @@ const CardPrimaryAdminControls = ({ options }) => {
             ElementTarget={() => (
                <Link to={`${PrivateRoutesPath.objects.edit}${id}`} target="_blank">
                   <BtnAction Selector="div" className="relative z-50">
-                     <IconEdit className="stroke-blue stroke-[1.5px]" width={18} height={18} />
+                     <IconEdit className="stroke-blue" width={18} height={18} />
                   </BtnAction>
                </Link>
             )}>
@@ -42,7 +42,7 @@ const CardPrimaryAdminControls = ({ options }) => {
             offset={[10, 5]}
             ElementTarget={() => (
                <BtnAction className="relative z-50" onClick={() => setConfirmDeleteModal(id)}>
-                  <IconTrash className="fill-red" width={16} height={16} />
+                  <IconTrash className="stroke-red" width={16} height={16} />
                </BtnAction>
             )}>
             Удалить

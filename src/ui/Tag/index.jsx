@@ -85,7 +85,7 @@ const Tag = ({
                   type="button"
                   onClick={onClickHandler}
                   className={cn(
-                     'relative z-[99]',
+                     'relative z-[98]',
                      styles.Tag,
                      styles.TagHoverEnable,
                      currentSizeClass(),
@@ -113,7 +113,7 @@ const Tag = ({
             type="button"
             onClick={onClickHandler}
             className={cn(
-               'relative z-[99]',
+               'relative z-[98]',
                styles.Tag,
                hoverEnable && styles.TagHoverEnable,
                currentSizeClass(),

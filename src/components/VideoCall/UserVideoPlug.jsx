@@ -11,7 +11,7 @@ const UserVideoPlug = ({ videoCallParams, userInfo }) => {
          <Avatar size={isDesktop ? 85 : 55} src={userInfo.image} title={userInfo.name} className="" />
 
          <h3 className="absolute bottom-3 left-3 text-white text-defaultMax font-medium">Вы</h3>
-         <IconСamcorderOff width={24} height={24} className="absolute top-3 right-3 fill-red" />
+         <IconСamcorderOff width={24} height={24} className="absolute top-3 right-3 stroke-red" />
       </div>
    );
 };

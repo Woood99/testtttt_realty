@@ -45,7 +45,7 @@ const DetailedStatisticsCardInfo = () => {
                      {combinedArrayLength(data.views_apart, data.views_my_apart)}
                   </div>
                   <div title="Добавили в избранное" className="z-10 flex gap-2">
-                     <IconFavoriteStroke className="fill-red" width={14} height={14} />
+                     <IconFavoriteStroke className="stroke-red" width={14} height={14} />
                      {combinedArrayLength(data.likes.my_complex, data.likes.my_apart)}
                   </div>
                   <div title="Добавили в сравнение" className="z-10 flex gap-2">

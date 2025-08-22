@@ -104,10 +104,10 @@ export const PresentCard = props => {
                ) : (
                   <div className="relative z-50 flex items-center gap-6 mt-auto">
                      <button type="button" className="relative z-50" onClick={editCard}>
-                        <IconEdit width={17} height={17} className="fill-none stroke-blue stroke-[1.5px]" />
+                        <IconEdit width={17} height={17} className="fill-none stroke-blue" />
                      </button>
                      <button type="button" className="relative z-50" onClick={deleteCard}>
-                        <IconTrash width={17} height={17} className="fill-red" />
+                        <IconTrash width={17} height={17} className="stroke-red" />
                      </button>
                   </div>
                )}

@@ -9,7 +9,7 @@ import "video.js/dist/video-js.css";
 
 import { BASE_URL, ROLE_BUYER, RoutesPath } from "@/constants";
 
-import { getCardBuildingsById, getDataRequest, sendPostRequest } from "@/api";
+import { getDataRequest, sendPostRequest } from "@/api";
 
 import { getSrcImage, isEmptyArrObj, timeToSeconds } from "@/helpers";
 
@@ -110,7 +110,17 @@ export const ShortsModal = ({ condition, set, data, startData = null, startIndex
 					</>
 				)}>
 				<div className='!px-8 !pt-8 !pb-0 md1:!px-0 md1:!pt-0'>
-					{!!condition && (
+					<Shorts
+						data={dynamicShorts || data}
+						startData={startData}
+						startIndex={startIndex}
+						condition={condition}
+						closeBtnOnClick={() => {
+							set(false);
+						}}
+					/>
+
+					{/* {!!condition && (
 						<>
 							{(dynamicShortsParams || dynamicShortsLoading) && !dynamicShorts?.length ? (
 								<div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
@@ -130,7 +140,7 @@ export const ShortsModal = ({ condition, set, data, startData = null, startIndex
 								</>
 							)}
 						</>
-					)}
+					)} */}
 				</div>
 			</Modal>
 		</ModalWrapper>
@@ -201,7 +211,7 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 
 	const onHandlerClick = useCallback((swiper, e) => {
 		if (isDesktop) return;
-		if (e.target.closest(".vjs-control-bar")) return;
+		if (e.target.closest(".vjs-control-bar") || e.target.closest(".vjs-volume-panel") || e.target.closest("[data-short-player-content]")) return;
 
 		const currentSlide = swiper.slides.find(item => +item.getAttribute("data-swiper-slide-index") === swiper.activeIndex);
 
@@ -257,7 +267,7 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 						onlyInViewport: true
 					}}
 					direction='vertical'
-					speed={isDesktop ? 600 : 400}
+					speed={isDesktop ? 500 : 300}
 					className='h-full mmd1:pl-[385px] mmd1:-ml-[385px]'
 					onSlideChange={handleSlideChange}
 					onClick={onHandlerClick}
@@ -357,7 +367,8 @@ export const VideoPlayer = ({
 	childrenVideo,
 	classNameButtonPlay,
 	onToggleVideo,
-	clickFullscreen = false
+	clickFullscreen = false,
+	objectData
 }) => {
 	const isDesktop = useSelector(getIsDesktop);
 	const videoRef = useRef(null);
@@ -521,7 +532,7 @@ export const VideoPlayer = ({
 			<div className={`video-player ${className}`}>
 				<div className='self-start overflow-hidden rounded-[20px]'>
 					<div className='bg-white rounded-[20px] overflow-hidden'>
-						<div ref={videoRef} className='relative md1:fixed md1:top-[50px] md1:left-0 md1:w-full z-[999]'>
+						<div ref={videoRef} className='relative md1:fixed md1:top-[50px] md1:left-0 md1:w-full z-[99]'>
 							{(!playerRef.current?.hasStarted_ || (!isDesktop && isActivePanel) || playerRef.current?.paused()) && (
 								<button
 									type='button'
@@ -536,11 +547,12 @@ export const VideoPlayer = ({
 									)}
 								</button>
 							)}
+
 							{userInfo?.role?.id === ROLE_BUYER.id &&
 								playerRef.current &&
 								!isEmptyArrObj(data.interactiveEl) &&
 								Boolean(playerRef.current.currentTime() >= timeToSeconds(data.interactiveEl.time)) && (
-									<Button onClick={() => setInteractiveIsOpen(true)} size='34' className='absolute bottom-[75px] right-4'>
+									<Button onClick={() => setInteractiveIsOpen(true)} size='34' className='absolute bottom-[64px] right-4 z-10'>
 										{data.interactiveEl.type.label}
 									</Button>
 								)}
@@ -550,8 +562,8 @@ export const VideoPlayer = ({
 							<div className='flex items-start gap-6 justify-between px-4 pb-4 shadow-primary md1:flex-col'>
 								<div className='flex-grow'>
 									{Boolean(data.building_name) && (
-										<Link to={`${RoutesPath.building}${data.building_id}`} className='mb-2 font-medium blue-link'>
-											ЖК {data.building_name}
+										<Link to={`${RoutesPath.building}${objectData.id}`} className='mb-2 flex items-center gap-2'>
+											<span className='blue-link font-medium'>{data.building_name}</span>
 										</Link>
 									)}
 									<PlayerTitle title={data.name} className='!static !w-full' classNameTitle='title-3' />
@@ -596,47 +608,37 @@ export const VideoPlayer = ({
 	}
 };
 
-export const InteractiveElement = ({ data, condition, set }) => {
-	const [objectData, setObjectData] = useState({});
+export const InteractiveElement = ({ data, condition, set, objectData }) => {
 	const authUser = useSelector(checkAuthUser);
 
-	useEffect(() => {
-		if (!data.interactiveEl || isEmptyArrObj(data.interactiveEl)) return;
+	if (!data.interactiveEl || isEmptyArrObj(data.interactiveEl)) return;
 
-		getCardBuildingsById(data.building_id).then(res => {
-			setObjectData(res);
-		});
-	}, [data]);
-
-	return (
-		Boolean(data.interactiveEl && !isEmptyArrObj(data.interactiveEl)) &&
-		(authUser ? (
-			<>
-				{data.interactiveEl.type.value === "record-viewing" && (
-					<ModalWrapper condition={condition}>
-						<RecordViewing
-							condition={condition}
-							set={set}
-							type='building'
-							id={data.building_id}
-							developName={data.developer.name}
-							objectData={objectData}
-							onUpdate={() => {
-								set(false);
-							}}
-						/>
-					</ModalWrapper>
-				)}
-			</>
-		) : (
-			<SelectAccLogModal
-				condition={condition}
-				set={() => {
-					if (condition) {
-						return set();
-					}
-				}}
-			/>
-		))
+	return authUser ? (
+		<>
+			{data.interactiveEl.type.value === "record-viewing" && (
+				<ModalWrapper condition={condition}>
+					<RecordViewing
+						condition={condition}
+						set={set}
+						type='building'
+						id={data.building_id}
+						developName={data.developer.name}
+						objectData={objectData}
+						onUpdate={() => {
+							set(false);
+						}}
+					/>
+				</ModalWrapper>
+			)}
+		</>
+	) : (
+		<SelectAccLogModal
+			condition={condition}
+			set={() => {
+				if (condition) {
+					return set();
+				}
+			}}
+		/>
 	);
 };

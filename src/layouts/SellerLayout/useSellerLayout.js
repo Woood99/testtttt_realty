@@ -12,7 +12,8 @@ export const useSellerLayout = () => {
 	const [userRole, setUserRole] = useState(ROLE_BUYER.name);
 	const userInfo = useSelector(getUserInfo);
 	const authLoading = useSelector(authLoadingSelector);
-
+	console.log(userInfo);
+	
 	useEffect(() => {
 		if (!city.id) return;
 	}, [city.id]);

@@ -26,14 +26,17 @@ import { getIsDesktop, getUserInfo } from "@/redux";
 import { Avatar, ElementNavBtn, ElementNavBtnCount, Maybe, Modal } from "@/ui";
 import {
 	IconAdd,
-	IconBasket2,
+	IconFileSearch,
+	IconChat,
 	IconComparison,
 	IconExit,
 	IconFavoriteStroke,
 	IconHouseLaptop,
+	IconNotif,
 	IconNotifStroke,
 	IconSettings,
-	IconWalletStroke
+	IconWalletStroke,
+	IconPenLine
 } from "@/ui/Icons";
 
 import { Button } from "@/uiForm";
@@ -153,7 +156,7 @@ export const PersonalModal = ({ condition, set }) => {
 								setCookie("loggedIn", true, { maxAge: COOKIE_MAX_AGE, path: "/" });
 								setCookie("access_token", token, { maxAge: COOKIE_MAX_AGE, path: "/" });
 								removeCookie("login_as_admin", { path: "/" });
-								setAuthUser();
+								setAuthUser(true);
 							}}>
 							Войти как администратор
 						</Button>
@@ -161,7 +164,7 @@ export const PersonalModal = ({ condition, set }) => {
 
 					<a href={RoutesPath.chat} className='w-full py-1 group'>
 						<ElementNavBtn className='flex items-center'>
-							<IconHouseLaptop />
+							<IconChat />
 							<span>Чат</span>
 							<ElementNavBtnCount>{userInfo.counts?.dialogs || 0}</ElementNavBtnCount>
 						</ElementNavBtn>
@@ -170,7 +173,7 @@ export const PersonalModal = ({ condition, set }) => {
 						<>
 							<Link to={BuyerRoutesPath.view} onClick={() => set(false)} className='w-full py-1 group'>
 								<ElementNavBtn className='flex items-center'>
-									<IconBasket2 />
+									<IconFileSearch />
 									<span>Записи на просмотр</span>
 									<ElementNavBtnCount>{userInfo.counts?.suggestions || 0}</ElementNavBtnCount>
 								</ElementNavBtn>
@@ -184,14 +187,14 @@ export const PersonalModal = ({ condition, set }) => {
 							</Link>
 							<Link to={BuyerRoutesPath.purchase.list} onClick={() => set(false)} className='w-full py-1 group'>
 								<ElementNavBtn className='flex items-center'>
-									<IconBasket2 />
+									<IconPenLine />
 									<span>Мои заявки на покупку</span>
 									<ElementNavBtnCount>{userInfo.counts?.orders || 0}</ElementNavBtnCount>
 								</ElementNavBtn>
 							</Link>
 
 							<ElementNavBtn className='flex items-center group'>
-								<IconNotifStroke />
+								<IconNotif />
 								<span>Уведомления</span>
 								<ElementNavBtnCount>{userInfo.counts?.notifications || 0}</ElementNavBtnCount>
 							</ElementNavBtn>
@@ -199,12 +202,6 @@ export const PersonalModal = ({ condition, set }) => {
 								<ElementNavBtn className='flex items-center'>
 									<IconFavoriteStroke />
 									<span>Избранное</span>
-								</ElementNavBtn>
-							</Link>
-							<Link to={RoutesPath.comparison} onClick={() => set(false)} className='w-full py-1'>
-								<ElementNavBtn className='flex items-center'>
-									<IconComparison />
-									<span>Сравнение</span>
 								</ElementNavBtn>
 							</Link>
 						</>

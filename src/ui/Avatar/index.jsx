@@ -20,7 +20,7 @@ export const getColorForLetter = letter => {
 };
 
 const Avatar = props => {
-	const { className = "", size = 40, src = "", title = "", textAvatar = "", online = false } = props;
+	const { className = "", size = 40, src = "", title = "", online = false } = props;
 	const gapOnlineBadge = size / 4 / 2 - 2;
 
 	return (

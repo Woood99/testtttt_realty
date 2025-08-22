@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import { Tooltip } from '../../../../ui/Tooltip';
-import { IconAdd, IconArrow, IconClearFormatting, IconFontBold, IconLink, IconQuote, IconUnderlineCh } from '../../../../ui/Icons';
+import { IconAdd, IconArrow, IconClearFormatting, IconFontBold, IconLink, IconQuote, IconUnderline } from '../../../../ui/Icons';
 import StyleButton from './StyleButton';
 
 const isType = (editorState, type) => {
@@ -52,14 +52,14 @@ const ChatDraftTooltip = ({ draftOptions }) => {
                   active={isUnderline}
                   label="Подчеркивание"
                   style="UNDERLINE"
-                  icon={<IconUnderlineCh className={cn(isUnderline && '!fill-white')} />}
+                  icon={<IconUnderline className={cn(isUnderline && '!fill-white')} />}
                   onToggle={draftOptions.toggleInlineStyle}
                />
                <StyleButton
                   active={isStrikethrough}
                   label="Зачёркнутый"
                   style="STRIKETHROUGH"
-                  icon={<IconUnderlineCh className={cn(isStrikethrough && '!fill-white')} />}
+                  icon={<IconUnderline className={cn(isStrikethrough && '!fill-white')} />}
                   onToggle={draftOptions.toggleInlineStyle}
                />
                <StyleButton

@@ -203,8 +203,8 @@
 	left: 50%;
 	transform: translateX(-50%);
 	z-index: 99;
-	    background: linear-gradient(254deg, rgba(15, 142, 194, .52) 0%, rgba(15, 142, 194, .52) 100%);
-		
+	background: linear-gradient(254deg, rgba(15, 142, 194, 0.52) 0%, rgba(15, 142, 194, 0.52) 100%);
+
 	color: var(--white);
 
 	border-radius: 12px;
@@ -397,7 +397,7 @@
 	}
 }
 
-.ChatMessageBlockMe{
+.ChatMessageBlockMe {
 	background: linear-gradient(239deg, #e9fdff 0%, #e9fdff 100%);
 }
 
@@ -420,15 +420,8 @@
 	p:only-child {
 		display: inline;
 	}
-}
-
-.ChatMessageTextLink {
-	background-color: var(--white);
-	color: var(--blue);
-	@media (min-width: $desktop-min) {
-		&:hover {
-			text-decoration: underline;
-		}
+	p:empty::before {
+		content: "\00a0";
 	}
 }
 
@@ -450,7 +443,7 @@
 }
 
 .ChatMessageBlockStory {
-	background-color: transparent;
+	background: transparent;
 }
 
 .ChatBottom {
@@ -504,6 +497,7 @@
 	max-height: 125px;
 	font-size: var(--default-max);
 	color: var(--dark);
+	overflow-y: auto;
 	&::-webkit-scrollbar {
 		width: 4px;
 		height: 4px;

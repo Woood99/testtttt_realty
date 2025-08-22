@@ -45,3 +45,15 @@ export const changePhoneFormat = phone => {
 	if (!isString(phone)) return;
 	return phone.replace(/(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})/, "$1 ($2) $3-$4-$5");
 };
+
+export const truncateString = (str, maxLength = 100) => {
+	if (!isString(str)) return;
+
+	const strTrim = str.trim().replace(/[.,]/g, "");
+
+	if (strTrim.length > maxLength) {
+		return `${strTrim.slice(0, maxLength)}...`;
+	}
+
+	return strTrim;
+};

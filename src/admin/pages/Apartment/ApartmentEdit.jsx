@@ -31,7 +31,7 @@ const ApartmentEdit = () => {
                         onClick={() => {
                            setConfirmDeleteModal(params.id);
                         }}>
-                        <IconTrash width={16} height={16} className="!fill-red" />
+                        <IconTrash width={16} height={16} className="!stroke-red" />
                         <span className="text-dark font-medium">Удалить квартиру</span>
                      </BtnActionText>
                   </div>

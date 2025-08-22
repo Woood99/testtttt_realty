@@ -1,371 +1,414 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import videojs from 'video.js';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import videojs from "video.js";
+import "video.js/dist/video-js.css";
 
-import 'video.js/dist/video-js.css';
-import '../../styles/components/video-player.scss';
+import { BASE_URL, ROLE_ADMIN, ROLE_BUYER, ROLE_SELLER, RoutesPath } from "@/constants";
 
-import Modal from '../../ui/Modal';
+import { getCardBuildingsById } from "@/api";
 
-import { BASE_URL } from '../../constants/api';
-import ModalWrapper from '../../ui/Modal/ModalWrapper';
-import isEmptyArrObj from '../../helpers/isEmptyArrObj';
-import { IconChat, IconPause, IconPlay, IconShareArrow } from '../../ui/Icons';
-import Button from '../../uiForm/Button';
-import { timeToSeconds } from '../../helpers/timeTo';
-import { RoutesPath } from '../../constants/RoutesPath';
-import { getIsDesktop, getUserInfo } from '@/redux';
-import { ROLE_ADMIN, ROLE_BUYER, ROLE_SELLER } from '../../constants/roles';
-import ModalHeader from '../../ui/Modal/ModalHeader';
-import Tag from '../../ui/Tag';
-import { InteractiveElement } from '../../ModalsMain/VideoModal';
-import ShareModal from '../../ModalsMain/ShareModal';
-import { playerLocalRu } from '../../ModalsMain/VideoModal/components/playerLocalRu';
-import PlayerCards from '../../ModalsMain/VideoModal/components/PlayerCards';
-import PlayerTitle from '../../ModalsMain/VideoModal/components/PlayerTitle';
-import PlayerAuthor from '../../ModalsMain/VideoModal/components/PlayerAuthor';
-import { ApartmentsCardsVertical } from '../../ModalsMain/VideoModal/components/ApartmentsCards';
-import timeTooltip from '../../ModalsMain/VideoModal/components/timeTooltip';
-import { useNavigateToChat } from '../../hooks/useNavigateToChat';
+import { useNavigateToChat } from "@/hooks";
+
+import { isArray, isEmptyArrObj, timeToSeconds } from "@/helpers";
+import findObjectWithMinValue from "@/helpers/findObjectWithMinValue";
+
+import { getIsDesktop, getUserInfo } from "@/redux";
+
+import { Button } from "@/uiForm";
+
+import { InteractiveElement, ShareModal } from "@/ModalsMain";
+import LocationModal from "@/ModalsMain/LocationModal";
+
+import { Maybe, Modal, ModalHeader, ModalWrapper, Tag, TagPresents, TagsDiscounts } from "..";
+
+import { ApartmentsCardsVertical } from "../../ModalsMain/VideoModal/components/ApartmentsCards";
+import PlayerAuthor from "../../ModalsMain/VideoModal/components/PlayerAuthor";
+import PlayerCards from "../../ModalsMain/VideoModal/components/PlayerCards";
+import PlayerTitle from "../../ModalsMain/VideoModal/components/PlayerTitle";
+import { playerLocalRu } from "../../ModalsMain/VideoModal/components/playerLocalRu";
+import timeTooltip from "../../ModalsMain/VideoModal/components/timeTooltip";
+import "../../styles/components/video-player.scss";
+import { IconChat, IconHome, IconLocation, IconPause, IconPlay, IconShareArrow } from "../Icons";
 
 const PlaybackIndicator = ({ isPlaying }) => (
-   <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 circle-dark ${isPlaying ? 'opacity-0' : 'opacity-100'}`}>
-      {isPlaying ? <IconPause width={24} height={24} className="fill-white" /> : <IconPlay width={24} height={24} className="fill-white" />}
-   </div>
+	<div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 circle-dark ${isPlaying ? "opacity-0" : "opacity-100"}`}>
+		{isPlaying ? <IconPause width={24} height={24} className='fill-white' /> : <IconPlay width={24} height={24} className='fill-white' />}
+	</div>
 );
 
-const ControlButtons = memo(({ onChat, onShare, volumePanelRef }) => (
-   <div className="flex flex-col items-center gap-4">
-      <div className="video-js video-js-short-volume short-player-volume" ref={volumePanelRef} />
-      <button className="w-[52px] h-[52px] flex items-center justify-center" onClick={onChat}>
-         <IconChat className="stroke-white fill-[transparent]" width={24} height={24} />
-      </button>
-      <button className="w-[52px] h-[52px] flex items-center justify-center" onClick={onShare}>
-         <IconShareArrow className="fill-white" width={24} height={24} />
-      </button>
-   </div>
+const ControlButtons = memo(({ onChat, onShare, onToggleApartments, volumePanelRef, setIsOpenModalLocation }) => (
+	<div className='flex flex-col items-center gap-8'>
+		<div className='video-js video-js-short-volume short-player-volume relative mb-4' ref={volumePanelRef}>
+			<span className='order-1 text-default absolute -bottom-4 left-1/2 transform -translate-x-1/2'>Звук</span>
+		</div>
+		<button className='flex items-center justify-center flex-col gap-2 text-white' onClick={() => setIsOpenModalLocation(true)}>
+			<IconLocation className='stroke-white w-[24px] h-[24px]' width={24} height={24} />
+			<span>На карте</span>
+		</button>
+		<button className='flex items-center justify-center flex-col gap-2 text-white' onClick={onToggleApartments}>
+			<IconHome className='stroke-white w-[24px] h-[24px]' width={24} height={24} />
+			<span>Кв-ры ЖК</span>
+		</button>
+		<button className='flex items-center justify-center flex-col gap-2 text-white' onClick={onChat}>
+			<IconChat className='stroke-white w-[24px] h-[24px]' width={24} height={24} />
+			<span>Чат</span>
+		</button>
+		<button className='flex items-center justify-center flex-col gap-2 text-white' onClick={onShare}>
+			<IconShareArrow className='stroke-white stroke-[1.5px] fill-[transparent] w-[24px] h-[24px]' width={24} height={24} />
+			<span>Поделится</span>
+		</button>
+	</div>
 ));
 
-export const ShortPlayer = ({ data, classNamePlayer = '' }) => {
-   const playerRef = useRef(null);
-   const elementRef = useRef(null);
-   const volumePanelRef = useRef(null);
+export const ShortPlayer = ({ data, classNamePlayer = "" }) => {
+	const playerRef = useRef(null);
+	const elementRef = useRef(null);
+	const volumePanelRef = useRef(null);
+	const [objectData, setObjectData] = useState({});
+	const [isOpenModalLocation, setIsOpenModalLocation] = useState(false);
 
-   const [sidebarState, setSidebarState] = useState({
-      apartments: false,
-      building: false,
-   });
+	const [sidebarState, setSidebarState] = useState({
+		apartments: false,
+		building: false
+	});
 
-   const [uiState, setUiState] = useState({
-      time: 0,
-      videoPlay: false,
-      shareModal: false,
-      interactiveOpen: false,
-   });
+	const [uiState, setUiState] = useState({
+		time: 0,
+		videoPlay: false,
+		shareModal: false,
+		interactiveOpen: false
+	});
 
-   const isDesktop = useSelector(getIsDesktop);
-   const userInfo = useSelector(getUserInfo);
-   const navigateToChat = useNavigateToChat();
+	const isDesktop = useSelector(getIsDesktop);
+	const userInfo = useSelector(getUserInfo);
+	const navigateToChat = useNavigateToChat();
 
-   const id = useRef(`short-player-${data.id}`).current;
+	const id = useRef(`short-player-${data.id}`).current;
 
-   const previewUrl = useMemo(() => `${BASE_URL}/api/video/${data.id}/preview/0`, [data.id]);
-   const shareUrl = useMemo(() => `${window.location.origin}/shorts/${data.id}`, [data.id]);
+	const previewUrl = useMemo(() => `${BASE_URL}/api/video/${data.id}/preview/0`, [data.id]);
+	const shareUrl = useMemo(() => `${window.location.origin}/shorts/${data.id}`, [data.id]);
 
-   const playerOptions = useMemo(
-      () => ({
-         controls: true,
-         autoplay: false,
-         preload: 'auto',
-         muted: false,
-         playsinline: true,
-         language: 'ru',
-         sources: [
-            {
-               src: `${BASE_URL}${data.video_url}`,
-               type: 'video/mp4',
-            },
-         ],
-         userActions: { doubleClick: false, click: isDesktop },
-      }),
-      [data.video_url, id]
-   );
+	const playerOptions = useMemo(
+		() => ({
+			controls: true,
+			autoplay: false,
+			preload: "auto",
+			muted: false,
+			playsinline: true,
+			language: "ru",
+			sources: [
+				{
+					src: `${BASE_URL}${data.video_url}`,
+					type: "video/mp4"
+				}
+			],
+			userActions: { doubleClick: false, click: isDesktop }
+		}),
+		[data.video_url, id]
+	);
 
-   const handleShare = useCallback(() => setUiState(prev => ({ ...prev, shareModal: true })), []);
+	useEffect(() => {
+		if (!data.building_id) return;
+		getCardBuildingsById(data.building_id).then(res => {
+			setObjectData(res);
+		});
+	}, []);
 
-   const handleInteractiveOpen = useCallback(() => setUiState(prev => ({ ...prev, interactiveOpen: true })), []);
+	const handleShare = useCallback(() => setUiState(prev => ({ ...prev, shareModal: true })), []);
 
-   const interactiveButtonProps = useMemo(
-      () => ({
-         onClick: handleInteractiveOpen,
-         size: '34',
-         className: 'absolute bottom-[75px] left-4',
-         children: data.interactiveEl?.type?.label,
-      }),
-      [handleInteractiveOpen, data.interactiveEl]
-   );
+	const handleInteractiveOpen = useCallback(() => setUiState(prev => ({ ...prev, interactiveOpen: true })), []);
 
-   const modalCommonProps = useMemo(
-      () => ({
-         options: {
-            modalClassNames: 'HeaderSticky !pb-0',
-            overlayClassNames: '_full',
-            modalContentClassNames: '!px-0 !pt-0',
-         },
-         closeBtn: false,
-      }),
-      []
-   );
+	const interactiveButtonProps = useMemo(
+		() => ({
+			onClick: handleInteractiveOpen,
+			size: "34",
+			className: "mb-4",
+			children: data.interactiveEl?.type?.label
+		}),
+		[handleInteractiveOpen, data.interactiveEl]
+	);
 
-   const toggleSidebar = useCallback(type => {
-      setSidebarState(prev => ({
-         apartments: type === 'apartments' ? !prev.apartments : false,
-         building: type === 'building' ? !prev.building : false,
-      }));
-   }, []);
+	const modalCommonProps = useMemo(
+		() => ({
+			options: {
+				modalClassNames: "HeaderSticky !pb-0",
+				overlayClassNames: "_full",
+				modalContentClassNames: "!px-0 !pt-0"
+			},
+			closeBtn: false
+		}),
+		[]
+	);
 
-   const handleChatNavigation = useCallback(async () => {
-      if (data.author.role === ROLE_ADMIN.id) {
-         await navigateToChat({
-            building_id: data.building_id,
-            organization_id: +data.developer.id,
-         });
-      } else if (data.author.role === ROLE_SELLER.id) {
-         await navigateToChat({
-            building_id: data.building_id,
-            recipients_id: [data.author.id],
-         });
-      }
-   }, [data, navigateToChat]);
+	const toggleSidebar = useCallback(type => {
+		setSidebarState(prev => ({
+			apartments: type === "apartments" ? !prev.apartments : false,
+			building: type === "building" ? !prev.building : false
+		}));
+	}, []);
 
-   const sidebarContent = useMemo(
-      () => ({
-         apartments: {
-            params: { ids: data.cards.slice(0, 50), per_page: 35 },
-            title: 'Квартиры этого обзора',
-            showMoreUrl: `${RoutesPath.listingFlats}?complex=${data.building_id}&ids=1&${data.cards.map(id => `id=${id}`).join('&')}`,
-         },
-         building: {
-            params: { building_id: data.building_id, per_page: 35 },
-            title: `Квартиры ЖК ${data.building_name}`,
-            showMoreUrl: `${RoutesPath.listingFlats}?complex=${data.building_id}`,
-         },
-      }),
-      [data]
-   );
+	const handleChatNavigation = useCallback(async () => {
+		if (data.author.role === ROLE_ADMIN.id) {
+			await navigateToChat({
+				building_id: data.building_id,
+				organization_id: +data.developer.id
+			});
+		} else if (data.author.role === ROLE_SELLER.id) {
+			await navigateToChat({
+				building_id: data.building_id,
+				recipients_id: [data.author.id]
+			});
+		}
+	}, [data, navigateToChat]);
 
-   const tagsContent = useMemo(
-      () =>
-         (data.tags || []).slice(0, 3).map((item, index) => (
-            <Tag size="small" color="default" key={index}>
-               {item.name}
-            </Tag>
-         )),
-      [data.tags]
-   );
+	const sidebarContent = useMemo(
+		() => ({
+			apartments: {
+				params: { ids: data.cards.slice(0, 50), per_page: 35 },
+				title: "Квартиры этого обзора",
+				showMoreUrl: `${RoutesPath.listingFlats}?complex=${data.building_id}&ids=1&${data.cards.map(id => `id=${id}`).join("&")}`
+			},
+			building: {
+				params: { building_id: data.building_id, per_page: 35 },
+				title: `Квартиры ЖК ${data.building_name}`,
+				showMoreUrl: `${RoutesPath.listingFlats}?complex=${data.building_id}`
+			}
+		}),
+		[data]
+	);
 
-   const showInteractiveButton = useMemo(
-      () =>
-         userInfo?.role?.id === ROLE_BUYER.id &&
-         elementRef.current &&
-         !isEmptyArrObj(data.interactiveEl) &&
-         uiState.time >= timeToSeconds(data.interactiveEl.time),
-      [userInfo, data.interactiveEl, uiState.time]
-   );
+	const tagsContent = useMemo(
+		() =>
+			(data.tags || []).slice(0, 3).map((item, index) => (
+				<Tag size='small' color='default' key={index}>
+					{item.name}
+				</Tag>
+			)),
+		[data.tags]
+	);
 
-   const renderMobileModals = useMemo(() => {
-      if (isDesktop) return null;
+	const showInteractiveButton = useMemo(
+		() => userInfo?.role?.id === ROLE_BUYER.id && !isEmptyArrObj(data.interactiveEl) && uiState.time >= timeToSeconds(data.interactiveEl.time),
+		[userInfo, data.interactiveEl, uiState.time]
+	);
 
-      return (
-         <>
-            <ModalWrapper condition={sidebarState.apartments}>
-               <Modal
-                  condition={sidebarState.apartments}
-                  set={() => toggleSidebar('apartments')}
-                  {...modalCommonProps}
-                  ModalHeader={() => (
-                     <ModalHeader set={() => toggleSidebar('apartments')} className="px-4 py-4 mb-2">
-                        <h2 className="title-2">{sidebarContent.apartments.title}</h2>
-                     </ModalHeader>
-                  )}>
-                  <ApartmentsCardsVertical
-                     options={{
-                        player: elementRef.current,
-                        ...sidebarContent.apartments,
-                        condition: sidebarState.apartments,
-                        set: () => toggleSidebar('apartments'),
-                        className: '',
-                     }}
-                  />
-               </Modal>
-            </ModalWrapper>
+	const renderMobileModals = useMemo(() => {
+		if (isDesktop) return null;
 
-            <ModalWrapper condition={sidebarState.building}>
-               <Modal
-                  condition={sidebarState.building}
-                  set={() => toggleSidebar('building')}
-                  {...modalCommonProps}
-                  ModalHeader={() => (
-                     <ModalHeader set={() => toggleSidebar('building')} className="px-4 py-4 mb-2">
-                        <h2 className="title-2">{sidebarContent.building.title}</h2>
-                     </ModalHeader>
-                  )}>
-                  <ApartmentsCardsVertical
-                     options={{
-                        player: elementRef.current,
-                        ...sidebarContent.building,
-                        condition: sidebarState.building,
-                        set: () => toggleSidebar('building'),
-                        className: '',
-                     }}
-                  />
-               </Modal>
-            </ModalWrapper>
-         </>
-      );
-   }, [isDesktop, sidebarState, modalCommonProps, sidebarContent]);
+		return (
+			<>
+				<ModalWrapper condition={sidebarState.apartments}>
+					<Modal
+						condition={sidebarState.apartments}
+						set={() => toggleSidebar("apartments")}
+						{...modalCommonProps}
+						ModalHeader={() => (
+							<ModalHeader set={() => toggleSidebar("apartments")} className='px-4 py-4 mb-2'>
+								<h2 className='title-2'>{sidebarContent.apartments.title}</h2>
+							</ModalHeader>
+						)}>
+						<ApartmentsCardsVertical
+							options={{
+								player: elementRef.current,
+								...sidebarContent.apartments,
+								condition: sidebarState.apartments,
+								set: () => toggleSidebar("apartments"),
+								className: ""
+							}}
+						/>
+					</Modal>
+				</ModalWrapper>
 
-   useEffect(() => {
-      const initPlayer = () => {
-         const el = document.getElementById(id);
-         if (!el) return;
+				<ModalWrapper condition={sidebarState.building}>
+					<Modal
+						condition={sidebarState.building}
+						set={() => toggleSidebar("building")}
+						{...modalCommonProps}
+						ModalHeader={() => (
+							<ModalHeader set={() => toggleSidebar("building")} className='px-4 py-4 mb-2'>
+								<h2 className='title-2'>{sidebarContent.building.title}</h2>
+							</ModalHeader>
+						)}>
+						<ApartmentsCardsVertical
+							options={{
+								player: elementRef.current,
+								...sidebarContent.building,
+								condition: sidebarState.building,
+								set: () => toggleSidebar("building"),
+								className: ""
+							}}
+						/>
+					</Modal>
+				</ModalWrapper>
+			</>
+		);
+	}, [isDesktop, sidebarState, modalCommonProps, sidebarContent]);
 
-         const existingPlayer = videojs.getPlayer(id);
-         if (existingPlayer) {
-            existingPlayer.dispose();
-            // Очищаем остатки из глобального списка Video.js
-            delete videojs.players[id];
-         }
+	useEffect(() => {
+		const initPlayer = () => {
+			const el = document.getElementById(id);
+			if (!el) return;
 
-         const player = videojs(el, playerOptions, function () {
-            // Колбэк после инициализации
-            this.el().style.setProperty('--bg-image', `url('${previewUrl}')`);
-         });
+			const existingPlayer = videojs.getPlayer(id);
+			if (existingPlayer) {
+				existingPlayer.dispose();
+				delete videojs.players[id];
+			}
 
-         playerRef.current = player;
+			const player = videojs(el, playerOptions, function () {
+				this.el().style.setProperty("--bg-image", `url('${previewUrl}')`);
+			});
 
-         const controlBar = player.getChild('controlBar');
-         const volumePanel = controlBar.getChild('volumePanel');
-         const playToggle = controlBar.getChild('playToggle');
+			playerRef.current = player;
 
-         controlBar.removeChild(playToggle);
-         controlBar.getChild('RemainingTimeDisplay')?.dispose();
+			const controlBar = player.getChild("controlBar");
+			const volumePanel = controlBar.getChild("volumePanel");
+			const playToggle = controlBar.getChild("playToggle");
 
-         if (volumePanelRef.current) {
-            controlBar.removeChild(volumePanel);
-            volumePanelRef.current.appendChild(volumePanel.el());
-         }
+			controlBar.removeChild(playToggle);
+			controlBar.getChild("RemainingTimeDisplay")?.dispose();
 
-         player.addChild('PlayToggle', {}, 0);
-         player.getChild('PlayToggle').el().classList.add('short-player-play');
+			if (volumePanelRef.current) {
+				controlBar.removeChild(volumePanel);
+				volumePanelRef.current.appendChild(volumePanel.el());
+			}
 
-         player.on('ended', () => player.play());
-         player.on('timeupdate', () => {
-            setUiState(prev => ({ ...prev, time: player.currentTime() }));
-         });
-         player.on('volumechange', () => {
-            localStorage.setItem('video_volume', player.muted() ? 0 : player.volume());
-         });
-         player.on('play', () => setUiState(prev => ({ ...prev, videoPlay: true })));
-         player.on('pause', () => setUiState(prev => ({ ...prev, videoPlay: false })));
+			player.addChild("PlayToggle", {}, 0);
+			player.getChild("PlayToggle").el().classList.add("short-player-play");
 
-         timeTooltip(player, data.timeCodes);
-      };
+			player.on("ended", () => player.play());
+			player.on("timeupdate", () => {
+				setUiState(prev => ({ ...prev, time: player.currentTime() }));
+			});
+			player.on("volumechange", () => {
+				localStorage.setItem("video_volume", player.muted() ? 0 : player.volume());
+			});
+			player.on("play", () => setUiState(prev => ({ ...prev, videoPlay: true })));
+			player.on("pause", () => setUiState(prev => ({ ...prev, videoPlay: false })));
 
-      initPlayer();
-      videojs.addLanguage('ru', playerLocalRu);
+			timeTooltip(player, data.timeCodes);
+		};
 
-      return () => {
-         if (playerRef.current && !playerRef.current.isDisposed()) {
-            playerRef.current.dispose();
-            delete videojs.players[id];
-            playerRef.current = null;
-         }
-      };
-   }, [data, id, playerOptions, previewUrl]);
+		initPlayer();
+		videojs.addLanguage("ru", playerLocalRu);
 
-   return (
-      <div className="h-full w-full cursor-pointer">
-         {isDesktop && (
-            <>
-               {sidebarState.apartments && (
-                  <ApartmentsCardsVertical
-                     options={{
-                        player: elementRef.current,
-                        ...sidebarContent.apartments,
-                        condition: sidebarState.apartments,
-                        set: () => toggleSidebar('apartments'),
-                        className: 'absolute top-8 bottom-8 -left-[360px] w-[360px] rounded-tr-none rounded-br-none rounded-br-x',
-                     }}
-                  />
-               )}
-               {sidebarState.building && (
-                  <ApartmentsCardsVertical
-                     options={{
-                        player: elementRef.current,
-                        ...sidebarContent.building,
-                        condition: sidebarState.building,
-                        set: () => toggleSidebar('building'),
-                        className: 'absolute top-8 bottom-8 -left-[360px] w-[360px] rounded-tr-none rounded-br-none rounded-br-x',
-                     }}
-                  />
-               )}
-            </>
-         )}
+		return () => {
+			if (playerRef.current && !playerRef.current.isDisposed()) {
+				playerRef.current.dispose();
+				delete videojs.players[id];
+				playerRef.current = null;
+			}
+		};
+	}, [data, id, playerOptions, previewUrl]);
 
-         <div data-vjs-player>
-            <div className="video-js-background" />
-            <video id={id} className={`video-js ${classNamePlayer}`} playsInline />
-         </div>
+	const objectDataMinValue = findObjectWithMinValue(objectData.apartments, "bd_price");
 
-         <div className="absolute top-6 right-6 z-[99]">
-            <button className="blue-link !text-white" onClick={() => toggleSidebar('building')}>
-               Квартиры ЖК
-            </button>
-         </div>
+	return (
+		<div className='h-full w-full cursor-pointer'>
+			<Maybe condition={isDesktop}>
+				{sidebarState.apartments && (
+					<ApartmentsCardsVertical
+						options={{
+							player: elementRef.current,
+							...sidebarContent.apartments,
+							condition: sidebarState.apartments,
+							set: () => toggleSidebar("apartments"),
+							className: "absolute top-8 bottom-8 -left-[360px] w-[360px] rounded-tr-none rounded-br-none rounded-br-x"
+						}}
+					/>
+				)}
+				{sidebarState.building && (
+					<ApartmentsCardsVertical
+						options={{
+							player: elementRef.current,
+							...sidebarContent.building,
+							condition: sidebarState.building,
+							set: () => toggleSidebar("building"),
+							className: "absolute top-8 bottom-8 -left-[360px] w-[360px] rounded-tr-none rounded-br-none rounded-br-x"
+						}}
+					/>
+				)}
+			</Maybe>
 
-         <div className="absolute bottom-[135px] right-1 z-[99]">
-            <ControlButtons onChat={handleChatNavigation} onShare={handleShare} volumePanelRef={volumePanelRef} />
-         </div>
+			<div data-vjs-player>
+				<div className='video-js-background' />
+				<video id={id} className={`video-js ${classNamePlayer}`} playsInline />
+			</div>
 
-         <ShareModal
-            condition={uiState.shareModal}
-            set={val => setUiState(prev => ({ ...prev, shareModal: val }))}
-            title="Поделиться Short"
-            url={shareUrl}
-         />
+			<div className='absolute bottom-[135px] right-1 z-[99]'>
+				<ControlButtons
+					onChat={handleChatNavigation}
+					onShare={handleShare}
+					onToggleApartments={() => toggleSidebar("building")}
+					volumePanelRef={volumePanelRef}
+					setIsOpenModalLocation={setIsOpenModalLocation}
+				/>
+			</div>
 
-         <PlayerAuthor
-            data={data}
-            player={playerRef.current}
-            setInteractiveIsOpen={val => setUiState(prev => ({ ...prev, interactiveOpen: val }))}
-            className={`top-4 left-4 z-[99] max-w-[300px] md3:max-w-[200px]`}
-            type="short"
-         />
+			<PlayerAuthor
+				data={data}
+				player={playerRef.current}
+				setInteractiveIsOpen={val => setUiState(prev => ({ ...prev, interactiveOpen: val }))}
+				className={`top-4 left-4 z-[99] max-w-[300px] md3:max-w-[200px]`}
+				type='short'
+			/>
+			<Maybe condition={objectData.buildingDiscounts?.length || objectData.present}>
+				<div className='absolute top-4 right-4 z-[99] flex flex-col gap-2 items-end'>
+					<Maybe condition={objectData.buildingDiscounts?.length}>
+						<TagsDiscounts
+							discounts={objectData.buildingDiscounts}
+							is_building
+							by_price={objectDataMinValue?.bd_price}
+							by_area={objectDataMinValue?.min_area}
+						/>
+					</Maybe>
 
-         <div className="absolute left-4 bottom-[20px] z-40 w-full">
-            {data.tags?.length > 0 && <div className="mb-4 flex gap-2 flex-wrap max-w-[80%]">{tagsContent}</div>}
+					<Maybe condition={objectData.present}>
+						<TagPresents
+							dataMainGifts={isArray(objectData.main_gifts) ? objectData.main_gifts.filter(item => item) : []}
+							dataSecondGifts={isArray(objectData.second_gifts) ? objectData.second_gifts.filter(item => item) : []}
+							title='Есть подарок'
+						/>
+					</Maybe>
+				</div>
+			</Maybe>
 
-            <PlayerTitle
-               title={data.name}
-               className="!static !w-[80%]"
-               building_id={data.building_id}
-               building_name={data.building_name}
-               type="short"
-            />
+			<div className='absolute left-4 bottom-[20px] z-40 w-full' data-short-player-content>
+				{showInteractiveButton && <Button {...interactiveButtonProps} />}
+				{data.tags?.length > 0 && <div className='mb-4 flex gap-2 flex-wrap max-w-[80%]'>{tagsContent}</div>}
+				<PlayerTitle
+					title={data.name}
+					className='!static !w-[80%]'
+					building_id={objectData.id}
+					building_name={objectData.title}
+					building_image={objectData.images?.[0] || ""}
+					type='short'
+				/>
 
-            <PlayerCards data={data} onClick={() => toggleSidebar('apartments')} />
-         </div>
+				<PlayerCards data={data} onClick={() => toggleSidebar("apartments")} />
+			</div>
 
-         {showInteractiveButton && <Button {...interactiveButtonProps} />}
+			<InteractiveElement
+				data={data}
+				condition={uiState.interactiveOpen}
+				set={val => setUiState(prev => ({ ...prev, interactiveOpen: val }))}
+				objectData={objectData}
+			/>
 
-         <InteractiveElement data={data} condition={uiState.interactiveOpen} set={val => setUiState(prev => ({ ...prev, interactiveOpen: val }))} />
+			<div className='pointer-events-none short-player-status'>
+				<PlaybackIndicator isPlaying={uiState.videoPlay} />
+			</div>
+			<Maybe condition={objectData.geo}>
+				<LocationModal condition={isOpenModalLocation} set={setIsOpenModalLocation} geo={objectData.geo} />
+			</Maybe>
+			<ShareModal
+				condition={uiState.shareModal}
+				set={val => setUiState(prev => ({ ...prev, shareModal: val }))}
+				title='Поделиться Short'
+				url={shareUrl}
+			/>
 
-         <div className="pointer-events-none short-player-status">
-            <PlaybackIndicator isPlaying={uiState.videoPlay} />
-         </div>
-
-         {renderMobileModals}
-      </div>
-   );
+			{renderMobileModals}
+		</div>
+	);
 };

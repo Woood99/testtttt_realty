@@ -135,11 +135,11 @@ const PurchaseList = ({ role_id = ROLE_BUYER.id }) => {
                                                             className="flex gap-2"
                                                             target="_blank"
                                                             to={`${PrivateRoutesPath.purchase.edit}${item.id}`}>
-                                                            <IconEdit className="stroke-blue stroke-[1.5px]" width={18} height={18} />
+                                                            <IconEdit className="stroke-blue" width={18} height={18} />
                                                             Редактировать
                                                          </Link>
                                                          <button className="flex gap-2" onClick={() => setConfirmDeleteCard(item.id)}>
-                                                            <IconTrash className="fill-red" width={16} height={16} />
+                                                            <IconTrash className="stroke-red" width={16} height={16} />
                                                             Удалить заявку
                                                          </button>
                                                       </div>

@@ -17,8 +17,10 @@ export const listingDefaultValue = {
       sortBy: urlParams.get('sort') || 'priceAsc',
       tags: urlParams.getAll('tags').map(item => +item),
       advantages: urlParams.getAll('advantages').map(item => +item),
-      is_gift: urlParams.get('is_gift') || false,
-      is_video: urlParams.get('is_video') || false,
+      is_gift: !!urlParams.get('is_gift') || false,
+      is_video: !!urlParams.get('is_video') || false,
+      is_cashback: !!urlParams.get('is_cashback') || false,
+      is_discount: !!urlParams.get('is_discount') || false,
       filtersMain: {
          price: {
             ...updateAdditionalFilters([apartmentsFilterPrice]).price,
@@ -76,6 +78,8 @@ const listingFlatsSlice = createSlice({
          state.filters.advantages = [];
          state.filters.is_gift = false;
          state.filters.is_video = false;
+         state.filters.is_discount = false;
+         state.filters.is_cashback = false;
       },
 
       setSort(state, action) {

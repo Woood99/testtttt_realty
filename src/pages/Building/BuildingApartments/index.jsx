@@ -45,6 +45,7 @@ const BuildingApartments = ({ data = null, frames = [], tags = [], advantages = 
 		appendParams(searchParams, "frames", filtersResult.filters.primary.frames?.value, "string");
 		appendParams(searchParams, "is_gift", filtersResult.is_gift, "bool");
 		appendParams(searchParams, "is_discount", filtersResult.is_discount, "bool");
+		appendParams(searchParams, "is_cashback", filtersResult.is_cashback, "bool");
 
 		setUrlParams(`&${searchParams.toString()}`);
 	}, [filtersResult, sortBy]);
@@ -85,10 +86,10 @@ const BuildingApartments = ({ data = null, frames = [], tags = [], advantages = 
 				)}
 				<div className='flex justify-between gap-2 items-center px-8 md1:px-4'>
 					<TabsNav>
-						<TabsTitle border onChange={() => setActiveTabIndex(0)} value={activeTabIndex === 0} className='text-bigSmall'>
+						<TabsTitle border onChange={() => setActiveTabIndex(0)} value={activeTabIndex === 0} className='text-bigSmall font-bold'>
 							По планировкам
 						</TabsTitle>
-						<TabsTitle border onChange={() => setActiveTabIndex(1)} value={activeTabIndex === 1} className='text-bigSmall'>
+						<TabsTitle border onChange={() => setActiveTabIndex(1)} value={activeTabIndex === 1} className='text-bigSmall font-bold'>
 							По квартирам
 						</TabsTitle>
 					</TabsNav>

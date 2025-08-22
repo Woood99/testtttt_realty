@@ -14,10 +14,10 @@ import { ChatContext, ChatMessagesContext } from "@/context";
 import { getIsDesktop, getUserInfo } from "@/redux";
 
 import { Avatar, SimpleScrollbar, Spinner } from "@/ui";
+import { IconChat } from "@/ui/Icons";
 
 import { Button } from "@/uiForm";
 
-import chatImg from "../../../../assets/img/chat-icon.png";
 import styles from "../../Chat.module.scss";
 import { CHAT_TYPES } from "../../constants";
 import { useChatMessages } from "../../hooks";
@@ -260,7 +260,7 @@ const ChatMessages = ({
 										e.stopPropagation();
 										goToChatOwner();
 									}}>
-									<img src={chatImg} width={20} height={20} alt='' />
+									<IconChat width={20} height={20} />
 								</div>
 							)}
 							{isLoadingJoinChannel ? (
@@ -276,7 +276,7 @@ const ChatMessages = ({
 				{visibleGoToChat && (
 					<div className='mt-auto'>
 						<button className='bg-white w-full py-4 px-4 flex justify-center items-center gap-3' onClick={goToChatOwner}>
-							<img src={chatImg} width={20} height={20} alt='' />
+							<IconChat width={20} height={20} />
 							<span className='font-medium text-defaultMax'>Задать вопрос</span>
 						</button>
 					</div>

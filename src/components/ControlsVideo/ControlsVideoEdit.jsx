@@ -21,7 +21,7 @@ import ControllerFieldTags from '../../uiForm/ControllerFields/ControllerFieldTa
 import { ControllerFieldCheckbox } from '../../uiForm/ControllerFields/ControllerFieldCheckbox';
 
 import DragDropImageSolo from '../DragDrop/DragDropImageSolo';
-import { IconImageAdd } from '../../ui/Icons';
+import { IconImage } from '../../ui/Icons';
 import Sidebar from '../Sidebar';
 import BodyAndSidebar from '../BodyAndSidebar';
 import { BASE_URL } from '../../constants/api';
@@ -224,7 +224,7 @@ const ControlsVideoEdit = ({ conditionModal, setModal, options, sending = () => 
                               effect={false}
                               defaultLayout={() => (
                                  <div className="bg-dark w-full h-full flex items-center justify-center">
-                                    <IconImageAdd width={32} height={32} className="fill-white" />
+                                    <IconImage width={32} height={32} className="stroke-blue" />
                                  </div>
                               )}
                               image={image?.image}

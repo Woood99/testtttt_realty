@@ -16,7 +16,7 @@ const PurchaseRequestActions = ({ className = '' }) => {
                <>
                   <Link target="_blank" to={`${BuyerRoutesPath.purchase.edit}${params.id}`} className="w-full h-full block">
                      <BtnActionBg title="Редактировать">
-                        <IconEdit width={16} height={16} className="!stroke-[currentColor] !stroke-[1.5px] !fill-none" />
+                        <IconEdit width={16} height={16} className="!stroke-[currentColor] !fill-none" />
                      </BtnActionBg>
                   </Link>
                   <BtnActionBg title="Закрыть" onClick={() => setConfirmDeleteModal(data.id)}>

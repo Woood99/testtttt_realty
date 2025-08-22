@@ -22,6 +22,7 @@
       "ahooks": "^3.8.1",
       "air-datepicker": "^3.5.3",
       "axios": "^1.7.2",
+      "broadcast-channel": "^7.1.0",
       "classnames": "^2.5.1",
       "dayjs": "^1.11.12",
       "draft-convert": "^2.1.13",

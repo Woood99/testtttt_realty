@@ -47,6 +47,7 @@ const RoomInfoApartments = memo(({ data, onClick, activeRoomId }) => {
 				tags: [...apartContext.filtersResult.tags, ...apartContext.filtersResult.advantages],
 				is_gift: apartContext.filtersResult.is_gift,
 				is_discount: apartContext.filtersResult.is_discount,
+				is_cashback: apartContext.filtersResult.is_cashback,
 				is_video: apartContext.filtersResult.is_video,
 				filters: {
 					primary: {
@@ -73,6 +74,7 @@ const RoomInfoApartments = memo(({ data, onClick, activeRoomId }) => {
 		appendParams(searchParams, "frames", apartContext.filtersResult.filters.primary.frames?.value, "string");
 		appendParams(searchParams, "is_gift", apartContext.filtersResult.is_gift, "bool");
 		appendParams(searchParams, "is_discount", apartContext.filtersResult.is_discount, "bool");
+		appendParams(searchParams, "is_cashback", apartContext.filtersResult.is_cashback, "bool");
 
 		return (
 			<>

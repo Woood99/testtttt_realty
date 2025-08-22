@@ -85,7 +85,7 @@ const ObjectEdit = () => {
                <div className="container flex justify-between">
                   <h2 className="title-2">Редактирование комплекса {data.title}</h2>
                   <BtnActionText className="!px-0" onClick={() => setConfirmDeleteModal(params.id)}>
-                     <IconTrash width={16} height={16} className="!fill-red" />
+                     <IconTrash width={16} height={16} className="!stroke-red" />
                      <span className="text-dark font-medium">Удалить комплекс</span>
                   </BtnActionText>
                </div>

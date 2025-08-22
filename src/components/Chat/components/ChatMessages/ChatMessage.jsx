@@ -34,25 +34,15 @@ const hasHorizontalPhotos = photos => {
 };
 
 const ChatMessage = ({ data, comments = true }) => {
-	const {
-		currentDialog,
-		currentDialogUserInfo,
-		setIsEdit,
-		setForwardMessageId,
-		chatPinMessages,
-		getDialog,
-		setFilesUpload,
-		messageCommentsOptions
-	} = useContext(ChatContext);
-	const { deleteMessage, showPopper, setShowPopper, firstUnreadRef, editMessage, variant, showPopperPosition, setShowPopperPosition } =
-		useContext(ChatMessagesContext);
+	const { currentDialog, currentDialogUserInfo } = useContext(ChatContext);
+	const { setShowPopper, firstUnreadRef, setShowPopperPosition } = useContext(ChatMessagesContext);
 
 	const userInfo = useSelector(getUserInfo);
 	const isDesktop = useSelector(getIsDesktop);
 
 	const [galleryCurrentIndex, setGalleryCurrentIndex] = useState(false);
 
-	const myMessage = data.user.id === userInfo.id;
+	const myMessage = userInfo.id === data.user.id;
 
 	const audioData = data.files?.filter(item => item.type === "audio")[0];
 	const dataText = data.is_json ? JSON.parse(data.text) : data.text;
@@ -91,25 +81,11 @@ const ChatMessage = ({ data, comments = true }) => {
 			value={{
 				data,
 				myMessage,
-				showPopper,
-				setShowPopper,
-				getDialog,
-				userInfo,
-				currentDialog,
-				currentDialogUserInfo,
-				chatPinMessages,
-				deleteMessage,
-				setIsEdit,
-				setForwardMessageId,
-				setFilesUpload,
-				messageCommentsOptions,
 				videoData,
 				audioData,
 				dataText,
 				galleryCurrentIndex,
 				setGalleryCurrentIndex,
-				editMessage,
-				variant,
 				photos,
 				photosLength
 			}}>
@@ -134,8 +110,18 @@ const ChatMessage = ({ data, comments = true }) => {
 				<div className={blockClassName}>
 					<div className={cn(styles.ChatMessageBlockWrapper)}>
 						{data.user_visible && (
-							<span className={styles.ChatMessageUserName} style={{ color: getColorForLetter(data.user.name) }}>
-								{userInfo.id === data.user.id ? "Вы" : data.user.name}
+							<span
+								className={styles.ChatMessageUserName}
+								style={{
+									color: getColorForLetter(
+										currentDialogUserInfo.type_channel
+											? currentDialogUserInfo.name
+											: myMessage
+												? data.user.name
+												: currentDialogUserInfo.name
+									)
+								}}>
+								{currentDialogUserInfo.type_channel ? currentDialogUserInfo.name : myMessage ? "Вы" : currentDialogUserInfo.name}
 							</span>
 						)}
 						<div className='relative'>
@@ -143,7 +129,6 @@ const ChatMessage = ({ data, comments = true }) => {
 								<div className={cn("flex flex-col gap-1", hasText(dataText) && "mb-3")}>
 									<ChatMessagePhotos />
 									<ChatMessageVideo />
-									{/* <ChatMessagePersonalDiscount /> */}
 								</div>
 							)}
 							<ChatMessageAudio />

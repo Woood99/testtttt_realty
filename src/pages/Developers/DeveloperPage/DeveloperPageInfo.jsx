@@ -45,11 +45,11 @@ const DeveloperPageInfo = () => {
                <div className="flex gap-2 absolute top-4 right-4 z-30">
                   <ExternalLink to={`${PrivateRoutesPath.developers.edit}${data.id}`} className="w-10 min-w-10">
                      <BtnActionBg title="Редактировать">
-                        <IconEdit className="!stroke-[currentColor] !stroke-[1.5px] !fill-none" width={18} height={18} />
+                        <IconEdit className="!stroke-[currentColor] !fill-none" width={18} height={18} />
                      </BtnActionBg>
                   </ExternalLink>
                   <BtnActionBg className="w-10 min-w-10" title="Удалить" onClick={() => setConfirmDeleteModal(data.id)}>
-                     <IconTrash className="fill-red" width={16} height={16} />
+                     <IconTrash className="stroke-red" width={16} height={16} />
                   </BtnActionBg>
                </div>
             )}

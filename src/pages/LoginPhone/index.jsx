@@ -123,7 +123,7 @@ const LoginPhoneLayout = ({ onSubmitLoginPhone = () => {} }) => {
 
 				setCookie("loggedIn", true, { maxAge: COOKIE_MAX_AGE, path: "/" });
 				setCookie("access_token", res.data.result, { maxAge: COOKIE_MAX_AGE, path: "/" });
-				setAuthUser().then(async user => {
+				setAuthUser(true).then(async user => {
 					await new Promise(resolve => setTimeout(resolve, 100));
 					userConnectionEcho(user, res.data.result);
 					await new Promise(resolve => setTimeout(resolve, 100));
@@ -180,7 +180,7 @@ const LoginPhoneLayout = ({ onSubmitLoginPhone = () => {} }) => {
 					<div className="mb-6">
 						<div className="mb-4 bg-pageColor rounded-xl p-5 flex gap-6">
 							<div className="bg-white flex-center-all relative w-10 h-10 rounded-xl flex-shrink-0">
-								<IconCall width={24} height={24} className="fill-blue" />
+								<IconCall width={24} height={24} className="stroke-blue" />
 								<div className="voicecall-animation">
 									<span className="voicecall-animation-item" />
 									<span className="voicecall-animation-item" />

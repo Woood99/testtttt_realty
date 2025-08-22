@@ -33,14 +33,14 @@ const ProgressCard = ({ data, isAdmin, deleteCard, onClick = () => {}, editCard 
                   title="Редактировать"
                   type="button"
                   className={`${stylesDragDropItems.DragDropImageIcon} top-4 right-14 !z-20 ${styles.ProgressCardControls}`}>
-                  <IconEdit width={15} height={15} className="stroke-blue stroke-[1.5px]" />
+                  <IconEdit width={15} height={15} className="stroke-blue" />
                </button>
                <button
                   title="Удалить"
                   type="button"
                   className={`${stylesDragDropItems.DragDropImageIcon} top-4 right-4 !z-20 ${styles.ProgressCardControls}`}
                   onClick={() => deleteCard(data.id)}>
-                  <IconTrash width={15} height={15} className="fill-red" />
+                  <IconTrash width={15} height={15} className="stroke-red" />
                </button>
             </>
          )}

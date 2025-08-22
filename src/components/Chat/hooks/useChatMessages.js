@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useDispatch } from "react-redux";
 
+import { ACCEPT_TYPE_ALL } from "@/constants";
+
 import { addToastPrimary } from "@/redux";
 
 import getImagesObj from "../../../unifComponents/getImagesObj";
@@ -92,14 +94,7 @@ export const useChatMessages = options => {
 		onDrop: addFile,
 		multiple: true,
 		noClick: true,
-		accept: {
-			"image/jpeg": [".jpeg", ".png", ".jpg", ".webp", ".avif"],
-			"image/gif": [".gif"],
-			"image/svg+xml": [".svg", ".svgz"],
-			"video/mp4": [".mp4"],
-			"video/webm": [".webm"],
-			"video/quicktime": [".mov"]
-		}
+		accept: ACCEPT_TYPE_ALL
 	});
 
 	useEffect(() => {
@@ -148,27 +143,23 @@ export const useChatMessages = options => {
 		if (!messages.length) return;
 		if (!mainBlockBar.current) return;
 
-		// Функция для скролла вниз
 		const scrollHandler = () => {
 			if (isActiveRef.current && mainBlockBar.current) {
 				if (firstUnreadRef.current) {
 					const messageTop = firstUnreadRef.current.offsetTop - 32;
 					mainBlockBar.current.scrollTop = messageTop;
-					// console.log('unread');
 				} else {
 					mainBlockBar.current.scrollTop = mainBlockBar.current.scrollHeight;
-					// console.log('read');
 				}
 			}
 		};
 
-		// 1. Настраиваем наблюдатель за изменениями DOM
 		observerRef.current = new MutationObserver(scrollHandler);
 
 		observerRef.current.observe(mainBlockBar.current, {
-			childList: true, // Отслеживаем новые элементы
-			subtree: true, // И во вложенных элементах
-			characterData: true // И изменения текста
+			childList: true,
+			subtree: true,
+			characterData: true
 		});
 
 		scrollHandler();

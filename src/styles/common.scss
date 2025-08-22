@@ -1148,6 +1148,9 @@
 			display: none;
 		}
 	}
+	&:focus-visible{
+		outline: none;
+	}
 }
 
 .html-elements-inline {

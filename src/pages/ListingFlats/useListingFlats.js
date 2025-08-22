@@ -31,6 +31,8 @@ const getFilters = data => {
       tags: [...data.filters.tags, ...data.filters.advantages],
       is_gift: data.filters.is_gift || null,
       is_video: data.filters.is_video || null,
+      is_discount: data.filters.is_discount || null,
+      is_cashback: data.filters.is_cashback || null,
       sort: data.filters.sortBy,
       page: data.page,
    };
@@ -164,6 +166,12 @@ export const useListingFlats = () => {
       if (listingFlatsSelector.filters.is_video) {
          setFilterCount(prev => prev + 1);
       }
+      if (listingFlatsSelector.filters.is_discount) {
+         setFilterCount(prev => prev + 1);
+      }
+      if (listingFlatsSelector.filters.is_cashback) {
+         setFilterCount(prev => prev + 1);
+      }
 
       const newParams = new URLSearchParams(searchParams);
 
@@ -183,6 +191,8 @@ export const useListingFlats = () => {
 
       appendParams(newParams, 'is_gift', listingFlatsSelector.filters.is_gift, 'bool');
       appendParams(newParams, 'is_video', listingFlatsSelector.filters.is_video, 'bool');
+      appendParams(newParams, 'is_discount', listingFlatsSelector.filters.is_discount, 'bool');
+      appendParams(newParams, 'is_cashback', listingFlatsSelector.filters.is_cashback, 'bool');
 
       setSearchParams(newParams);
 

@@ -125,11 +125,11 @@ const SpecialistPage = () => {
                                  <div className="white-block-small !py-2 mb-3 grid grid-cols-2 gap-3">
                                     <Link to={`${PrivateRoutesPath.specialists.edit}${params.id}`} className="w-full h-full block">
                                        <BtnActionBg title="Редактировать">
-                                          <IconEdit className="!stroke-[currentColor] !stroke-[1.5px] !fill-none" width={18} height={18} />
+                                          <IconEdit className="!stroke-[currentColor] !fill-none" width={18} height={18} />
                                        </BtnActionBg>
                                     </Link>
                                     <BtnActionBg title="Удалить" onClick={() => setConfirmDeleteModal(params.id)}>
-                                       <IconTrash className="fill-red" width={16} height={16} />
+                                       <IconTrash className="stroke-red" width={16} height={16} />
                                     </BtnActionBg>
                                  </div>
                               )}

@@ -64,14 +64,14 @@ export const CardStock = props => {
                      title="Редактировать"
                      type="button"
                      className={`${stylesDragDropItems.DragDropImageIcon} top-4 right-14 !z-20 ${styles.CardStockControl}`}>
-                     <IconEdit width={15} height={15} className="stroke-blue stroke-[1.5px]" />
+                     <IconEdit width={15} height={15} className="stroke-blue" />
                   </button>
                )}
                <button
                   type="button"
                   className={`${stylesDragDropItems.DragDropImageIcon} top-4 right-4 ${styles.CardStockControl}`}
                   onClick={() => setIsDeleteVideoModal(true)}>
-                  <IconTrash width={15} height={15} className="fill-red" />
+                  <IconTrash width={15} height={15} className="stroke-red" />
                </button>
             </>
          )}

@@ -24,23 +24,23 @@ const ChatNotAuth = () => {
 	const [isLoadingHandler, setIsLoadingHandler] = useState(false);
 
 	return (
-		<div className="text-center flex flex-col items-center justify-center flex-grow h-full">
+		<div className='text-center flex flex-col items-center justify-center flex-grow h-full'>
 			<ChatIconDialogs />
-			<h3 className="title-3 mt-12">Общаться с застройщиком — легко</h3>
-			<p className="mt-1.5 text-primary400">
+			<h3 className='title-3 mt-12'>Общаться с застройщиком — легко</h3>
+			<p className='mt-1.5 text-primary400'>
 				Для того что-бы начать общение, <br /> войдите в свой аккаунт
 			</p>
-			<div className="mt-5 mx-6 w-[85%]">
+			<div className='mt-5 mx-6 w-[85%]'>
 				<Button
-					className="w-full"
+					className='w-full'
 					onClick={() => {
 						dispatch(setSelectAccLogModalOpen(true));
 					}}>
 					Войти
 				</Button>
-				<Button
-					variant="secondary"
-					className="w-full mt-2"
+				{/* <Button
+					variant='secondary'
+					className='w-full mt-2'
 					isLoading={isLoadingHandler}
 					onClick={async () => {
 						setIsLoadingHandler(true);
@@ -60,7 +60,7 @@ const ChatNotAuth = () => {
 									maxAge: COOKIE_MAX_AGE,
 									path: "/"
 								});
-								setAuthUser().then(async user => {
+								setAuthUser(true).then(async user => {
 									await new Promise(resolve => setTimeout(resolve, 100));
 									userConnectionEcho(user, res.data.result);
 									await new Promise(resolve => setTimeout(resolve, 100));
@@ -70,16 +70,15 @@ const ChatNotAuth = () => {
 							.catch(error => {
 								console.log(error);
 							});
-					}}
-				>
+					}}>
 					Войти как админ
 				</Button>
 
-				<ExternalLink to={PrivateRoutesPath.login} className="mt-2 w-full">
-					<Button Selector="div" variant="secondary" className="">
+				<ExternalLink to={PrivateRoutesPath.login} className='mt-2 w-full'>
+					<Button Selector='div' variant='secondary' className=''>
 						Войти через логин
 					</Button>
-				</ExternalLink>
+				</ExternalLink> */}
 			</div>
 		</div>
 	);

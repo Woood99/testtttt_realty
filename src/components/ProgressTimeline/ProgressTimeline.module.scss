@@ -1,0 +1,25 @@
+.centerTitle {
+	width: 100%;
+	text-align: center;
+	font-weight: 500;
+	font-size: var(--default-max);
+	color: var(--white);
+	transition: opacity 300ms ease;
+}
+
+.progressBar {
+	margin-top: 10px;
+	position: relative;
+	width: 100%;
+	height: 12px;
+	background: var(--white);
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.progress {
+	height: 100%;
+	border-radius: 8px;
+	background: linear-gradient(90deg, var(--blue), var(--light-blue));
+	width: 0%;
+}

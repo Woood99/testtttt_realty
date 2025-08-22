@@ -3,9 +3,9 @@ import { useContext } from "react";
 
 import { ChatContext } from "../../../../context";
 import { getLastElementArray } from "../../../../helpers/arrayMethods";
-import { IconClip2 } from "../../../../ui/Icons";
 import { getHtmlText } from "../ChatDraft/getHtmlText";
 import { ChatMessagePreview } from "../ChatMessages/ui";
+import { IconPin } from "@/ui/Icons";
 
 const ChatPinTop = () => {
 	const { chatPinMessages, allowScroll, isLoadingDialog } = useContext(ChatContext);
@@ -38,7 +38,7 @@ const ChatPinTop = () => {
 					</div>
 				</div>
 				<div className='self-center ml-auto flex-center-all'>
-					<IconClip2 width={18} height={18} className='fill-dark' />
+					<IconPin width={18} height={18} className='stroke-dark' />
 				</div>
 			</div>
 		</div>

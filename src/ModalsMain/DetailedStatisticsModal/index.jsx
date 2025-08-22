@@ -113,7 +113,7 @@ const DetailedStatisticsModal = ({ condition, set, defaultType = 'building_visit
                                     {getSumOfArray(item.apartments.apartment_visited)}
                                  </div>
                                  <div title="Добавили в избранное" className="z-10 flex gap-2">
-                                    <IconFavoriteStroke className="fill-red" width={14} height={14} />
+                                    <IconFavoriteStroke className="stroke-red" width={14} height={14} />
                                     {item.added_to_favorites}
                                     {getSumOfArray(item.building.likes)}
                                  </div>

@@ -25,10 +25,9 @@ const VideoPage = () => {
    const [similarShorts, setSimilarShort] = useState([]);
    const [similarVideos, setSimilarVideos] = useState([]);
    const [otherVideos, setOtherVideos] = useState([]);
+   const [objectData, setObjectData] = useState({});
 
    const playerRef = useRef(null);
-
-   const currentUser = data?.author?.role === ROLE_ADMIN.id ? data?.developer : data?.author;
 
    useEffect(() => {
       window.scrollTo({
@@ -86,6 +85,7 @@ const VideoPage = () => {
             setSimilarShort(similarShorts);
             setSimilarVideos(similarVideos);
             setOtherVideos(otherVideos);
+            setObjectData(building);
          } catch (error) {
             console.log(error);
          }
@@ -112,6 +112,7 @@ const VideoPage = () => {
                               <VideoPlayer
                                  variant="page"
                                  data={data}
+                                 objectData={objectData}
                                  className="grid mmd1:grid-cols-[1fr_350px] gap-4 md1:gap-3"
                                  refElement={playerRef}
                                  childrenVideo={

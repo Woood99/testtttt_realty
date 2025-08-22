@@ -45,6 +45,7 @@ const BuildingFilter = () => {
 					advantages: state.advantages,
 					is_gift: state.is_gift || null,
 					is_discount: state.is_discount || null,
+					is_cashback: state.is_cashback || null,
 					is_video: state.is_video || null
 				});
 				apartContext.setLayoutsIsLoading(true);
@@ -54,6 +55,7 @@ const BuildingFilter = () => {
 					tags: [...state.tags, ...state.advantages],
 					is_gift: state.is_gift || null,
 					is_discount: state.is_discount || null,
+					is_cashback: state.is_cashback || null,
 					is_video: state.is_video || null
 				}).then(result => {
 					const totalApart = result.items.reduce((acc, item) => {

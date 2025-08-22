@@ -93,7 +93,7 @@ const ChannelGroupInfoModal = ({ condition, set, dialog }) => {
                                        <UserInfo avatar={companion.image} name={companion.name} classListName="!text-defaultMax" centered />
                                        {myChannelOrGroup && (
                                           <button type="button" className="flex-center-all" onClick={() => setDeleteParticipant(companion)}>
-                                             <IconTrash className="fill-red" width={14} height={14} />
+                                             <IconTrash className="stroke-red" width={14} height={14} />
                                           </button>
                                        )}
                                     </div>
