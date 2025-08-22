@@ -200,11 +200,18 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 						const volume = parseFloat(localStorage.getItem("video_volume") || "0.5");
 						player.volume(volume);
 						console.log("play start");
+						console.debug("play start");
 
 						player
 							.play()
-							.then(() => console.log("Play!"))
-							.catch(e => console.log("Play error", e));
+							.then(() => {
+								console.log("Play!");
+								console.debug("Play!");
+							})
+							.catch(e => {
+								console.log("Play error", e);
+								console.debug("Play error", e);
+							});
 					});
 				} else {
 					player.pause();
