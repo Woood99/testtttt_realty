@@ -204,10 +204,14 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 							.play()
 							.then(() => {})
 							.catch(e => {
-								player.muted(true);
 								setTimeout(() => {
-									player.play().catch(e => console.error("Still cannot play:", e));
-								}, 50);
+									player.muted(true);
+									setTimeout(() => {
+										console.log("asfsfas");
+
+										player.play().catch(e => console.error("Still cannot play:", e));
+									}, 100);
+								}, 100);
 							});
 					});
 				} else {
