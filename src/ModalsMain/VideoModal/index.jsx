@@ -293,7 +293,7 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 							key={index}
 							virtualIndex={index}
 							className={cn("shorts-player-slide", initShortIds.includes(card.id) && "_init")}>
-							<ShortPlayer data={card} />
+							{initShortIds.includes(card.id) && <ShortPlayer data={card} />}
 						</SwiperSlide>
 					))}
 				</Swiper>
