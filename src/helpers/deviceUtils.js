@@ -1,3 +1,6 @@
 export const isIOS = () => {
-	return /iPhone|iPad|iPod/.test(navigator.userAgent);
+	const ua = navigator.userAgent;
+	const iOSDevice = /iPhone|iPod/.test(ua);
+	const iPadOS = ua.includes("Macintosh") && "ontouchend" in document;
+	return iOSDevice || iPadOS;
 };
