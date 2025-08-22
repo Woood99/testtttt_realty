@@ -196,7 +196,7 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 				const isActiveSlide = +slide.getAttribute("data-swiper-slide-index") === swiper.activeIndex;
 
 				if (isActiveSlide) {
-					player.ready(async () => {
+					player.ready(() => {
 						const volume = parseFloat(localStorage.getItem("video_volume") || "0.5");
 						player.volume(volume);
 
@@ -265,10 +265,7 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 				<Swiper
 					modules={[Navigation, Virtual]}
 					ref={swiperRef}
-					virtual={{
-						enabled: true,
-						addSlidesAfter: 0
-					}}
+					virtual
 					slidesPerView={1}
 					spaceBetween={16}
 					grabCursor
@@ -277,7 +274,7 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 						onlyInViewport: true
 					}}
 					direction='vertical'
-					speed={isDesktop ? 500 : 220}
+					speed={isDesktop ? 500 : 250}
 					className='h-full mmd1:pl-[385px] mmd1:-ml-[385px]'
 					onSlideChange={handleSlideChange}
 					onClick={onHandlerClick}
