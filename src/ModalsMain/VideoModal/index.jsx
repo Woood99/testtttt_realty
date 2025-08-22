@@ -196,22 +196,19 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 				const isActiveSlide = +slide.getAttribute("data-swiper-slide-index") === swiper.activeIndex;
 
 				if (isActiveSlide) {
-					player.ready(() => {
+					player.ready(async () => {
 						const volume = parseFloat(localStorage.getItem("video_volume") || "0.5");
 						player.volume(volume);
 
-						if (isIOS) {
-							player.muted(true);
-						}
+						try {
+							await player.play();
+						} catch (error) {
+							console.log("Autoplay with sound failed:", error);
 
-						player.play().catch(error => {
-							console.log(error);
-						});
-						player.on("useractivate", () => {
-							if (isIOS && player.muted()) {
-								player.muted(false);
-							}
-						});
+							// Если не получилось - заглушаем и пробуем снова
+							player.muted(true);
+							player.play().catch(e => console.error("Muted autoplay also failed:", e));
+						}
 					});
 				} else {
 					player.pause();
