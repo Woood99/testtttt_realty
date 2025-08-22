@@ -202,21 +202,12 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 
 						player
 							.play()
-							.then(() => {
-								setTimeout(() => {
-									player.muted(true);
-									setTimeout(() => {
-										player.play().catch(e => console.error("Still cannot play:", e));
-									}, 100);
-								}, 100);
-							})
+							.then(() => {})
 							.catch(e => {
+								player.muted(true);
 								setTimeout(() => {
-									player.muted(true);
-									setTimeout(() => {
-										player.play().catch(e => console.error("Still cannot play:", e));
-									}, 100);
-								}, 100);
+									player.play().catch(e => console.error("Still cannot play:", e));
+								}, 50);
 							});
 					});
 				} else {
