@@ -258,7 +258,6 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 				<Swiper
 					modules={[Navigation, Virtual]}
 					ref={swiperRef}
-					virtual
 					slidesPerView={1}
 					spaceBetween={16}
 					grabCursor
