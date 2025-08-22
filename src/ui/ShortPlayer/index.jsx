@@ -330,6 +330,7 @@ export const ShortPlayer = ({ data, classNamePlayer = "" }) => {
 					/>
 				)}
 			</Maybe>
+
 			<div data-vjs-player>
 				<div className='video-js-background' />
 				<video
