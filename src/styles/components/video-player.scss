@@ -427,6 +427,8 @@
 	.video-js {
 		height: 100%;
 		border-radius: 32px;
+		max-height: 250px !important;
+		padding-top:65% !important;
 		&::after {
 			height: 360px;
 			background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.85), transparent);

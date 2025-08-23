@@ -494,7 +494,10 @@ export const ShortPlayerTest = ({ data, isActive }) => {
 	};
 
 	return (
-		<div className='short-player relative'>
+		<div className='h-full !max-h-[250px] w-full cursor-pointer'>
+
+
+		<div className='short-player relative !max-h-[250px] h-full'>
 			<div data-vjs-player>
 				<video ref={videoRef} id={`short-video-${data.id}`} className='video-js vjs-fluid' playsInline />
 			</div>
@@ -508,5 +511,7 @@ export const ShortPlayerTest = ({ data, isActive }) => {
 				</div>
 			)}
 		</div>
+		</div>
+
 	);
 };
