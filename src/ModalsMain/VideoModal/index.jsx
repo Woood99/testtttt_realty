@@ -248,7 +248,8 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 	const onHandlerClick = useCallback((swiper, e) => {
 		if (isDesktop) return;
 		if (e.target.closest(".vjs-control-bar") || e.target.closest(".vjs-volume-panel") || e.target.closest("[data-short-player-content]")) return;
-
+		if (e.target.closest(".unmute-overlay")) return;
+		
 		const currentSlide = swiper.slides.find(item => +item.getAttribute("data-swiper-slide-index") === swiper.activeIndex);
 
 		if (!currentSlide) return;

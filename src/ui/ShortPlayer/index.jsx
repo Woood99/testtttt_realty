@@ -484,7 +484,11 @@ export const ShortPlayerTest = ({ data, isActive }) => {
 		}
 	}, [isActive, isSoundEnabled]);
 
-	const handleUnmuteClick = () => {
+	const handleUnmuteClick = e => {
+		e.preventDefault();
+		e.stopPropagation();
+		console.log(e);
+
 		enableSound();
 		setShowUnmuteButton(false);
 
@@ -495,23 +499,20 @@ export const ShortPlayerTest = ({ data, isActive }) => {
 
 	return (
 		<div className='h-full !max-h-[250px] w-full cursor-pointer'>
-
-
-		<div className='short-player relative !max-h-[250px] h-full'>
-			<div data-vjs-player>
-				<video ref={videoRef} id={`short-video-${data.id}`} className='video-js vjs-fluid' playsInline />
-			</div>
-
-			{showUnmuteButton && (
-				<div className='unmute-overlay' onClick={handleUnmuteClick}>
-					<div className='unmute-button'>
-						<span className='icon'>🔇</span>
-						<span className='text'>Включить звук</span>
-					</div>
+			<div className='short-player relative !max-h-[250px] h-full'>
+				<div data-vjs-player>
+					<video ref={videoRef} id={`short-video-${data.id}`} className='video-js vjs-fluid' playsInline />
 				</div>
-			)}
-		</div>
-		</div>
 
+				{showUnmuteButton && (
+					<div className='unmute-overlay' onClick={handleUnmuteClick}>
+						<div className='unmute-button'>
+							<span className='icon'>🔇</span>
+							<span className='text'>Включить звук</span>
+						</div>
+					</div>
+				)}
+			</div>
+		</div>
 	);
 };
