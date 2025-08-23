@@ -17,7 +17,6 @@ import { checkAuthUser, getIsDesktop, getUserInfo } from "@/redux";
 
 import { Modal, ModalWrapper, NavBtnNext, NavBtnPrev, ShortPlayer, Spinner, Tag } from "@/ui";
 import { IconArrow, IconClose, IconPause, IconPlay, IconShareArrow } from "@/ui/Icons";
-import { ShortPlayerTest } from "@/ui/ShortPlayer";
 
 import { Button } from "@/uiForm";
 
@@ -31,23 +30,6 @@ import customTimeDisplay from "./components/customTimeDisplay";
 import { playerLocalRu } from "./components/playerLocalRu";
 import timeCodes from "./components/timeCodes";
 import timeTooltip from "./components/timeTooltip";
-
-export const useSoundSettings = () => {
-	const [isSoundEnabled, setIsSoundEnabled] = useState(false);
-
-	useEffect(() => {
-		// Проверяем, давал ли пользователь уже разрешение на звук
-		const saved = localStorage.getItem("userSoundPreference");
-		setIsSoundEnabled(saved === "true");
-	}, []);
-
-	const enableSound = () => {
-		setIsSoundEnabled(true);
-		localStorage.setItem("userSoundPreference", "true");
-	};
-
-	return { isSoundEnabled, enableSound };
-};
 
 const splitIntoChunks = (array, chunkSize) => {
 	const chunks = [];
@@ -173,7 +155,6 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 	const modalContainerRef = useRef(null);
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [initShortIds, setInitShortIds] = useState([]);
-	const { isSoundEnabled, enableSound } = useSoundSettings();
 
 	const handleNavigation = useCallback(direction => {
 		if (!shortReadyNext || !swiperRef.current?.swiper) return;
@@ -210,8 +191,8 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 				const video = slide.querySelector("video");
 				if (!video) return;
 				const player = videojs.getPlayer(video.id);
-				if (!player) return;
 
+				if (!player) return;
 				const isActiveSlide = +slide.getAttribute("data-swiper-slide-index") === swiper.activeIndex;
 
 				if (isActiveSlide) {
@@ -219,37 +200,26 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 						const volume = parseFloat(localStorage.getItem("video_volume") || "0.5");
 						player.volume(volume);
 
-						// Ключевое изменение: проверяем глобальный флаг
-						if (isSoundEnabled) {
-							// Пользователь разрешил звук - пробуем играть без mute
-							player.muted(false);
-							player.play().catch(error => {
-								// Если не получилось (например, в Safari до первого жеста)
-								console.log("Autoplay with sound failed, falling back to muted");
-								player.muted(true);
-								player.play();
-							});
-						} else {
-							// Пользователь еще не разрешил звук - играем muted
+						if (isIOS()) {
 							player.muted(true);
-							player.play().catch(error => {
-								console.log("Muted autoplay failed:", error);
-							});
 						}
+
+						player.play().catch(error => {
+							console.log(error);
+						});
 					});
 				} else {
 					player.pause();
 				}
 			});
 		},
-		[data, isSoundEnabled]
+		[data]
 	);
 
 	const onHandlerClick = useCallback((swiper, e) => {
 		if (isDesktop) return;
 		if (e.target.closest(".vjs-control-bar") || e.target.closest(".vjs-volume-panel") || e.target.closest("[data-short-player-content]")) return;
-		if (e.target.closest(".unmute-overlay")) return;
-		
+
 		const currentSlide = swiper.slides.find(item => +item.getAttribute("data-swiper-slide-index") === swiper.activeIndex);
 
 		if (!currentSlide) return;
@@ -331,7 +301,7 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 							key={index}
 							virtualIndex={index}
 							className={cn("shorts-player-slide", initShortIds.includes(card.id) && "_init")}>
-							<ShortPlayerTest data={card} />
+							<ShortPlayer data={card} />
 						</SwiperSlide>
 					))}
 				</Swiper>

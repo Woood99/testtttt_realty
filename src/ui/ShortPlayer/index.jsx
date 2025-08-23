@@ -19,7 +19,6 @@ import { Button } from "@/uiForm";
 
 import { InteractiveElement, ShareModal } from "@/ModalsMain";
 import LocationModal from "@/ModalsMain/LocationModal";
-import { useSoundSettings } from "@/ModalsMain/VideoModal";
 
 import { Maybe, Modal, ModalHeader, ModalWrapper, Tag, TagDiscountSecondary, TagPresents, TagsDiscounts } from "..";
 
@@ -62,7 +61,7 @@ const ControlButtons = memo(({ onChat, onShare, onToggleApartments, volumePanelR
 	</div>
 ));
 
-export const ShortPlayer = ({ data, classNamePlayer = "", enableSound }) => {
+export const ShortPlayer = ({ data, classNamePlayer = "" }) => {
 	const playerRef = useRef(null);
 	const elementRef = useRef(null);
 	const volumePanelRef = useRef(null);
@@ -95,7 +94,7 @@ export const ShortPlayer = ({ data, classNamePlayer = "", enableSound }) => {
 			controls: true,
 			autoplay: false,
 			preload: "auto",
-			muted: true,
+			muted: false,
 			playsinline: true,
 			language: "ru",
 			sources: [
@@ -418,101 +417,6 @@ export const ShortPlayer = ({ data, classNamePlayer = "", enableSound }) => {
 			/>
 
 			{renderMobileModals}
-		</div>
-	);
-};
-
-export const ShortPlayerTest = ({ data, isActive }) => {
-	const videoRef = useRef(null);
-	const playerRef = useRef(null);
-	const { isSoundEnabled, enableSound } = useSoundSettings();
-	const [showUnmuteButton, setShowUnmuteButton] = useState(!isSoundEnabled);
-
-	// Инициализация Video.js
-	useEffect(() => {
-		if (!playerRef.current && videoRef.current) {
-			const player = (playerRef.current = videojs(videoRef.current, {
-				controls: true,
-				autoplay: false,
-				muted: true, // Всегда начинаем с muted
-				fluid: true,
-				playsinline: true,
-				sources: [
-					{
-						src: `${BASE_URL}${data.video_url}`,
-						type: "video/mp4"
-					}
-				]
-			}));
-
-			player.ready(() => {
-				const volume = parseFloat(localStorage.getItem("video_volume") || "0.5");
-				player.volume(volume);
-			});
-		}
-
-		return () => {
-			if (playerRef.current) {
-				playerRef.current.dispose();
-				playerRef.current = null;
-			}
-		};
-	}, [data.video_url]);
-
-	// Обработка активного/неактивного состояния
-	useEffect(() => {
-		if (!playerRef.current) return;
-
-		if (isActive) {
-			if (isSoundEnabled) {
-				// Пытаемся играть со звуком
-				playerRef.current.muted(false);
-				playerRef.current.play().catch(error => {
-					console.log("Play with sound failed, fallback to muted");
-					playerRef.current.muted(true);
-					playerRef.current.play();
-				});
-			} else {
-				// Играем без звука
-				playerRef.current.muted(true);
-				playerRef.current.play().catch(error => {
-					console.log("Muted play failed:", error);
-				});
-			}
-		} else {
-			playerRef.current.pause();
-		}
-	}, [isActive, isSoundEnabled]);
-
-	const handleUnmuteClick = e => {
-		e.preventDefault();
-		e.stopPropagation();
-		console.log(e);
-
-		enableSound();
-		setShowUnmuteButton(false);
-
-		if (playerRef.current) {
-			playerRef.current.muted(false);
-		}
-	};
-
-	return (
-		<div className='h-full !max-h-[250px] w-full cursor-pointer'>
-			<div className='short-player relative !max-h-[250px] h-full'>
-				<div data-vjs-player>
-					<video ref={videoRef} id={`short-video-${data.id}`} className='video-js vjs-fluid' playsInline />
-				</div>
-
-				{showUnmuteButton && (
-					<div className='unmute-overlay' onClick={handleUnmuteClick}>
-						<div className='unmute-button'>
-							<span className='icon'>🔇</span>
-							<span className='text'>Включить звук</span>
-						</div>
-					</div>
-				)}
-			</div>
 		</div>
 	);
 };
