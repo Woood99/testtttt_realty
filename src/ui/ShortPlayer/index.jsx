@@ -432,7 +432,7 @@ export const ShortPlayerTest = ({ data, isActive }) => {
 	useEffect(() => {
 		if (!playerRef.current && videoRef.current) {
 			const player = (playerRef.current = videojs(videoRef.current, {
-				controls: false,
+				controls: true,
 				autoplay: false,
 				muted: true, // Всегда начинаем с muted
 				fluid: true,
@@ -440,7 +440,6 @@ export const ShortPlayerTest = ({ data, isActive }) => {
 				sources: [
 					{
 						src: `${BASE_URL}${data.video_url}`,
-
 						type: "video/mp4"
 					}
 				]
