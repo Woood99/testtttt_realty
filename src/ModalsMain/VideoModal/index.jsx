@@ -17,6 +17,7 @@ import { checkAuthUser, getIsDesktop, getUserInfo } from "@/redux";
 
 import { Modal, ModalWrapper, NavBtnNext, NavBtnPrev, ShortPlayer, Spinner, Tag } from "@/ui";
 import { IconArrow, IconClose, IconPause, IconPlay, IconShareArrow } from "@/ui/Icons";
+import { ShortPlayerTest } from "@/ui/ShortPlayer";
 
 import { Button } from "@/uiForm";
 
@@ -30,6 +31,23 @@ import customTimeDisplay from "./components/customTimeDisplay";
 import { playerLocalRu } from "./components/playerLocalRu";
 import timeCodes from "./components/timeCodes";
 import timeTooltip from "./components/timeTooltip";
+
+export const useSoundSettings = () => {
+	const [isSoundEnabled, setIsSoundEnabled] = useState(false);
+
+	useEffect(() => {
+		// Проверяем, давал ли пользователь уже разрешение на звук
+		const saved = localStorage.getItem("userSoundPreference");
+		setIsSoundEnabled(saved === "true");
+	}, []);
+
+	const enableSound = () => {
+		setIsSoundEnabled(true);
+		localStorage.setItem("userSoundPreference", "true");
+	};
+
+	return { isSoundEnabled, enableSound };
+};
 
 const splitIntoChunks = (array, chunkSize) => {
 	const chunks = [];
@@ -155,6 +173,7 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 	const modalContainerRef = useRef(null);
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [initShortIds, setInitShortIds] = useState([]);
+	const { isSoundEnabled, enableSound } = useSoundSettings();
 
 	const handleNavigation = useCallback(direction => {
 		if (!shortReadyNext || !swiperRef.current?.swiper) return;
@@ -191,54 +210,39 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 				const video = slide.querySelector("video");
 				if (!video) return;
 				const player = videojs.getPlayer(video.id);
-
 				if (!player) return;
+
 				const isActiveSlide = +slide.getAttribute("data-swiper-slide-index") === swiper.activeIndex;
 
 				if (isActiveSlide) {
 					player.ready(() => {
 						const volume = parseFloat(localStorage.getItem("video_volume") || "0.5");
 						player.volume(volume);
-						player.muted(true);
 
-						console.log({ activeId, nextId, slides: swiper.slides });
-						const nextSlide = swiper.slides.find(item => +item.getAttribute("data-swiper-slide-index") === swiper.activeIndex + 1);
-						if (nextSlide) {
-							const video = nextSlide.querySelector("video");
-							if (video) {
-								const player = videojs.getPlayer(video.id);
-								if (player) {
-									console.log({ video, player, nextSlide });
-									player.muted(true);
-									player.play().then(() => {
-										player.pause();
-									});
-								}
-							}
-						}
-
-						player.muted(false);
-						player
-							.play()
-							.then(() => {
-								console.log("Воспроизведение со звуком удалось");
-							})
-							.catch(() => {
+						// Ключевое изменение: проверяем глобальный флаг
+						if (isSoundEnabled) {
+							// Пользователь разрешил звук - пробуем играть без mute
+							player.muted(false);
+							player.play().catch(error => {
+								// Если не получилось (например, в Safari до первого жеста)
+								console.log("Autoplay with sound failed, falling back to muted");
 								player.muted(true);
-								player
-									.play()
-									.then(() => {
-										console.log("Воспроизведение без звука удалось");
-									})
-									.catch(err => console.log("Даже без звука не удалось", err));
+								player.play();
 							});
+						} else {
+							// Пользователь еще не разрешил звук - играем muted
+							player.muted(true);
+							player.play().catch(error => {
+								console.log("Muted autoplay failed:", error);
+							});
+						}
 					});
 				} else {
 					player.pause();
 				}
 			});
 		},
-		[data]
+		[data, isSoundEnabled]
 	);
 
 	const onHandlerClick = useCallback((swiper, e) => {
@@ -326,7 +330,7 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 							key={index}
 							virtualIndex={index}
 							className={cn("shorts-player-slide", initShortIds.includes(card.id) && "_init")}>
-							<ShortPlayer data={card} />
+							<ShortPlayerTest data={card} />
 						</SwiperSlide>
 					))}
 				</Swiper>
