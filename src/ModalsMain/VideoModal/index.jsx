@@ -201,6 +201,22 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 						player.volume(volume);
 						player.muted(true);
 
+						console.log({ activeId, nextId, slides: swiper.slides });
+						const nextSlide = swiper.slides.find(item => +item.getAttribute("data-swiper-slide-index") === swiper.activeIndex + 1);
+						if (nextSlide) {
+							const video = nextSlide.querySelector("video");
+							if (video) {
+								const player = videojs.getPlayer(video.id);
+								if (player) {
+									console.log({ video, player, nextSlide });
+									player.muted(true);
+									player.play().then(() => {
+										player.pause();
+									});
+								}
+							}
+						}
+
 						player.muted(false);
 						player
 							.play()
