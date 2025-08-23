@@ -196,18 +196,19 @@ export const Shorts = ({ data = [], startIndex = 0, single = false, closeBtnOnCl
 				const isActiveSlide = +slide.getAttribute("data-swiper-slide-index") === swiper.activeIndex;
 
 				if (isActiveSlide) {
-					player.ready(() => {
-						const volume = parseFloat(localStorage.getItem("video_volume") || "0.5");
-						player.volume(volume);
+					player.volume(parseFloat(localStorage.getItem("video_volume") || "0.5"));
+					player.muted(true);
+					console.log("fas");
 
-						if (isIOS()) {
-							player.muted(true);
-						}
-
-						player.play().catch(error => {
-							console.log(error);
-						});
-					});
+					try {
+						player.muted(false);
+						player.play();
+						console.log("play try");
+					} catch (error) {
+						player.muted(true);
+						player.play();
+						console.log("play catch",error);
+					}
 				} else {
 					player.pause();
 				}
